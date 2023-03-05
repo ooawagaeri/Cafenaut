@@ -13,7 +13,9 @@ const db = getFirestore(app);
 @Injectable()
 export class ReviewService {
   public async create(post: ReviewModel): Promise<void> {
-    await setDoc(doc(db, 'reviews', post.user_uid + ',' + post.title), post);
+    const docRef = doc(collection(db, "reviews"));
+    console.log(`New Document ID: ${docRef.id}`);
+    await setDoc(doc(db, 'reviews', docRef.id), post);
   }
 
   public async getAll(): Promise<ReviewModel[]> {

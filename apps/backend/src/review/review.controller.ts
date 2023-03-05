@@ -11,7 +11,6 @@ export class ReviewController {
     return this.reviewService.getAll();
   }
 
-  // id is User's UUID + Post title
   @Get(':id')
   getReview(@Param('id') id: string): Promise<ReviewModel> {
     return this.reviewService.get(id);

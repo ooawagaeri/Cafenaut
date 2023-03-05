@@ -4,6 +4,7 @@ export interface ReviewModel {
   user_uid: string;
   aspects: Aspects;
   rating: number;
+  rid: number; // restaurant ID
 }
 
 interface Aspects {
