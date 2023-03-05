@@ -2,11 +2,13 @@ import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/c
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { PreAuthMiddleware } from "../auth/pre-auth-middleware.service";
+import { ReviewController } from '../review/review.controller';
+import { ReviewService } from '../review/review.service';
 
 @Module({
   imports: [],
-  controllers: [UserController],
-  providers: [UserService],
+  controllers: [UserController, ReviewController],
+  providers: [UserService, ReviewService],
 })
 
 export class UserModule implements NestModule {
