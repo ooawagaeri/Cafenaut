@@ -14,7 +14,7 @@ const db = getFirestore(app);
 export class ReviewService {
   public async create(post: ReviewModel): Promise<void> {
     const docRef = doc(collection(db, "reviews"));
-    console.log(`New Document ID: ${docRef.id}`);
+    console.log(`New Review ID: ${docRef.id}`);
     await setDoc(doc(db, 'reviews', docRef.id), post);
   }
 
