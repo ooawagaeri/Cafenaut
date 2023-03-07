@@ -1,26 +1,26 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ReviewModel } from './review.interface';
-import { initializeApp } from 'firebase/app';
-import { DocumentData, getFirestore, QuerySnapshot } from 'firebase/firestore';
 import { doc, setDoc, getDoc, getDocs, collection } from 'firebase/firestore';
-import * as firebaseConfig from '../firebase/firebaseConfig';
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig.config);
-// Initialize Cloud Firestore and get a reference to the service
-const db = getFirestore(app);
+import { DatabaseService } from "../firebase/database.service";
 
 @Injectable()
 export class ReviewService {
+  constructor(private databaseService: DatabaseService) {
+  }
+
   public async create(post: ReviewModel): Promise<void> {
+    const db = this.databaseService.getFirestore();
+
     const docRef = doc(collection(db, "reviews"));
     console.log(`New Review ID: ${docRef.id}`);
     await setDoc(doc(db, 'reviews', docRef.id), post);
   }
 
   public async getAll(): Promise<ReviewModel[]> {
+    const db = this.databaseService.getFirestore();
+
     const querySnapshot = await getDocs(collection(db, 'reviews'));
-    let arr = [];
+    const arr = [];
 
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
@@ -32,6 +32,8 @@ export class ReviewService {
   }
 
   public async get(review_id): Promise<ReviewModel> {
+    const db = this.databaseService.getFirestore();
+
     const docRef = doc(db, 'reviews', review_id);
     const docSnap = await getDoc(docRef);
 

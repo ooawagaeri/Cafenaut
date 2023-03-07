@@ -22,16 +22,16 @@ interface Aspects {
 interface Coffee {
     beans: CoffeeBeans;
     milk: Milk;
-    non_caffeinated: Boolean;
+    non_caffeinated: boolean;
     sub_rating: number;
     free_text: string;
 }
 
 interface CoffeeBeans {
-    arabica: Boolean;
-    robusta: Boolean;
-    excelsa: Boolean;
-    liberica: Boolean;
+    arabica: boolean;
+    robusta: boolean;
+    excelsa: boolean;
+    liberica: boolean;
 }
 
 interface Tea {
@@ -42,51 +42,51 @@ interface Tea {
 }
 
 interface Milk {
-    low_fat: Boolean;
-    oat: Boolean;
-    soy: Boolean;
-    almond: Boolean;
+    low_fat: boolean;
+    oat: boolean;
+    soy: boolean;
+    almond: boolean;
 }
 
 interface TeaLeaves {
-    black: Boolean;
-    white: Boolean;
-    green: Boolean;
-    oolong: Boolean;
-    pu_erh: Boolean;
+    black: boolean;
+    white: boolean;
+    green: boolean;
+    oolong: boolean;
+    pu_erh: boolean;
 }
 
 interface Ambience {
     lighting: string;
-    alfresco: Boolean;
+    alfresco: boolean;
     vibe: string;
     sub_rating: number;
     free_text: string;
 }
 
 interface Pricing {
-    student: Boolean;
-    elderly: Boolean;
+    student: boolean;
+    elderly: boolean;
     avg_price: number;
     sub_rating: number;
     free_text: string;
 }
 
 interface WorkFriendly {
-    charging_ports: Boolean;
-    wifi: Boolean;
+    charging_ports: boolean;
+    wifi: boolean;
     sub_rating: number;
     free_text: string;
 }
 
 interface Cuisine {
-    serve_food: Boolean
+    serve_food: boolean
     sub_rating: number;
     free_text: string;
 }
 
 interface Speciality {
-    present: Boolean;
+    present: boolean;
     sub_rating: number;
     free_text: string;
 }
@@ -97,7 +97,7 @@ interface Amenities {
 }
 
 interface Pet {
-    friendly: Boolean;
+    friendly: boolean;
     sub_rating: number;
     free_text: string;
 }
