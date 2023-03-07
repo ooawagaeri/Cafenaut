@@ -7,6 +7,7 @@ export interface ReviewModel {
   rid: string; // restaurant ID
   sentiment?: number;
   spam?: number;
+  chat_gpt?: number;
 }
 
 interface Aspect {

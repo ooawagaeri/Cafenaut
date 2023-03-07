@@ -11,10 +11,10 @@ export class SpamAnalyser extends Analyser {
     super();
   }
 
-  analyseContent(content: string | undefined): number {
-    if (!content) {
+  async analyseContent(content: string | undefined): Promise<number> {
+    if (content == undefined || content.length == 0) {
       return 0;
     }
-    return spamCheck.getResults(content)[1].value;
+    return Math.round(spamCheck.getResults(content)[1].value * 100) / 100;
   }
 }

@@ -22,8 +22,8 @@ export class SentimentAnalyser extends Analyser {
     this.sentiment = new Sentiment()
   }
 
-  analyseContent(content: string | undefined): number {
-    if (!content) {
+  async analyseContent(content: string | undefined): Promise<number> {
+    if (content == undefined || content.length == 0) {
       return 0;
     }
     const result = this.sentiment.analyze(content, options);

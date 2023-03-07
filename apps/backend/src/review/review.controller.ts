@@ -3,6 +3,7 @@ import { ReviewService } from './review.service';
 import { ReviewModel } from './review.interface';
 import { SentimentAnalyser } from "../analysis/sentiment";
 import { SpamAnalyser } from "../analysis/spam";
+import { ChatGptAnalyser } from "../analysis/chatgpt";
 
 @Controller('review')
 export class ReviewController {
@@ -10,6 +11,7 @@ export class ReviewController {
     private readonly reviewService: ReviewService,
     private readonly sentimentAnalyser: SentimentAnalyser,
     private readonly spamAnalyser: SpamAnalyser,
+    private readonly chatGptAnalyser: ChatGptAnalyser,
   ) {
   }
 
@@ -25,8 +27,9 @@ export class ReviewController {
 
   @Post()
   async postReview(@Body() post: ReviewModel): Promise<void> {
-    post.sentiment = this.sentimentAnalyser.analysePost(post);
-    post.spam = this.spamAnalyser.analysePost(post);
+    post.sentiment = await this.sentimentAnalyser.analysePost(post);
+    post.spam = await this.spamAnalyser.analysePost(post);
+    post.chat_gpt = await this.chatGptAnalyser.analysePost(post);
     return this.reviewService.create(post);
   }
 }
