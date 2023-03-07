@@ -4,10 +4,6 @@ import { User } from "./user.interface";
 
 @Injectable()
 export class UserService {
-  getData(): { message: string } {
-    return { message: 'Welcome to backend!' };
-  }
-
   async getUserDetails(uid: string): Promise<User> {
     const snapshot = await firebase.firestore().collection("users")
       .where("uid", "==", uid)
