@@ -5,26 +5,30 @@ export interface ReviewModel {
   aspects: Aspects;
   rating: number;
   rid: string; // restaurant ID
+  sentiment?: number;
+}
+
+interface Aspect {
+  sub_rating: number;
+  free_text: string;
 }
 
 interface Aspects {
     coffee: Coffee;
     tea: Tea;
     ambience: Ambience;
-    price: Pricing;
+    price: Price;
     work_friendly: WorkFriendly;
     cuisine: Cuisine;
     speciality: Speciality;
-    amentities: Amenities;
-    pet_friendliness: Pet;
+    amenities: Amenities;
+    pet: Pet;
 }
 
-interface Coffee {
+interface Coffee extends Aspect {
     beans: CoffeeBeans;
     milk: Milk;
     non_caffeinated: boolean;
-    sub_rating: number;
-    free_text: string;
 }
 
 interface CoffeeBeans {
@@ -34,11 +38,9 @@ interface CoffeeBeans {
     liberica: boolean;
 }
 
-interface Tea {
+interface Tea extends Aspect {
     tea_leaves: TeaLeaves;
     milk: Milk;
-    sub_rating: number;
-    free_text: string;
 }
 
 interface Milk {
@@ -56,48 +58,35 @@ interface TeaLeaves {
     pu_erh: boolean;
 }
 
-interface Ambience {
+interface Ambience extends Aspect {
     lighting: string;
     alfresco: boolean;
     vibe: string;
-    sub_rating: number;
-    free_text: string;
 }
 
-interface Pricing {
+interface Price extends Aspect {
     student: boolean;
     elderly: boolean;
     avg_price: number;
-    sub_rating: number;
-    free_text: string;
 }
 
-interface WorkFriendly {
+interface WorkFriendly extends Aspect {
     charging_ports: boolean;
     wifi: boolean;
-    sub_rating: number;
-    free_text: string;
 }
 
-interface Cuisine {
+interface Cuisine extends Aspect {
     serve_food: boolean
-    sub_rating: number;
-    free_text: string;
 }
 
-interface Speciality {
+interface Speciality extends Aspect {
     present: boolean;
-    sub_rating: number;
-    free_text: string;
 }
 
-interface Amenities {
-    sub_rating: number;
-    free_text: string;
+interface Amenities extends Aspect {
+    type: string;
 }
 
-interface Pet {
+interface Pet extends Aspect {
     friendly: boolean;
-    sub_rating: number;
-    free_text: string;
 }

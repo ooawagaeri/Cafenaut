@@ -1,10 +1,15 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { ReviewModel } from './review.interface';
+import { SentimentAnalyser } from "./analysis/sentiment";
 
 @Controller('review')
 export class ReviewController {
-  constructor(private readonly reviewService: ReviewService) {}
+  constructor(
+    private readonly reviewService: ReviewService,
+    private readonly sentimentAnalyser: SentimentAnalyser,
+  ) {
+  }
 
   @Get()
   getAllReviews() {
@@ -18,6 +23,7 @@ export class ReviewController {
 
   @Post()
   postReview(@Body() post: ReviewModel): Promise<void> {
+    post.sentiment = this.sentimentAnalyser.analysePost(post);
     return this.reviewService.create(post);
   }
 }
