@@ -1,39 +1,13 @@
-import Sentiment from "sentiment";
-import { Injectable } from "@nestjs/common";
-import { ReviewModel } from "../review.interface";
+import { ReviewModel } from "../review/review.interface";
 
-// Manual defined values for café specific words
-const options = {
-  extras: {
-    "noisy": -2,
-    "mediocre": -1,
-    "stale ": -2,
-    "dry": -1,
-    "splatter": -1,
-  }
-}
-
-@Injectable()
-export class SentimentAnalyser {
-  private sentiment: Sentiment;
-
-  public constructor() {
-    this.sentiment = new Sentiment()
-  }
-
-  private analyseContent(content: string | undefined): number {
-    if (!content) {
-      return 0;
-    }
-    const result = this.sentiment.analyze(content, options);
-    return result.score;
-  }
+export abstract class Analyser {
+  abstract analyseContent(content: string | undefined): number;
 
   /**
-   * Analyses post text contents for sentiment score.
+   * Analyses post text contents.
    *
    * @param post Review posted
-   * @return Average of all aspects' sentiment score.
+   * @return Average of all aspects' score.
    */
   public analysePost(post: ReviewModel): number {
     const scores: number[] = [];
