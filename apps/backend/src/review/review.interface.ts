@@ -3,9 +3,17 @@ export interface ReviewModel {
   body: string;
   user_uid: string;
   aspects: Aspects;
-  rating: number;
+  rating: Ratings;
   rid: string; // restaurant ID
   sentiment?: number;
+}
+
+export interface Ratings {
+  unweighted: number;
+  casual_coffee: number;
+  connoisseur_coffee: number;
+  casual_tea: number;
+  connoisseur_tea: number;
 }
 
 interface Aspect {
@@ -14,79 +22,79 @@ interface Aspect {
 }
 
 interface Aspects {
-    coffee: Coffee;
-    tea: Tea;
-    ambience: Ambience;
-    price: Price;
-    work_friendly: WorkFriendly;
-    cuisine: Cuisine;
-    speciality: Speciality;
-    amenities: Amenities;
-    pet: Pet;
+  coffee: Coffee;
+  tea: Tea;
+  ambience: Ambience;
+  price: Price;
+  work_friendly: WorkFriendly;
+  cuisine: Cuisine;
+  speciality: Speciality;
+  amenities: Amenities;
+  pet: Pet;
 }
 
 interface Coffee extends Aspect {
-    beans: CoffeeBeans;
-    milk: Milk;
-    non_caffeinated: boolean;
+  beans: CoffeeBeans;
+  milk: Milk;
+  non_caffeinated: boolean;
 }
 
 interface CoffeeBeans {
-    arabica: boolean;
-    robusta: boolean;
-    excelsa: boolean;
-    liberica: boolean;
+  arabica: boolean;
+  robusta: boolean;
+  excelsa: boolean;
+  liberica: boolean;
 }
 
 interface Tea extends Aspect {
-    tea_leaves: TeaLeaves;
-    milk: Milk;
+  tea_leaves: TeaLeaves;
+  milk: Milk;
 }
 
 interface Milk {
-    low_fat: boolean;
-    oat: boolean;
-    soy: boolean;
-    almond: boolean;
+  low_fat: boolean;
+  oat: boolean;
+  soy: boolean;
+  almond: boolean;
 }
 
 interface TeaLeaves {
-    black: boolean;
-    white: boolean;
-    green: boolean;
-    oolong: boolean;
-    pu_erh: boolean;
+  black: boolean;
+  white: boolean;
+  green: boolean;
+  oolong: boolean;
+  pu_erh: boolean;
 }
 
 interface Ambience extends Aspect {
-    lighting: string;
-    alfresco: boolean;
-    vibe: string;
+  lighting: string;
+  alfresco: boolean;
+  vibe: string;
 }
 
 interface Price extends Aspect {
-    student: boolean;
-    elderly: boolean;
-    avg_price: number;
+  student: boolean;
+  elderly: boolean;
+  avg_price: number;
 }
 
 interface WorkFriendly extends Aspect {
-    charging_ports: boolean;
-    wifi: boolean;
+  charging_ports: boolean;
+  wifi: boolean;
 }
 
 interface Cuisine extends Aspect {
-    serve_food: boolean
+  serve_food: boolean;
 }
 
 interface Speciality extends Aspect {
-    present: boolean;
+  present: boolean;
 }
 
 interface Amenities extends Aspect {
-    type: string;
+  type: string;
 }
 
 interface Pet extends Aspect {
-    friendly: boolean;
+  friendly: boolean;
 }
