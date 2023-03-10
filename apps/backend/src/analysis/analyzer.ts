@@ -1,12 +1,18 @@
 import { ReviewModel } from "../review/review.interface";
 
 export abstract class Analyser {
+  /**
+   * Analyses a free-text content.
+   *
+   * @param content Free-text content.
+   * @return Analyse score.
+   */
   abstract analyseContent(content: string | undefined): Promise<number>;
 
   /**
    * Analyses post text contents.
    *
-   * @param post Review posted
+   * @param post Review posted.
    * @return Average of all aspects' score.
    */
   public async analysePost(post: ReviewModel): Promise<number> {

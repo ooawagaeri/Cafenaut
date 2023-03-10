@@ -1,6 +1,7 @@
 import puppeteer from "puppeteer";
 import { Injectable } from "@nestjs/common";
 import { Analyser } from "./analyzer";
+import { ReviewModel } from "../review/review.interface";
 
 // Puppeteer configurations
 const options = {
@@ -34,5 +35,16 @@ export class ChatGptAnalyser extends Analyser {
     });
     await browser.close();
     return Number(percentage) / 100;
+  }
+
+  public override async analysePost(post: ReviewModel): Promise<number> {
+    const content_arr = [post.title, post.body, post.aspects.coffee.free_text,
+      post.aspects.tea.free_text, post.aspects.ambience.free_text,
+      post.aspects.price.free_text, post.aspects.work_friendly.free_text,
+      post.aspects.cuisine.free_text, post.aspects.speciality.free_text,
+      post.aspects.amenities.free_text, post.aspects.pet.free_text
+    ];
+    const content = content_arr.join(". ");
+    return await this.analyseContent(content);
   }
 }
