@@ -9,16 +9,16 @@ export class ReviewService {
   constructor(private databaseService: DatabaseService) {
   }
 
-  public async create(post: ReviewModel): Promise<void> {
+  public async create(post: ReviewModel): Promise<string> {
     // Generate aggregated rating for all user types
     const aggregatedRating = new AggregatedRating(post);
     post.rating = aggregatedRating.get_aggreagated_ratings();
 
     const db = this.databaseService.getFirestore();
-
     const docRef = doc(collection(db, "reviews"));
     console.log(`New Review ID: ${docRef.id}`);
     await setDoc(doc(db, 'reviews', docRef.id), post);
+    return docRef.id;
   }
 
   public async getAll(): Promise<ReviewModel[]> {

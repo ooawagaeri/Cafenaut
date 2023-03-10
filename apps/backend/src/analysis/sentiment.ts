@@ -1,5 +1,4 @@
 import Sentiment from "sentiment";
-import { Injectable } from "@nestjs/common";
 import { Analyser } from "./analyzer";
 
 // Manual defined values for café specific words
@@ -13,7 +12,6 @@ const options = {
   }
 }
 
-@Injectable()
 export class SentimentAnalyser extends Analyser {
   private sentiment: Sentiment;
 
@@ -27,6 +25,6 @@ export class SentimentAnalyser extends Analyser {
       return 0;
     }
     const result = this.sentiment.analyze(content, options);
-    return result.score;
+    return Math.round(result.comparative * 100) / 100;
   }
 }

@@ -3,11 +3,12 @@ export interface ReviewModel {
   body: string;
   user_uid: string;
   aspects: Aspects;
-  rating: Ratings;
+  rating?: Ratings;
   rid: string; // restaurant ID
   sentiment?: number;
   spam?: number;
   chat_gpt?: number;
+  authenticity?: number;
 }
 
 export interface Ratings {

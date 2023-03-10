@@ -1,17 +1,13 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { ReviewModel } from './review.interface';
-import { SentimentAnalyser } from "../analysis/sentiment";
-import { SpamAnalyser } from "../analysis/spam";
-import { ChatGptAnalyser } from "../analysis/chatgpt";
+import { AuthenticityService } from "../analysis/authenticity.service";
 
 @Controller('review')
 export class ReviewController {
   constructor(
     private readonly reviewService: ReviewService,
-    private readonly sentimentAnalyser: SentimentAnalyser,
-    private readonly spamAnalyser: SpamAnalyser,
-    private readonly chatGptAnalyser: ChatGptAnalyser,
+    private readonly authenticityService: AuthenticityService,
   ) {
   }
 
@@ -27,9 +23,9 @@ export class ReviewController {
 
   @Post()
   async postReview(@Body() post: ReviewModel): Promise<void> {
-    post.sentiment = await this.sentimentAnalyser.analysePost(post);
-    post.spam = await this.spamAnalyser.analysePost(post);
-    post.chat_gpt = await this.chatGptAnalyser.analysePost(post);
-    return this.reviewService.create(post);
+    const reviewId = await this.reviewService.create(post);
+    // Async update scores
+    this.authenticityService.calculate(reviewId)
+      .then(() => console.log('Updating scores...'));
   }
 }
