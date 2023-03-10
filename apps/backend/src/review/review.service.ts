@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ReviewModel } from './review.interface';
 import { doc, setDoc, getDoc, getDocs, collection } from 'firebase/firestore';
 import { DatabaseService } from "../firebase/database.service";
+import { AggregatedRating } from '../rating/aggregatedRating';
 
 @Injectable()
 export class ReviewService {
@@ -9,6 +10,10 @@ export class ReviewService {
   }
 
   public async create(post: ReviewModel): Promise<void> {
+    // Generate aggregated rating for all user types
+    const aggregatedRating = new AggregatedRating(post);
+    post.rating = aggregatedRating.get_aggreagated_ratings();
+
     const db = this.databaseService.getFirestore();
 
     const docRef = doc(collection(db, "reviews"));
@@ -38,10 +43,10 @@ export class ReviewService {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      console.log('Document data:', docSnap.data());
+      console.log('Review data:', docSnap.data());
     } else {
       // doc.data() will be undefined in this case
-      console.log('No such document!');
+      console.log('No such Review!');
       throw new HttpException('Not Found.', HttpStatus.NOT_FOUND);
     }
 
