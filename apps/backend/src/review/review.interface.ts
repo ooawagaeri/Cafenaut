@@ -1,19 +1,13 @@
+import { Ratings } from "../rating/rating.interface";
+
 export interface ReviewModel {
   title: string;
   body: string;
   user_uid: string;
   aspects: Aspects;
   rating: Ratings;
-  rid: string; // restaurant ID
+  cafe_id: string; // cafe ID
   sentiment?: number;
-}
-
-export interface Ratings {
-  unweighted: number;
-  casual_coffee: number;
-  connoisseur_coffee: number;
-  casual_tea: number;
-  connoisseur_tea: number;
 }
 
 interface Aspect {

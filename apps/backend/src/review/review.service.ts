@@ -14,6 +14,8 @@ export class ReviewService {
     const aggregatedRating = new AggregatedRating(post);
     post.rating = aggregatedRating.get_aggreagated_ratings();
 
+    // TODO: Calculate overall rating for the Cafe and store it.
+
     const db = this.databaseService.getFirestore();
 
     const docRef = doc(collection(db, "reviews"));
@@ -47,7 +49,7 @@ export class ReviewService {
     } else {
       // doc.data() will be undefined in this case
       console.log('No such Review!');
-      throw new HttpException('Not Found.', HttpStatus.NOT_FOUND);
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
 
     return docSnap.data() as ReviewModel;
