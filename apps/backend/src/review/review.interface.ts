@@ -9,6 +9,7 @@ export interface ReviewModel {
   spam?: number;
   chat_gpt?: number;
   authenticity?: number;
+  reports?: number;
 }
 
 export interface Ratings {

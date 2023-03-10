@@ -25,7 +25,16 @@ export class ReviewController {
   async postReview(@Body() post: ReviewModel): Promise<void> {
     const reviewId = await this.reviewService.create(post);
     // Async update scores
-    this.authenticityService.calculate(reviewId)
+    this.authenticityService.calculateAllAspects(reviewId)
       .then(() => console.log('Updating scores...'));
+  }
+
+  @Post('report/:id')
+  async reportReview(@Param('id') id: string): Promise<void> {
+    await this.reviewService.reportReview(id)
+      .then(() => console.log('Updating report...'));
+    this.authenticityService.calculateOnlyAuthenticity(id)
+      .then(() => console.log('Updating authenticity...'));
+
   }
 }

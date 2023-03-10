@@ -21,29 +21,24 @@ export class AuthenticityService {
     this.chatGptAnalyser = new ChatGptAnalyser();
   }
 
-  public async calculate(reviewId: string): Promise<void> {
+  public async calculateAllAspects(reviewId: string): Promise<void> {
     const reviewRef = firebase.firestore().collection("reviews")
       .doc(reviewId);
     // Details to set
-    const toUpdate = {
-      sentiment: 0,
-      spam: 0,
-      chat_gpt: 0,
-      authenticity: 0,
-    };
     reviewRef.get().then(async (docSnapshot) => {
       if (docSnapshot.exists) {
         const review = docSnapshot.data() as ReviewModel;
-        toUpdate.sentiment = await this.sentimentAnalyser.analysePost(review);
-        toUpdate.spam = await this.spamAnalyser.analysePost(review);
-        toUpdate.chat_gpt = await this.chatGptAnalyser.analysePost(review);
+        review.sentiment = await this.sentimentAnalyser.analysePost(review);
+        review.spam = await this.spamAnalyser.analysePost(review);
+        review.chat_gpt = await this.chatGptAnalyser.analysePost(review);
+        review.authenticity = AuthenticityService.findAuthenticity(review)
 
-        // Assume user classification is coffee connoisseur
-        // and equal weightage of sus-ness
-        const ratingSenti = AuthenticityService
-          .calculateRatingSentiment(review.rating.connoisseur_coffee, toUpdate.sentiment)
-        toUpdate.authenticity = (1 - toUpdate.spam) * (1 - toUpdate.chat_gpt) * (1 - ratingSenti);
-
+        const toUpdate = {
+          sentiment: review.sentiment,
+          spam: review.spam,
+          chat_gpt: review.chat_gpt,
+          authenticity: review.authenticity,
+        };
         await reviewRef.update(toUpdate);
         console.log("Review score updated.")
       } else {
@@ -52,7 +47,41 @@ export class AuthenticityService {
     });
   }
 
-  private static calculateRatingSentiment(rating: number, sentiment: number): number {
+  public async calculateOnlyAuthenticity(reviewId: string): Promise<void> {
+    const reviewRef = firebase.firestore().collection("reviews")
+      .doc(reviewId);
+    const toUpdate = {
+      authenticity: 0,
+    };
+    reviewRef.get().then(async (docSnapshot) => {
+      if (docSnapshot.exists) {
+        const review = docSnapshot.data() as ReviewModel;
+        toUpdate.authenticity = AuthenticityService.findAuthenticity(review)
+        await reviewRef.update(toUpdate);
+        console.log("Review authenticity updated.")
+      } else {
+        console.log("Review does not exist.")
+      }
+    });
+  }
+
+  private static findAuthenticity(review: ReviewModel) {
+    // Assume user classification is coffee connoisseur
+    // and equal weightage of sus-ness
+    const ratingSenti = AuthenticityService
+      .findRatingSentiment(review.rating.connoisseur_coffee, review.sentiment)
+
+    // When review is reported, treat as normal until >= 3
+    let reportScore;
+    if (review.reports < 2) {
+      reportScore = 1;
+    } else {
+      reportScore = Math.log2(review.reports)
+    }
+    return (1 - review.spam) * (1 - review.chat_gpt) * (1 - ratingSenti) / reportScore;
+  }
+
+  private static findRatingSentiment(rating: number, sentiment: number): number {
     let score;
     if (sentiment < 0) {
       score = (rating - MIN_RATING) * -sentiment;
