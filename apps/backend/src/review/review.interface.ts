@@ -5,9 +5,13 @@ export interface ReviewModel {
   body: string;
   user_uid: string;
   aspects: Aspects;
-  rating: Ratings;
-  cafe_id: string; // cafe ID
+  cafe_id: string;
+  rating?: Ratings;
   sentiment?: number;
+  spam?: number;
+  chat_gpt?: number;
+  authenticity?: number;
+  reports?: number;
 }
 
 interface Aspect {

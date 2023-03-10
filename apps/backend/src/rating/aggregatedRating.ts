@@ -69,7 +69,7 @@ export class AggregatedRating {
     };
 
     this.user_types.forEach((type) => {
-      result[type] =
+      const individualRating =
         this.review.aspects.coffee.sub_rating * this.weightages[type].coffee +
         this.review.aspects.tea.sub_rating * this.weightages[type].tea +
         this.review.aspects.ambience.sub_rating * this.weightages[type].ambience +
@@ -82,6 +82,7 @@ export class AggregatedRating {
         this.review.aspects.amenities.sub_rating *
           this.weightages['common'].amenities +
         this.review.aspects.pet.sub_rating * this.weightages['common'].pet;
+      result[type] = Math.round(individualRating * 100) / 100
     });
     this.ratings = result;
   }

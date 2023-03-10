@@ -1,13 +1,13 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { ReviewModel } from './review.interface';
-import { SentimentAnalyser } from "./analysis/sentiment";
+import { AuthenticityService } from "../analysis/authenticity.service";
 
 @Controller('review')
 export class ReviewController {
   constructor(
     private readonly reviewService: ReviewService,
-    private readonly sentimentAnalyser: SentimentAnalyser,
+    private readonly authenticityService: AuthenticityService,
   ) {
   }
 
@@ -17,13 +17,24 @@ export class ReviewController {
   }
 
   @Get(':id')
-  getReview(@Param('id') id: string): Promise<ReviewModel> {
+  async getReview(@Param('id') id: string): Promise<ReviewModel> {
     return this.reviewService.get(id);
   }
 
   @Post()
-  postReview(@Body() post: ReviewModel): Promise<void> {
-    post.sentiment = this.sentimentAnalyser.analysePost(post);
-    return this.reviewService.create(post);
+  async postReview(@Body() post: ReviewModel): Promise<void> {
+    const reviewId = await this.reviewService.create(post);
+    // Async update scores
+    this.authenticityService.calculateAllAspects(reviewId)
+      .then(() => console.log('Updating scores...'));
+  }
+
+  @Post('report/:id')
+  async reportReview(@Param('id') id: string): Promise<void> {
+    await this.reviewService.reportReview(id)
+      .then(() => console.log('Updating report...'));
+    this.authenticityService.calculateOnlyAuthenticity(id)
+      .then(() => console.log('Updating authenticity...'));
+
   }
 }
