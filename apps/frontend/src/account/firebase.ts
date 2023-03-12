@@ -8,8 +8,8 @@ import {
 } from "firebase/auth";
 import {
  getFirestore,
- collection,
- addDoc,
+ setDoc,
+ doc,
 } from "firebase/firestore";
 
 // Reference: https://blog.logrocket.com/user-authentication-firebase-react-apps/
@@ -41,7 +41,7 @@ const registerWithEmailAndPassword = async (name: string, email: string, passwor
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
-    await addDoc(collection(db, "users"), {
+    await setDoc(doc(db, "users", user.uid), {
       uid: user.uid,
       name,
       email,

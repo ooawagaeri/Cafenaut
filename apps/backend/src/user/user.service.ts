@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as firebase from 'firebase-admin';
+const { FieldValue } = require('firebase-admin/firestore');
 import { User } from './user.interface';
 
 @Injectable()
@@ -8,10 +9,21 @@ export class UserService {
     const snapshot = await firebase
       .firestore()
       .collection('users')
-      .where('uid', '==', uid)
-      .limit(1)
+      .doc(uid)
       .get();
-    const userDetails = snapshot.docs[0].data();
+    const userDetails = snapshot.data();
     return userDetails as User;
+  }
+
+  async addFollow(own_uid: string, following_uid: string): Promise<void> {
+    const userRef = await firebase.firestore().collection('users').doc(own_uid);
+    await userRef.update({
+      following: FieldValue.arrayUnion(following_uid),
+    });
+
+    const following_userRef = await firebase.firestore().collection('users').doc(following_uid);
+    await following_userRef.update({
+      followers: FieldValue.arrayUnion(own_uid),
+    });
   }
 }
