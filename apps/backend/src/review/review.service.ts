@@ -1,34 +1,26 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ReviewModel } from './review.interface';
-import { doc, setDoc, getDoc, getDocs, collection } from 'firebase/firestore';
-import { DatabaseService } from "../firebase/database.service";
 import { AggregatedRating } from '../rating/aggregatedRating';
 import * as firebase from "firebase-admin";
 
 @Injectable()
 export class ReviewService {
-  constructor(private databaseService: DatabaseService) {
-  }
-
   public async create(post: ReviewModel): Promise<string> {
     // Generate aggregated rating for all user types
     const aggregatedRating = new AggregatedRating(post);
     post.rating = aggregatedRating.get_aggreagated_ratings();
 
+    post.reports = 0;
+    const res = await firebase.firestore().collection("reviews").add(post);
+    console.log(`New Review ID: ${res.id}`);
+
     // TODO: Calculate overall rating for the Cafe and store it.
 
-    post.reports = 0;
-    const db = this.databaseService.getFirestore();
-    const docRef = doc(collection(db, "reviews"));
-    console.log(`New Review ID: ${docRef.id}`);
-    await setDoc(doc(db, 'reviews', docRef.id), post);
-    return docRef.id;
+    return res.id;
   }
 
   public async getAll(): Promise<ReviewModel[]> {
-    const db = this.databaseService.getFirestore();
-
-    const querySnapshot = await getDocs(collection(db, 'reviews'));
+    const querySnapshot = await firebase.firestore().collection("reviews").get();
     const arr = [];
 
     querySnapshot.forEach((doc) => {
@@ -41,12 +33,9 @@ export class ReviewService {
   }
 
   public async get(review_id): Promise<ReviewModel> {
-    const db = this.databaseService.getFirestore();
+    const docSnap = await firebase.firestore().collection("reviews").doc(review_id).get();
 
-    const docRef = doc(db, 'reviews', review_id);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
+    if (docSnap.exists) {
       console.log('Review data:', docSnap.data());
     } else {
       // doc.data() will be undefined in this case

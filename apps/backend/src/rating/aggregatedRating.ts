@@ -1,4 +1,5 @@
-import { Ratings, ReviewModel } from '../review/review.interface';
+import { ReviewModel } from '../review/review.interface';
+import { Ratings } from './rating.interface';
 
 export class AggregatedRating {
   review: ReviewModel;
