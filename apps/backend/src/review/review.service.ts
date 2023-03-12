@@ -1,26 +1,59 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ReviewModel } from './review.interface';
 import { AggregatedRating } from '../rating/aggregatedRating';
-import * as firebase from "firebase-admin";
+import * as firebase from 'firebase-admin';
 
 @Injectable()
 export class ReviewService {
   public async create(post: ReviewModel): Promise<string> {
     // Generate aggregated rating for all user types
-    const aggregatedRating = new AggregatedRating(post);
-    post.rating = aggregatedRating.get_aggreagated_ratings();
-
+    const aggregatedRating = new AggregatedRating();
+    post.rating = aggregatedRating.generate_review_rating(post);
     post.reports = 0;
-    const res = await firebase.firestore().collection("reviews").add(post);
-    console.log(`New Review ID: ${res.id}`);
+    const add_review = await firebase
+      .firestore()
+      .collection('reviews')
+      .add(post);
+    console.log(`New Review ID: ${add_review.id}`);
 
-    // TODO: Calculate overall rating for the Cafe and store it.
+    // Calculate overall rating for the Cafe and store it in Cafe.
+    const get_all_reviews = await firebase
+      .firestore()
+      .collection('reviews')
+      .where('cafe_id', '==', post.cafe_id)
+      .get();
+    if (get_all_reviews.empty) {
+      console.log(`FAILED getting all reviews from Cafe: ${post.cafe_id}`);
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    } else {
+      console.log(`Getting all reviews from Cafe: ${post.cafe_id}`);
+    }
+    const arr_of_review_ratings = [];
+    get_all_reviews.forEach((review) => {
+      const r = review.data() as ReviewModel;
+      arr_of_review_ratings.push(r.rating);
+    });
+    const new_cafe_rating = aggregatedRating.generate_cafe_rating(
+      arr_of_review_ratings
+    );
 
-    return res.id;
+    const update_cafe = await firebase
+      .firestore()
+      .collection('cafes')
+      .doc(post.cafe_id)
+      .update({
+        rating: new_cafe_rating,
+      });
+    console.log(`Updated cafe: ${post.cafe_id}`);
+
+    return add_review.id;
   }
 
   public async getAll(): Promise<ReviewModel[]> {
-    const querySnapshot = await firebase.firestore().collection("reviews").get();
+    const querySnapshot = await firebase
+      .firestore()
+      .collection('reviews')
+      .get();
     const arr = [];
 
     querySnapshot.forEach((doc) => {
@@ -33,7 +66,11 @@ export class ReviewService {
   }
 
   public async get(review_id): Promise<ReviewModel> {
-    const docSnap = await firebase.firestore().collection("reviews").doc(review_id).get();
+    const docSnap = await firebase
+      .firestore()
+      .collection('reviews')
+      .doc(review_id)
+      .get();
 
     if (docSnap.exists) {
       console.log('Review data:', docSnap.data());
@@ -47,8 +84,7 @@ export class ReviewService {
   }
 
   public async reportReview(review_id): Promise<void> {
-    const reviewRef = firebase.firestore().collection("reviews")
-      .doc(review_id);
+    const reviewRef = firebase.firestore().collection('reviews').doc(review_id);
     reviewRef.get().then(async (docSnap) => {
       if (docSnap.exists) {
         const review = docSnap.data() as ReviewModel;
@@ -56,11 +92,11 @@ export class ReviewService {
           reports: review.reports + 1,
         };
         await reviewRef.update(toUpdate);
-        console.log("Review reports updated.")
+        console.log('Review reports updated.');
       } else {
         console.log('No such Review!');
-        throw new HttpException('Not Found.', HttpStatus.NOT_FOUND);
+        throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
       }
-    })
+    });
   }
 }
