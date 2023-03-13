@@ -26,4 +26,16 @@ export class UserService {
       followers: FieldValue.arrayUnion(own_uid),
     });
   }
+
+  async unfollow(own_uid: string, following_uid: string): Promise<void> {
+    const userRef = await firebase.firestore().collection('users').doc(own_uid);
+    await userRef.update({
+      following: FieldValue.arrayRemove(following_uid),
+    });
+
+    const following_userRef = await firebase.firestore().collection('users').doc(following_uid);
+    await following_userRef.update({
+      followers: FieldValue.arrayRemove(own_uid),
+    });
+  }
 }
