@@ -4,11 +4,11 @@ import { CafeModel } from './cafe.interface';
 
 @Injectable()
 export class CafeService {
-  async getCafe(rid: string): Promise<CafeModel> {
+  async getCafe(id: string): Promise<CafeModel> {
     const snapshot = await firebase
       .firestore()
       .collection('cafes')
-      .doc(rid)
+      .doc(id)
       .get();
     if (snapshot.exists) {
       snapshot.data();

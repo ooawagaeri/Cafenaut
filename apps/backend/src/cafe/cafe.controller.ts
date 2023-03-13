@@ -11,8 +11,8 @@ export class CafeController {
     return this.cafeService.getAllCafes();
   }
 
-  @Get(':rid')
-  getCafe(@Param('rid') rid: string): Promise<CafeModel> {
-    return this.cafeService.getCafe(rid);
+  @Get(':id')
+  getCafe(@Param('id') id: string): Promise<CafeModel> {
+    return this.cafeService.getCafe(id);
   }
 }
