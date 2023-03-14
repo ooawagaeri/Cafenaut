@@ -1,4 +1,5 @@
-import { Ratings, ReviewModel } from '../review/review.interface';
+import { ReviewModel } from '../review/review.interface';
+import { Ratings } from './rating.interface';
 
 export class AggregatedRating {
   review: ReviewModel;
@@ -22,27 +23,27 @@ export class AggregatedRating {
     },
     casual_coffee: {
       coffee: 0.4,
-      tea: 0.0,
-      ambience: 0.2,
+      tea: 0.01,
+      ambience: 0.19,
       price: 0.1,
     },
     connoisseur_coffee: {
       coffee: 0.6,
-      tea: 0.0,
-      ambience: 0.1,
-      price: 0.0,
+      tea: 0.01,
+      ambience: 0.08,
+      price: 0.01,
     },
     casual_tea: {
-      coffee: 0.0,
+      coffee: 0.01,
       tea: 0.4,
-      ambience: 0.2,
+      ambience: 0.19,
       price: 0.1,
     },
     connoisseur_tea: {
-      coffee: 0.0,
+      coffee: 0.01,
       tea: 0.6,
-      ambience: 0.1,
-      price: 0.0,
+      ambience: 0.08,
+      price: 0.01,
     },
     // 30%, equal weightage
     common: {
@@ -54,12 +55,7 @@ export class AggregatedRating {
     },
   };
 
-  constructor(review: ReviewModel) {
-    this.review = review;
-    this.generate_rating();
-  }
-
-  generate_rating(): void {
+  generate_review_rating(review: ReviewModel): Ratings {
     const result = {
       unweighted: 0,
       casual_coffee: 0,
@@ -70,24 +66,47 @@ export class AggregatedRating {
 
     this.user_types.forEach((type) => {
       const individualRating =
-        this.review.aspects.coffee.sub_rating * this.weightages[type].coffee +
-        this.review.aspects.tea.sub_rating * this.weightages[type].tea +
-        this.review.aspects.ambience.sub_rating * this.weightages[type].ambience +
-        this.review.aspects.price.sub_rating * this.weightages[type].price +
-        this.review.aspects.work_friendly.sub_rating *
+        review.aspects.coffee.sub_rating * this.weightages[type].coffee +
+        review.aspects.tea.sub_rating * this.weightages[type].tea +
+        review.aspects.ambience.sub_rating * this.weightages[type].ambience +
+        review.aspects.price.sub_rating * this.weightages[type].price +
+        review.aspects.work_friendly.sub_rating *
           this.weightages['common'].work_friendly +
-        this.review.aspects.cuisine.sub_rating * this.weightages['common'].cuisine +
-        this.review.aspects.speciality.sub_rating *
+        review.aspects.cuisine.sub_rating * this.weightages['common'].cuisine +
+        review.aspects.speciality.sub_rating *
           this.weightages['common'].speciality +
-        this.review.aspects.amenities.sub_rating *
+        review.aspects.amenities.sub_rating *
           this.weightages['common'].amenities +
-        this.review.aspects.pet.sub_rating * this.weightages['common'].pet;
-      result[type] = Math.round(individualRating * 100) / 100
+        review.aspects.pet.sub_rating * this.weightages['common'].pet;
+      result[type] = Math.round(individualRating * 100) / 100;
     });
-    this.ratings = result;
+
+    return result;
   }
 
-  get_aggreagated_ratings(): Ratings {
-    return this.ratings;
+  generate_cafe_rating(reviews_from_cafe: Ratings[]): Ratings {
+    const result = {
+      unweighted: 0,
+      casual_coffee: 0,
+      connoisseur_coffee: 0,
+      casual_tea: 0,
+      connoisseur_tea: 0,
+    };
+
+    const num_of_reviews = reviews_from_cafe.length;
+
+    // Sum all of the ratings
+    reviews_from_cafe.forEach((rating) => {
+      this.user_types.forEach((type) => {
+        result[type] += rating[type];
+      });
+    });
+
+    // Get avg
+    this.user_types.forEach((type) => {
+      result[type] = Math.round((result[type] / num_of_reviews) * 100) / 100;
+    });
+
+    return result;
   }
 }
