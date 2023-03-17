@@ -1,16 +1,22 @@
-import { Body, Controller, Get } from "@nestjs/common";
-import { Location } from "./location.interface";
-import { MiddleGroundService } from "./middle-ground.service";
+import { Body, Controller, Get } from '@nestjs/common';
+import { Location } from './location.interface';
+import { MiddleGroundService } from './middle-ground.service';
+import { CafeModel } from '../cafe/cafe.interface';
+import { CafeService } from '../cafe/cafe.service';
 
-const RADIUS = 5000; // 5km
-
-@Controller("/mid")
+@Controller('/mid')
 export class MiddleGroundController {
-  constructor(private readonly midGrdService: MiddleGroundService) {
+  constructor(
+    private readonly midGrdService: MiddleGroundService,
+    private readonly cafeService: CafeService,
+  ) {
   }
 
   @Get()
-  findMiddleGround(@Body() body: { A: Location, B: Location }): Location {
-    return this.midGrdService.calculateCenter(body.A, body.B);
+  async findCafes(@Body() body: { locations:Location[] }): Promise<CafeModel[]> {
+    const midPoint = this.midGrdService.calculateCenter(body.locations);
+    console.log('Initial Midpoint:', midPoint);
+    const allCafes = await this.cafeService.getAllCafes();
+    return await this.midGrdService.retrieveNearbyCafes(midPoint, allCafes);
   }
 }
