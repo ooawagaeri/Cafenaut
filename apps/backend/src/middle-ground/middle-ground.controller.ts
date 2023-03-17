@@ -15,7 +15,6 @@ export class MiddleGroundController {
   @Get()
   async findCafes(@Body() body: { locations:Location[] }): Promise<CafeModel[]> {
     const midPoint = this.midGrdService.calculateCenter(body.locations);
-    console.log('Initial Midpoint:', midPoint);
     const allCafes = await this.cafeService.getAllCafes();
     return await this.midGrdService.retrieveNearbyCafes(midPoint, allCafes);
   }
