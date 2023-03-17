@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
-import { auth, sendPasswordReset } from './firebase';
+import { auth, sendPasswordReset } from '../db/firebase';
 import {
   Flex,
   Box,
