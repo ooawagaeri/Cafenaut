@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Location } from './location.interface';
 import { CafeModel } from '../cafe/cafe.interface';
 import {
@@ -23,13 +23,11 @@ const CBD = {
 export class MiddleGroundService {
   calculateCenter(locations: Location[]): Location {
     const res = getCenter(locations)
-    if (res) {
+    if (MiddleGroundService.isValidLocation(res)) {
       return res as Location;
     }
-    return {
-      latitude: -1,
-      longitude: -1,
-    }
+    console.log('Invalid location(s)!');
+    throw new HttpException('Invalid location(s)!', HttpStatus.BAD_REQUEST);
   }
 
   async retrieveNearbyCafes(midPoint: Location, allCafe: CafeModel[]): Promise<CafeModel[]> {
@@ -66,5 +64,12 @@ export class MiddleGroundService {
       }
     });
     return cafes;
+  }
+
+  private static isValidLocation(loc:  false | Location) {
+    if (loc == false) {
+      return false;
+    }
+    return !(isNaN(loc.latitude) || isNaN(loc.longitude));
   }
 }
