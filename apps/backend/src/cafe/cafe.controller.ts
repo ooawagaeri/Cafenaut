@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CafeModel } from './cafe.interface';
 import { CafeService } from './cafe.service';
 
@@ -14,5 +14,10 @@ export class CafeController {
   @Get(':id')
   getCafe(@Param('id') id: string): Promise<CafeModel> {
     return this.cafeService.getCafe(id);
+  }
+
+  @Post()
+  async postCafe(@Body() post: CafeModel): Promise<void> {
+    await this.cafeService.create(post);
   }
 }
