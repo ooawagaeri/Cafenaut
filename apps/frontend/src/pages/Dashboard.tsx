@@ -14,7 +14,7 @@ function Dashboard() {
   const fetchFromBackend = async () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    console.log(user?.accessToken);
+    // console.log(user?.accessToken);
     const options = {
       method: 'GET',
       headers: {
@@ -29,6 +29,7 @@ function Dashboard() {
       .then((res) => res.json())
       .then((results) => {
         setName(results.name);
+        localStorage.setItem('user', JSON.stringify(results));
       })
       .catch((error) => {
         console.error(error);

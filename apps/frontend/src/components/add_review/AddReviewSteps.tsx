@@ -1,6 +1,6 @@
 import { Flex, Button } from '@chakra-ui/react';
 import { Step, Steps, useSteps } from 'chakra-ui-steps';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { CoffeeStep } from './CoffeeStep';
 import { SelectCafe } from './SelectCafeStep';
@@ -21,6 +21,15 @@ export const AddReviewSteps = () => {
   const { nextStep, prevStep, setStep, reset, activeStep } = useSteps({
     initialStep: 0,
   });
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user') || '');
+    setReview((review: any) => {
+      const newReview = { ...review };
+      newReview.user_uid = user.uid;
+      return newReview;
+    });
+  }, []);
 
   const reviewOutput: ReviewModel = {
     title: '',
@@ -152,7 +161,6 @@ export const AddReviewSteps = () => {
 
   const createReview = async () => {
     console.log(review);
-    // TODO: Set user ID
     const res = await postReview(review);
     console.log(res);
   };

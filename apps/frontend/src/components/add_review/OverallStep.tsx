@@ -1,13 +1,5 @@
-import {
-  FormControl,
-  FormLabel,
-  Input,
-  Box,
-  Checkbox,
-  Textarea,
-} from '@chakra-ui/react';
+import { FormControl, FormLabel, Input, Box, Textarea } from '@chakra-ui/react';
 // @ts-ignore
-import ReactStars from 'react-rating-stars-component';
 
 export function OverallStep({ setReview }: { setReview: any }) {
   return (
@@ -18,7 +10,7 @@ export function OverallStep({ setReview }: { setReview: any }) {
           onChange={(e) => {
             setReview((review: any) => {
               const newReview = { ...review };
-              newReview.aspects.title = e.target.value;
+              newReview.title = e.target.value;
               return newReview;
             });
           }}
@@ -29,7 +21,7 @@ export function OverallStep({ setReview }: { setReview: any }) {
           onChange={(e) => {
             setReview((review: any) => {
               const newReview = { ...review };
-              newReview.aspects.body = e.target.value;
+              newReview.body = e.target.value;
               return newReview;
             });
           }}
