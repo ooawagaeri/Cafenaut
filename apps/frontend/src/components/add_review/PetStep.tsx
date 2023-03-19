@@ -1,24 +1,52 @@
-import { FormControl, FormLabel, Input, Box, Checkbox } from '@chakra-ui/react';
+import {
+  FormControl,
+  FormLabel,
+  Box,
+  Checkbox,
+  Textarea,
+} from '@chakra-ui/react';
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
 
-let petRating = 0;
-const ratingChanged = (newRating: number) => {
-  petRating = newRating;
-};
-
-export const pet = (
-  <Box padding="5%">
-    <FormControl as="fieldset">
-      <Checkbox value="pet">Pet Friendly?</Checkbox>
-      <FormLabel paddingTop={'2%'}>Thoughts on Pet-Friendliness</FormLabel>
-      <Input type="pet-free-text" />
-    </FormControl>
-    <ReactStars
-      count={5}
-      onChange={ratingChanged}
-      size={30}
-      activeColor="#ffd700"
-    />
-  </Box>
-);
+export function PetStep({ setReview }: { setReview: any }) {
+  return (
+    <Box padding="5%">
+      <FormControl as="fieldset">
+        <Checkbox
+          onChange={(e) => {
+            setReview((review: any) => {
+              const newReview = { ...review };
+              newReview.aspects.pet.friendly = e.target.checked;
+              return newReview;
+            });
+          }}
+          value="pet"
+        >
+          Pet Friendly?
+        </Checkbox>
+        <FormLabel paddingTop={'2%'}>Thoughts on Pet-Friendliness</FormLabel>
+        <Textarea
+          onChange={(e) => {
+            setReview((review: any) => {
+              const newReview = { ...review };
+              newReview.aspects.pet.free_text = e.target.value;
+              return newReview;
+            });
+          }}
+        />
+      </FormControl>
+      <ReactStars
+        count={5}
+        onChange={(newRating: number) => {
+          setReview((review: any) => {
+            const newReview = { ...review };
+            newReview.aspects.pet.sub_rating = newRating;
+            return newReview;
+          });
+        }}
+        size={30}
+        activeColor="#ffd700"
+      />
+    </Box>
+  );
+}

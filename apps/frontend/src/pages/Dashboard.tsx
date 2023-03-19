@@ -4,7 +4,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
 import Header from '../common/Header';
 import './Dashboard.css';
-import { auth, logout } from '../db/firebase';
+import { auth, logout } from '../services/firebase';
 
 function Dashboard() {
   const [user, loading, error] = useAuthState(auth);

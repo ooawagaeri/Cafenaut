@@ -6,35 +6,70 @@ import {
   Checkbox,
   CheckboxGroup,
   Stack,
+  Textarea,
 } from '@chakra-ui/react';
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
 
-let workFriendlyRating = 0;
-const ratingChanged = (newRating: number) => {
-  workFriendlyRating = newRating;
-};
-
-export const workFriendly = (
-  <Box padding="5%">
-    <FormControl as="fieldset">
-      <FormLabel as="legend">Availability</FormLabel>
-      <CheckboxGroup colorScheme="green" defaultValue={[]}>
-        <Stack spacing={[1, 5]} direction={['column', 'row']}>
-          <Checkbox value="charging">Charging ports</Checkbox>
-          <Checkbox value="wifi">WiFi</Checkbox>
-        </Stack>
-      </CheckboxGroup>
-      <FormLabel paddingTop={'2%'}>
-        Thoughts on Working/Studying in the Cafe
-      </FormLabel>
-      <Input type="work-free-text" />
-    </FormControl>
-    <ReactStars
-      count={5}
-      onChange={ratingChanged}
-      size={30}
-      activeColor="#ffd700"
-    />
-  </Box>
-);
+export function WorkFriendlyStep({ setReview }: { setReview: any }) {
+  return (
+    <Box padding="5%">
+      <FormControl as="fieldset">
+        <FormLabel as="legend">Availability</FormLabel>
+        <CheckboxGroup colorScheme="green" defaultValue={[]}>
+          <Stack spacing={[1, 5]} direction={['column', 'row']}>
+            <Checkbox
+              onChange={(e) => {
+                setReview((review: any) => {
+                  const newReview = { ...review };
+                  newReview.aspects.work_friendly.charging_ports =
+                    e.target.checked;
+                  return newReview;
+                });
+              }}
+              value="charging"
+            >
+              Charging ports
+            </Checkbox>
+            <Checkbox
+              onChange={(e) => {
+                setReview((review: any) => {
+                  const newReview = { ...review };
+                  newReview.aspects.work_friendly.wifi = e.target.checked;
+                  return newReview;
+                });
+              }}
+              value="wifi"
+            >
+              WiFi
+            </Checkbox>
+          </Stack>
+        </CheckboxGroup>
+        <FormLabel paddingTop={'2%'}>
+          Thoughts on Working/Studying in the Cafe
+        </FormLabel>
+        <Textarea
+          onChange={(e) => {
+            setReview((review: any) => {
+              const newReview = { ...review };
+              newReview.aspects.work_friendly.free_text = e.target.value;
+              return newReview;
+            });
+          }}
+        />
+      </FormControl>
+      <ReactStars
+        count={5}
+        onChange={(newRating: number) => {
+          setReview((review: any) => {
+            const newReview = { ...review };
+            newReview.aspects.work_friendly.sub_rating = newRating;
+            return newReview;
+          });
+        }}
+        size={30}
+        activeColor="#ffd700"
+      />
+    </Box>
+  );
+}

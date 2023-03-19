@@ -18,7 +18,7 @@ import {
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
-import { auth, registerWithEmailAndPassword } from '../db/firebase';
+import { auth, registerWithEmailAndPassword } from '../services/firebase';
 
 function Register() {
   const [email, setEmail] = useState('');
