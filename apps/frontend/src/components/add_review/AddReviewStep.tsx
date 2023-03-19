@@ -1,16 +1,28 @@
 import { Flex, Button } from '@chakra-ui/react';
 import { Step, Steps, useSteps } from 'chakra-ui-steps';
 
-const content = (
-  <Flex py={4}>
-    "Test content lalala"
-  </Flex>
-);
+import { ambience } from './AmbienceStep';
+import { amenities } from './AmenitiesStep';
+import { coffee } from './CoffeeStep';
+import { cuisine } from './CuisineStep';
+import { pet } from './PetStep';
+import { pricing } from './PricingStep';
+import { selectCafe } from './SelectCafeStep';
+import { speciality } from './specialityStep';
+import { tea } from './TeaStep';
+import { workFriendly } from './WorkFriendlyStep';
 
 const steps = [
-  { label: 'Step 1: Select Cafe', content },
-  { label: 'Step 2: Aspect: Coffee', content },
-  { label: 'Step 3: Aspect: Tea', content },
+  { label: 'Select Cafe', content: selectCafe },
+  { label: 'Coffee', content: coffee },
+  { label: 'Tea', content: tea },
+  { label: 'Ambience', content: ambience },
+  { label: 'Work/Study Friendly', content: workFriendly },
+  { label: 'Pricing', content: pricing },
+  { label: 'Cuisine', content: cuisine },
+  { label: 'Speciality', content: speciality },
+  { label: 'Amenities', content: amenities },
+  { label: 'Pet-Friendliness', content: pet },
 ];
 
 export const AddReviewSteps = () => {
@@ -20,7 +32,7 @@ export const AddReviewSteps = () => {
 
   return (
     <Flex flexDir="column" width="100%">
-      <Steps activeStep={activeStep}>
+      <Steps onClickStep={(step) => setStep(step)} activeStep={activeStep}>
         {steps.map(({ label, content }) => (
           <Step label={label} key={label}>
             {content}

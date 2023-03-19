@@ -24,7 +24,7 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
-import { AddReviewSteps } from '../components/AddReviewSteps';
+import { AddReviewSteps } from '../components/add_review/AddReviewStep';
 
 const Links = ['Dashboard', 'Cafes', 'Users'];
 
@@ -58,7 +58,11 @@ export default function Header() {
   return (
     <>
       <Box>
-        <Modal isOpen={isAddReviewModalOpen} onClose={onAddReviewModalClose}>
+        <Modal
+          size="4xl"
+          isOpen={isAddReviewModalOpen}
+          onClose={onAddReviewModalClose}
+        >
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>Add Review</ModalHeader>
@@ -68,10 +72,9 @@ export default function Header() {
             </ModalBody>
 
             <ModalFooter>
-              <Button colorScheme="blue" mr={3} onClick={onAddReviewModalClose}>
-                Close
+              <Button colorScheme="red" mr={3} onClick={onAddReviewModalClose}>
+                Cancel
               </Button>
-              <Button variant="ghost">Secondary Action</Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
