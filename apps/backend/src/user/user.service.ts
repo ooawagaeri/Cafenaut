@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User } from './user.interface';
 import * as firebase from 'firebase-admin';
+import { Classification } from "../classifier/classification.interface";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { FieldValue } = require('firebase-admin/firestore');
 
@@ -69,6 +70,21 @@ export class UserService {
 
     await following_userRef.update({
       followers: FieldValue.arrayRemove(own_uid),
+    });
+  }
+
+  async updateClassification(uid: string, classification: Classification) {
+    const userRef = firebase.firestore().collection('users').doc(uid);
+    userRef.get().then(async (docSnap) => {
+      if (docSnap.exists) {
+        const toUpdate = {
+          classification,
+        };
+        await userRef.update(toUpdate);
+        console.log('User updated.');
+      } else {
+        console.log('No such user!');
+      }
     });
   }
 }

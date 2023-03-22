@@ -28,7 +28,7 @@ export class CustomClassifier {
     this.classifier.train(text, label);
   }
 
-  predictClassifier(text: string): string | void {
+  predictClassifier(text: string): string | undefined {
     const predictions = this.classifier.predict(text);
     if (predictions.length) {
       predictions.forEach((prediction) => {
@@ -38,6 +38,7 @@ export class CustomClassifier {
     } else {
       console.log('No predictions!')
     }
+    return undefined
   }
 
   saveModel(): void {
