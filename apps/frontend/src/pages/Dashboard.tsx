@@ -57,8 +57,8 @@ function Dashboard() {
   return (
     <Box>
       <Header />
-      {reviews.map((review) => (
-        <PreviewReview review={review}></PreviewReview>
+      {reviews.map((review, index) => (
+        <PreviewReview key={index} review={review}></PreviewReview>
       ))}
     </Box>
   );
