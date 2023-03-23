@@ -24,7 +24,7 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
-import { AddReviewSteps } from '../components/add_review/AddReviewSteps';
+import { AddReviewSteps } from '../components/review/add_review/AddReviewSteps';
 
 const Links = ['Dashboard', 'Cafes', 'Users'];
 

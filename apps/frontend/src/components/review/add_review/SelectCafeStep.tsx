@@ -1,7 +1,7 @@
 import { FormControl, FormLabel, Select, Box } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
-import { CafeModel } from '../../../../backend/src/cafe/cafe.interface';
-import { getCafes } from '../../services/api_service';
+import { CafeModel } from '../../../../../backend/src/cafe/cafe.interface';
+import { getCafes } from '../../../services/api_service';
 
 export function SelectCafe({ setReview }: { setReview: any }) {
   const [cafes, setCafes] = useState([]);
@@ -26,6 +26,7 @@ export function SelectCafe({ setReview }: { setReview: any }) {
               )[0];
               const newReview = { ...review };
               newReview.cafe_id = cafe.id;
+              newReview.cafe_name = cafe.name;
               return newReview;
             });
           }}

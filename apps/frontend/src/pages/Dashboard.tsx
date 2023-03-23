@@ -1,10 +1,12 @@
 import { Box } from '@chakra-ui/layout';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
 import Header from '../common/Header';
 import './Dashboard.css';
 import { auth, logout } from '../services/firebase';
+import { PreviewReview } from '../components/review/PreviewReview';
+import { getAllReviews } from '../services/api_service';
 
 function Dashboard() {
   const [user, loading, error] = useAuthState(auth);
@@ -14,7 +16,6 @@ function Dashboard() {
   const fetchFromBackend = async () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    // console.log(user?.accessToken);
     const options = {
       method: 'GET',
       headers: {
@@ -44,19 +45,20 @@ function Dashboard() {
     fetchFromBackend();
   }, [user, loading]);
 
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    getReviews();
+  }, []);
+
+  async function getReviews() {
+    await getAllReviews().then((reviews) => setReviews(reviews));
+  }
+
   return (
     <Box>
       <Header />
-      <div className="dashboard">
-        <div className="dashboard__container">
-          Logged in as
-          <div>{name}</div>
-          <div>{user?.email}</div>
-          <button className="dashboard__btn" onClick={logout}>
-            Logout
-          </button>
-        </div>
-      </div>
+      {reviews.map(review => <PreviewReview review={review}></PreviewReview>)}
     </Box>
   );
 }

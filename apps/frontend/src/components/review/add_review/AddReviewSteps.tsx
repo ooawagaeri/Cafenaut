@@ -13,8 +13,8 @@ import { SpecialityStep } from './SpecialityStep';
 import { AmenitiesStep } from './AmenitiesStep';
 import { PetStep } from './PetStep';
 
-import { ReviewModel } from '../../../../backend/src/review/review.interface';
-import { postReview } from '../../services/api_service';
+import { ReviewModel } from '../../../../../backend/src/review/review.interface';
+import { postReview } from '../../../services/api_service';
 import { OverallStep } from './OverallStep';
 
 export const AddReviewSteps = () => {
@@ -27,6 +27,7 @@ export const AddReviewSteps = () => {
     setReview((review: any) => {
       const newReview = { ...review };
       newReview.user_uid = user.uid;
+      newReview.user_name = user.name
       return newReview;
     });
   }, []);
@@ -35,6 +36,7 @@ export const AddReviewSteps = () => {
     title: '',
     body: '',
     user_uid: '',
+    user_name: '',
     aspects: {
       coffee: {
         beans: {
@@ -101,7 +103,6 @@ export const AddReviewSteps = () => {
         free_text: '',
       },
       amenities: {
-        type: '',
         sub_rating: 0,
         free_text: '',
       },
@@ -112,6 +113,7 @@ export const AddReviewSteps = () => {
       },
     },
     cafe_id: '',
+    cafe_name: ''
   };
   const [review, setReview] = useState(reviewOutput);
 

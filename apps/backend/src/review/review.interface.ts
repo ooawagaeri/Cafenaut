@@ -4,8 +4,10 @@ export interface ReviewModel {
   title: string;
   body: string;
   user_uid: string;
+  user_name: string;
   aspects: Aspects;
   cafe_id: string;
+  cafe_name: string;
   rating?: Ratings;
   sentiment?: number;
   spam?: number;
@@ -90,7 +92,6 @@ interface Speciality extends Aspect {
 }
 
 interface Amenities extends Aspect {
-  type: string;
 }
 
 interface Pet extends Aspect {
