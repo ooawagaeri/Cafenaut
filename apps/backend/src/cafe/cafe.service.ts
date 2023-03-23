@@ -24,7 +24,11 @@ export class CafeService {
     const cafes = [];
     const snapshot = await firebase.firestore().collection('cafes').get();
     snapshot.forEach((doc) => {
-      cafes.push(doc.data());
+      const details = {
+        ...doc.data(),
+        id: doc.id,
+      };
+      cafes.push(details);
     });
     return cafes;
   }
