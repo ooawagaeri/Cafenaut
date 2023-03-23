@@ -17,6 +17,7 @@
     "firebase": "^9.17.1",
     "firebase-admin": "^11.5.0",
     "framer-motion": "^10.2.4",
+    "geolib": "^3.3.3",
     "puppeteer": "^19.7.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",

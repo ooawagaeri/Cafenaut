@@ -32,4 +32,12 @@ export class CafeService {
     });
     return cafes;
   }
+
+  async create(post: CafeModel): Promise<void> {
+    const add_cafe = await firebase
+      .firestore()
+      .collection('cafes')
+      .add(post);
+    console.log(`New Cafe ID: ${add_cafe.id}`);
+  }
 }

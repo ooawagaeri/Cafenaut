@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import * as firebase from 'firebase-admin';
-const { FieldValue } = require('firebase-admin/firestore');
 import { User } from './user.interface';
+import * as firebase from 'firebase-admin';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { FieldValue } = require('firebase-admin/firestore');
 
 @Injectable()
 export class UserService {

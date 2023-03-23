@@ -36,8 +36,7 @@ export class ReviewService {
     const new_cafe_rating = aggregatedRating.generate_cafe_rating(
       arr_of_review_ratings
     );
-
-    const update_cafe = await firebase
+    await firebase
       .firestore()
       .collection('cafes')
       .doc(post.cafe_id)
