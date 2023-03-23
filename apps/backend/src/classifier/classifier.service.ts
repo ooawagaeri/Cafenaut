@@ -35,25 +35,41 @@ export class ClassifierService {
     return this.drinkClassifier.predictClassifier(text);
   }
 
-  async retrieveUserClassification(uid: string): Promise<Classification> {
+  async retrieveUserClassification(uid: string): Promise<void> {
     const reviewsSnapshot = await firebase
       .firestore()
       .collection('reviews')
       .where('user_uid', '==', uid)
       .get();
 
+    // Analyse & classify all reviews
     const all_class: Classification[] = [];
     reviewsSnapshot.forEach((reviewDoc) => {
       const review = reviewDoc.data() as ReviewModel;
       all_class.push(this.classifyReview(review));
     });
 
-    return all_class.reduce((previous, current, i, arr) =>
+    // Top occurrence classification
+    const classification = all_class.reduce((previous, current, i, arr) =>
       arr.filter(item => item === previous).length >
       arr.filter(item => item === current).length
         ? previous
         : current
     );
+
+    // Update user classification
+    const userRef = firebase.firestore().collection('users').doc(uid);
+    userRef.get().then(async (docSnap) => {
+      if (docSnap.exists) {
+        const toUpdate = {
+          classification,
+        };
+        await userRef.update(toUpdate);
+        console.log(`User updated to ${classification}`);
+      } else {
+        console.log('No such user!');
+      }
+    });
   }
 
   private classifyReview(post: ReviewModel): Classification {
