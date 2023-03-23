@@ -36,13 +36,9 @@ export class ReviewService {
     const new_cafe_rating = aggregatedRating.generate_cafe_rating(
       arr_of_review_ratings
     );
-    await firebase
-      .firestore()
-      .collection('cafes')
-      .doc(post.cafe_id)
-      .update({
-        rating: new_cafe_rating,
-      });
+    await firebase.firestore().collection('cafes').doc(post.cafe_id).update({
+      rating: new_cafe_rating,
+    });
     console.log(`Updated cafe: ${post.cafe_id}`);
 
     return add_review.id;
@@ -57,7 +53,6 @@ export class ReviewService {
 
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, ' => ', doc.data());
       arr.push(doc.data());
     });
 
