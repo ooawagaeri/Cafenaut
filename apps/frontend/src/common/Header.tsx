@@ -68,7 +68,7 @@ export default function Header() {
             <ModalHeader>Add Review</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <AddReviewSteps></AddReviewSteps>
+              <AddReviewSteps onAddReviewModalClose={onAddReviewModalClose}></AddReviewSteps>
             </ModalBody>
 
             <ModalFooter>
