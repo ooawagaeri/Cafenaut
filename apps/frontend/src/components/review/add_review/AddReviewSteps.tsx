@@ -37,6 +37,7 @@ export const AddReviewSteps = () => {
     body: '',
     user_uid: '',
     user_name: '',
+    created_at: new Date(),
     aspects: {
       coffee: {
         beans: {
