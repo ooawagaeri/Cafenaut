@@ -11,17 +11,54 @@ import {
   Stat,
   StatLabel,
   StatNumber,
+  Image,
+  Link,
+  HStack,
 } from '@chakra-ui/react';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
+import { useEffect, useState } from 'react';
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
+import { getCafeDetail } from '../../services/api_service';
 
 export function ViewReview({ review }: { review: ReviewModel }) {
+  const [cafeLogo, setCafeLogo] = useState('');
+  const [cafeDetails, setCafeDetails] = useState({});
+
+  useEffect(() => {
+    getDetails();
+  }, []);
+
+  const getDetails = async () => {
+    const cafe_details = await getCafeDetail(review.cafe_id);
+    setCafeDetails(cafe_details);
+    setCafeLogo(cafe_details.logo);
+  };
+
   return (
     <Card>
       <CardHeader>
         <Heading size="md">{review.title}</Heading>
+        <Link onClick={() => console.log('TODO: link to profile page')}>
+          Written by: {review.user_name}
+        </Link>
       </CardHeader>
+
+      <CardBody>
+        <HStack>
+          <Link
+            onClick={() =>
+              console.log('TODO: link to cafe page and pass cafeDetails')
+            }
+            size="md"
+          >
+            {review.cafe_name}
+          </Link>
+          {cafeLogo && (
+            <Image src={cafeLogo} maxHeight={'50px'} maxWidth={'auto'} />
+          )}
+        </HStack>
+      </CardBody>
 
       <CardBody>
         <Stack divider={<StackDivider />} spacing="4">
@@ -373,6 +410,15 @@ export function ViewReview({ review }: { review: ReviewModel }) {
               {review.aspects.pet.free_text}
             </Text>
           </Box>
+
+          {review.image_url && (
+            <Stack>
+              <Heading size="xs" textTransform="uppercase">
+                Images
+              </Heading>
+              <Image src={review.image_url} />
+            </Stack>
+          )}
         </Stack>
       </CardBody>
     </Card>

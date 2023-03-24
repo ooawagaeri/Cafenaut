@@ -1,3 +1,4 @@
+import { CafeModel } from 'apps/backend/src/cafe/cafe.interface';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
 import axios from 'axios';
 
@@ -8,9 +9,9 @@ export async function getCafes() {
   return res.data;
 }
 
-export async function getCafeDetail(cafe_id: string) {
+export async function getCafeDetail(cafe_id: string): Promise<CafeModel> {
   const res = await axios.get(base_url + 'cafe/' + cafe_id);
-  return res.data;
+  return res.data as CafeModel;
 }
 
 export async function postReview(review: ReviewModel) {
@@ -29,6 +30,8 @@ export async function getAllUsers() {
 }
 
 export async function getUserDetail(user_uid: string) {
-  const res = await axios.get(base_url + 'user', {params: {user: {uid: user_uid}}});
+  const res = await axios.get(base_url + 'user', {
+    params: { user: { uid: user_uid } },
+  });
   return res.data;
 }

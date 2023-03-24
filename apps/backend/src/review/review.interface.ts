@@ -1,4 +1,4 @@
-import { Ratings } from "../rating/rating.interface";
+import { Ratings } from '../rating/rating.interface';
 
 export interface ReviewModel {
   title: string;
@@ -14,6 +14,7 @@ export interface ReviewModel {
   chat_gpt?: number;
   authenticity?: number;
   reports?: number;
+  image_url?: string;
 }
 
 interface Aspect {
@@ -91,8 +92,7 @@ interface Speciality extends Aspect {
   present: boolean;
 }
 
-interface Amenities extends Aspect {
-}
+interface Amenities extends Aspect {}
 
 interface Pet extends Aspect {
   friendly: boolean;
