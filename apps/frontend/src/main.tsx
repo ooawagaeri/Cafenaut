@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Reset from './pages/Reset';
 import Dashboard from './pages/Dashboard';
+import Explore from './pages/Explore';
 
 const theme = extendTheme({
   components: {
@@ -27,6 +28,7 @@ root.render(
           <Route path="/register" element={<Register />} />
           <Route path="/reset" element={<Reset />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/explore" element={<Explore />} />
         </Routes>
       </Router>
     </ChakraProvider>
