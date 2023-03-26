@@ -15,6 +15,7 @@ export interface ReviewModel {
   authenticity?: number;
   reports?: number;
   image_url?: string;
+  created_at: Date;
 }
 
 interface Aspect {

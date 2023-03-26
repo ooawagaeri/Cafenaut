@@ -21,7 +21,18 @@ export async function postReview(review: ReviewModel) {
 
 export async function getAllReviews() {
   const res = await axios.get(base_url + 'review');
-  return res.data;
+
+  const reviews = res.data;
+  reviews.map((review: any) => {review.created_at = new Date(review.created_at)})
+  return sortReviewsByDate(reviews);
+}
+
+function sortReviewsByDate(reviews: []) {
+  // If you are wondering why is there a '+' before new
+  // https://stackoverflow.com/questions/40248643/typescript-sort-by-date-not-working
+  return reviews.sort((review_a: ReviewModel, review_b: ReviewModel) => {
+    return +new Date(review_b.created_at) - +new Date(review_a.created_at);
+  });
 }
 
 export async function getAllUsers() {
