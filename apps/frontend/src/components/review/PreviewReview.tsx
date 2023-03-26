@@ -97,6 +97,7 @@ export function PreviewReview({ review }: { review: ReviewModel }) {
           />
           <Stack direction={'column'} spacing={0} fontSize={'sm'}>
             <Text fontWeight={600}>{review.user_name}</Text>
+            <Text color={'gray.500'}>{review.created_at.toLocaleDateString()}, {review.created_at.toLocaleTimeString()}</Text>
           </Stack>
         </Stack>
       </Box>

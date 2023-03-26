@@ -17,7 +17,11 @@ import { ReviewModel } from '../../../../../backend/src/review/review.interface'
 import { postReview } from '../../../services/api_service';
 import { OverallStep } from './OverallStep';
 
-export const AddReviewSteps = () => {
+export function AddReviewSteps({
+  onAddReviewModalClose,
+}: {
+  onAddReviewModalClose: any;
+}) {
   const { nextStep, prevStep, setStep, reset, activeStep } = useSteps({
     initialStep: 0,
   });
@@ -27,7 +31,7 @@ export const AddReviewSteps = () => {
     setReview((review: any) => {
       const newReview = { ...review };
       newReview.user_uid = user.uid;
-      newReview.user_name = user.name
+      newReview.user_name = user.name;
       return newReview;
     });
   }, []);
@@ -37,6 +41,7 @@ export const AddReviewSteps = () => {
     body: '',
     user_uid: '',
     user_name: '',
+    created_at: new Date(),
     aspects: {
       coffee: {
         beans: {
@@ -113,7 +118,7 @@ export const AddReviewSteps = () => {
       },
     },
     cafe_id: '',
-    cafe_name: ''
+    cafe_name: '',
   };
   const [review, setReview] = useState(reviewOutput);
 
@@ -121,6 +126,10 @@ export const AddReviewSteps = () => {
     {
       label: 'Select Cafe',
       content: <SelectCafe setReview={setReview}></SelectCafe>,
+    },
+    {
+      label: 'Overall',
+      content: <OverallStep setReview={setReview}></OverallStep>,
     },
     {
       label: 'Coffee',
@@ -155,16 +164,14 @@ export const AddReviewSteps = () => {
       label: 'Pet-Friendliness',
       content: <PetStep setReview={setReview}></PetStep>,
     },
-    {
-      label: 'Overall',
-      content: <OverallStep setReview={setReview}></OverallStep>,
-    },
   ];
 
   const createReview = async () => {
     console.log(review);
-    const res = await postReview(review);
-    console.log(res);
+    await postReview(review).then((res) => {
+      console.log(res);
+      onAddReviewModalClose();
+    });
   };
 
   return (
@@ -203,4 +210,4 @@ export const AddReviewSteps = () => {
       )}
     </Flex>
   );
-};
+}

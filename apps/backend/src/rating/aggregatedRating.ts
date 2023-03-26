@@ -15,12 +15,6 @@ export class AggregatedRating {
 
   weightages = {
     // 70%, weightage differing among user_types
-    unweighted: {
-      coffee: 0.175,
-      tea: 0.175,
-      ambience: 0.175,
-      price: 0.175,
-    },
     casual_coffee: {
       coffee: 0.4,
       tea: 0.01,
@@ -45,15 +39,30 @@ export class AggregatedRating {
       ambience: 0.08,
       price: 0.01,
     },
-    // 30%, equal weightage
-    common: {
-      work_friendly: 0.06,
-      cuisine: 0.06,
-      speciality: 0.06,
-      amenities: 0.06,
-      pet: 0.06,
-    },
+    // 30%, equal weightage for the rest of the common aspects
   };
+
+  common_total_weightage = 0.3;
+
+  all_aspects = [
+    'coffee',
+    'tea',
+    'ambience',
+    'price',
+    'work_friendly',
+    'cuisine',
+    'speciality',
+    'amenities',
+    'pet',
+  ];
+
+  common_aspects = [
+    'work_friendly',
+    'cuisine',
+    'speciality',
+    'amenities',
+    'pet',
+  ];
 
   generate_review_rating(review: ReviewModel): Ratings {
     const result = {
@@ -65,19 +74,58 @@ export class AggregatedRating {
     };
 
     this.user_types.forEach((type) => {
-      const individualRating =
-        review.aspects.coffee.sub_rating * this.weightages[type].coffee +
-        review.aspects.tea.sub_rating * this.weightages[type].tea +
-        review.aspects.ambience.sub_rating * this.weightages[type].ambience +
-        review.aspects.price.sub_rating * this.weightages[type].price +
-        review.aspects.work_friendly.sub_rating *
-          this.weightages['common'].work_friendly +
-        review.aspects.cuisine.sub_rating * this.weightages['common'].cuisine +
-        review.aspects.speciality.sub_rating *
-          this.weightages['common'].speciality +
-        review.aspects.amenities.sub_rating *
-          this.weightages['common'].amenities +
-        review.aspects.pet.sub_rating * this.weightages['common'].pet;
+      let individualRating = 0;
+      if (type == 'unweighted') {
+        console.log('calculating for unweighted');
+        let total = 0;
+        let num_of_aspects = 0;
+        this.all_aspects.forEach((aspect) => {
+          console.log(aspect);
+          console.log(review.aspects[aspect]);
+          if (
+            review.aspects[aspect].sub_rating !== 0 &&
+            review.aspects[aspect].free_text !== ''
+          ) {
+            console.log(aspect);
+            total += review.aspects[aspect].sub_rating;
+            num_of_aspects += 1;
+          }
+
+          // Prevent NaN because / 0
+          if (num_of_aspects !== 0) {
+            individualRating = total / num_of_aspects;
+          }
+        });
+      } else {
+        individualRating =
+          review.aspects.coffee.sub_rating * this.weightages[type].coffee +
+          review.aspects.tea.sub_rating * this.weightages[type].tea +
+          review.aspects.ambience.sub_rating * this.weightages[type].ambience +
+          review.aspects.price.sub_rating * this.weightages[type].price;
+
+        // For common aspects, we will only take into account aspects with given sub_rating + free_text
+        let num_of_aspects = 0;
+        this.common_aspects.forEach((aspect) => {
+          if (
+            review.aspects[aspect].sub_rating !== 0 &&
+            review.aspects[aspect].free_text !== ''
+          ) {
+            num_of_aspects += 1;
+          }
+        });
+        const common_aspect_weightage =
+          this.common_total_weightage / num_of_aspects;
+        this.common_aspects.forEach((aspect) => {
+          if (
+            review.aspects[aspect].sub_rating !== 0 &&
+            review.aspects[aspect].free_text !== ''
+          ) {
+            individualRating +=
+              review.aspects[aspect].sub_rating * common_aspect_weightage;
+          }
+        });
+      }
+
       result[type] = Math.round(individualRating * 100) / 100;
     });
 

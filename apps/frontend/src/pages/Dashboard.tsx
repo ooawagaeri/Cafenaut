@@ -50,6 +50,7 @@ function Dashboard() {
     getReviews();
   }, []);
 
+  // TODO: Change to view followers reviews, then move all reviews to an "Explore" tab
   async function getReviews() {
     await getAllReviews().then((reviews) => setReviews(reviews));
   }

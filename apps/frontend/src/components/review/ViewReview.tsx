@@ -42,6 +42,7 @@ export function ViewReview({ review }: { review: ReviewModel }) {
         <Link onClick={() => console.log('TODO: link to profile page')}>
           Written by: {review.user_name}
         </Link>
+        <Text color={'gray.500'}>{review.created_at.toLocaleDateString()}, {review.created_at.toLocaleTimeString()}</Text>
       </CardHeader>
 
       <CardBody>
