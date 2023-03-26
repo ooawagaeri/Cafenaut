@@ -2,12 +2,14 @@ import { Box, Center, Stack, Image, Text, Grid } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
+import { useNavigate } from 'react-router-dom';
 
 import Header from '../../common/Header';
 import { getCafes } from '../../services/api_service';
 
 export function CafeList() {
   const [cafes, setCafes] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAll();
@@ -21,7 +23,7 @@ export function CafeList() {
     <Box>
       <Header />
       <Grid
-        padding={'5%'}
+        padding={'1%'}
         h="200px"
         templateRows="repeat(3, 1fr)"
         templateColumns="repeat(3, 1fr)"
@@ -37,7 +39,7 @@ export function CafeList() {
               p={6}
               overflow={'hidden'}
               cursor={'pointer'}
-              onClick={() => console.log('OPEN cafe')}
+              onClick={() => navigate(`/cafe/${cafe['id']}`, { state: cafe })}
             >
               {cafe['logo'] && (
                 <Box bg={'gray.100'} mt={-6} mx={-6} mb={6} position="relative">

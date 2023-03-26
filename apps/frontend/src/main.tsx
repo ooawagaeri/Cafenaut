@@ -9,6 +9,7 @@ import Register from './pages/Register';
 import Reset from './pages/Reset';
 import Dashboard from './pages/Dashboard';
 import { CafeList } from './components/cafe/CafeList';
+import { Cafe } from './components/cafe/Cafe';
 
 const theme = extendTheme({
   components: {
@@ -29,6 +30,7 @@ root.render(
           <Route path="/reset" element={<Reset />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/cafes" element={<CafeList />} />
+          <Route path="/cafe/*" element={<Cafe />} />
         </Routes>
       </Router>
     </ChakraProvider>
