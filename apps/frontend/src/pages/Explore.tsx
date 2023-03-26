@@ -1,11 +1,14 @@
+import { Box } from '@chakra-ui/layout';
 import React from 'react';
-const Explore = () => {
+import Header from '../common/Header';
+import { PigeonMapComponent } from "../components/maps/PigeonMapComponent";
 
+const Explore = () => {
   return (
-    <>
-      <h1 style={{color:"green"}}>
-        Welcome to GeeksForGeeks</h1>
-    </>
+    <Box>
+      <Header/>
+      <PigeonMapComponent/>
+    </Box>
   )
 };
 

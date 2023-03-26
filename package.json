@@ -20,6 +20,7 @@
     "framer-motion": "^10.2.4",
     "geolib": "^3.3.3",
     "ml-classify-text": "^2.0.1",
+    "pigeon-maps": "^0.21.3",
     "puppeteer": "^19.7.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",

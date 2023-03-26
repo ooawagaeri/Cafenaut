@@ -1,4 +1,3 @@
-import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
@@ -19,18 +18,17 @@ const theme = extendTheme({
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
-  <StrictMode>
-    <ChakraProvider theme={theme}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/reset" element={<Reset />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/explore" element={<Explore />} />
-        </Routes>
-      </Router>
-    </ChakraProvider>
-  </StrictMode>
+  <ChakraProvider theme={theme}>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login/>}/>
+        <Route path="/register" element={<Register/>}/>
+        <Route path="/reset" element={<Reset/>}/>
+        <Route path="/dashboard" element={<Dashboard/>}/>
+        <Route path="/explore" element={<Explore/>}/>
+      </Routes>
+    </Router>
+  </ChakraProvider>
 );
