@@ -22,7 +22,7 @@ import { ReviewModel } from 'apps/backend/src/review/review.interface';
 import ReactStars from 'react-rating-stars-component';
 import { ViewReview } from './ViewReview';
 
-export function PreviewReview({ review }: { review: ReviewModel }) {
+export function ReviewList({ review }: { review: ReviewModel }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -97,7 +97,10 @@ export function PreviewReview({ review }: { review: ReviewModel }) {
           />
           <Stack direction={'column'} spacing={0} fontSize={'sm'}>
             <Text fontWeight={600}>{review.user_name}</Text>
-            <Text color={'gray.500'}>{review.created_at.toLocaleDateString()}, {review.created_at.toLocaleTimeString()}</Text>
+            <Text color={'gray.500'}>
+              {review.created_at.toLocaleDateString()},{' '}
+              {review.created_at.toLocaleTimeString()}
+            </Text>
           </Stack>
         </Stack>
       </Box>

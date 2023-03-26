@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import {
   Box,
   Flex,
@@ -28,7 +27,7 @@ import { AddReviewSteps } from '../components/review/add_review/AddReviewSteps';
 
 const Links = ['Dashboard', 'Cafes', 'Users'];
 
-const NavLink = ({ children }: { children: ReactNode }) => (
+const NavLink = ({ children }: { children: string }) => (
   <Link
     px={2}
     py={1}
@@ -37,7 +36,7 @@ const NavLink = ({ children }: { children: ReactNode }) => (
       textDecoration: 'none',
       bg: useColorModeValue('gray.200', 'gray.700'),
     }}
-    href={'#'}
+    href={`/${children.toLowerCase()}`}
   >
     {children}
   </Link>

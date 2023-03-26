@@ -4,7 +4,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
 import Header from '../common/Header';
 import { auth, logout } from '../services/firebase';
-import { PreviewReview } from '../components/review/PreviewReview';
+import { ReviewList } from '../components/review/ReviewList';
 import { getAllReviews } from '../services/api_service';
 
 function Dashboard() {
@@ -59,7 +59,7 @@ function Dashboard() {
     <Box>
       <Header />
       {reviews.map((review, index) => (
-        <PreviewReview key={index} review={review}></PreviewReview>
+        <ReviewList key={index} review={review}></ReviewList>
       ))}
     </Box>
   );
