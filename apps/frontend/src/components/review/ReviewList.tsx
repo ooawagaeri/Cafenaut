@@ -45,7 +45,7 @@ export function ReviewList({ review }: { review: ReviewModel }) {
       </Modal>
 
       <Box
-        maxW={'60%'}
+        maxW={'70%'}
         w={'full'}
         bg={useColorModeValue('white', 'gray.900')}
         boxShadow={'2xl'}
@@ -93,7 +93,7 @@ export function ReviewList({ review }: { review: ReviewModel }) {
         </Stack>
         <Stack mt={6} direction={'row'} spacing={4} align={'center'}>
           <Avatar
-            src={'https://avatars0.githubusercontent.com/u/1164541?v=4'}
+            name={review.user_name}
           />
           <Stack direction={'column'} spacing={0} fontSize={'sm'}>
             <Text fontWeight={600}>{review.user_name}</Text>

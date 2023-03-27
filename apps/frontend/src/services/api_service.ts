@@ -20,6 +20,12 @@ export async function getCafeReviews(cafe_id: string) {
   return reviews;
 }
 
+export async function getUserReviews(uid: string) {
+  let reviews = await getAllReviews();
+  reviews = reviews.filter((review: ReviewModel) => review.user_uid === uid);
+  return reviews;
+}
+
 export async function postReview(review: ReviewModel) {
   const res = await axios.post(base_url + 'review', review);
   return res;

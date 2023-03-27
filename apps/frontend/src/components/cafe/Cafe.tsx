@@ -28,7 +28,6 @@ export function Cafe() {
   }, []);
 
   async function getReviews() {
-    console.log(state);
     await getCafeReviews(state['id']).then((reviews) => setReviews(reviews));
   }
 
@@ -36,7 +35,7 @@ export function Cafe() {
     <Box>
       <Header />
       <Flex paddingTop={'5%'} paddingLeft={'10%'} paddingRight={'10%'}>
-        <Center w="70%" h="450px" padding={'1%'}>
+        <Box w="70%">
           <Card>
             <CardHeader>
               <Heading>{state['name']}</Heading>
@@ -60,9 +59,9 @@ export function Cafe() {
               />
             </CardBody>
           </Card>
-        </Center>
+        </Box>
         <Spacer />
-        <Center w="130%">
+        <Box w="130%">
           <Card>
             <CardHeader>
               <Heading>Reviews for {state['name']}</Heading>
@@ -73,7 +72,7 @@ export function Cafe() {
               ))}
             </CardBody>
           </Card>
-        </Center>
+        </Box>
       </Flex>
     </Box>
   );

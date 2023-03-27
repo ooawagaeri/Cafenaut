@@ -24,6 +24,8 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { AddReviewSteps } from '../components/review/add_review/AddReviewSteps';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../services/firebase';
 
 const Links = ['Dashboard', 'Cafes', 'Users'];
 
@@ -43,6 +45,7 @@ const NavLink = ({ children }: { children: string }) => (
 );
 
 export default function Header() {
+  const navigate = useNavigate();
   const {
     isOpen: isProfileOpen,
     onOpen: onProfileOpen,
@@ -117,16 +120,14 @@ export default function Header() {
                 >
                   <Avatar
                     size={'sm'}
-                    src={
-                      'https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
-                    }
+                    name={JSON.parse(localStorage.getItem('user') || '').name}
                   />
                 </MenuButton>
                 <MenuList>
-                  <MenuItem>Profile</MenuItem>
+                  <MenuItem onClick={() => navigate(`/profile/self`)}>Profile</MenuItem>
                   <MenuItem>Settings</MenuItem>
                   <MenuDivider />
-                  <MenuItem>Signout</MenuItem>
+                  <MenuItem onClick={() => logout()}>Signout</MenuItem>
                 </MenuList>
               </Menu>
             </Flex>
