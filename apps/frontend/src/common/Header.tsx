@@ -124,10 +124,19 @@ export default function Header() {
                   />
                 </MenuButton>
                 <MenuList>
-                  <MenuItem onClick={() => navigate(`/profile/self`)}>Profile</MenuItem>
+                  <MenuItem onClick={() => navigate(`/profile/self`)}>
+                    Profile
+                  </MenuItem>
                   <MenuItem>Settings</MenuItem>
                   <MenuDivider />
-                  <MenuItem onClick={() => logout()}>Signout</MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      logout();
+                      navigate('/');
+                    }}
+                  >
+                    Signout
+                  </MenuItem>
                 </MenuList>
               </Menu>
             </Flex>

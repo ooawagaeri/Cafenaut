@@ -41,7 +41,13 @@ export function ViewReview({ review }: { review: ReviewModel }) {
     <Card>
       <CardHeader>
         <Heading size="md">{review.title}</Heading>
-        <Link onClick={() => console.log('TODO: link to profile page')}>
+        <Link
+          onClick={() =>
+            navigate(`/profile/${review.user_uid}`, {
+              state: { uid: review.user_uid },
+            })
+          }
+        >
           Written by: {review.user_name}
         </Link>
         <Text color={'gray.500'}>

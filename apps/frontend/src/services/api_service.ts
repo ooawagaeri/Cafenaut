@@ -47,8 +47,6 @@ export async function getAllUsers() {
 }
 
 export async function getUserDetail(user_uid: string) {
-  const res = await axios.get(base_url + 'user', {
-    params: { user: { uid: user_uid } },
-  });
+  const res = await axios.get(base_url + 'user/' + user_uid);
   return res.data;
 }

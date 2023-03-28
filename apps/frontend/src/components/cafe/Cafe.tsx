@@ -3,12 +3,10 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Center,
   Flex,
   Heading,
   Image,
-  SimpleGrid,
-  Spacer,
+  Text,
 } from '@chakra-ui/react';
 import { useLocation } from 'react-router-dom';
 // @ts-ignore
@@ -35,7 +33,7 @@ export function Cafe() {
     <Box>
       <Header />
       <Flex paddingTop={'5%'} paddingLeft={'10%'} paddingRight={'10%'}>
-        <Box w="70%">
+        <Box w="70%" padding={'1%'}>
           <Card>
             <CardHeader>
               <Heading>{state['name']}</Heading>
@@ -60,16 +58,19 @@ export function Cafe() {
             </CardBody>
           </Card>
         </Box>
-        <Spacer />
-        <Box w="130%">
+        <Box w="130%" padding={'1%'}>
           <Card>
             <CardHeader>
               <Heading>Reviews for {state['name']}</Heading>
             </CardHeader>
             <CardBody>
-              {reviews.map((review: ReviewModel, index) => (
-                <ReviewList key={index} review={review}></ReviewList>
-              ))}
+              {reviews.length > 0 ? (
+                reviews.map((review: ReviewModel, index) => (
+                  <ReviewList key={index} review={review}></ReviewList>
+                ))
+              ) : (
+                <Text>No Reviews for this Cafe 😔</Text>
+              )}
             </CardBody>
           </Card>
         </Box>

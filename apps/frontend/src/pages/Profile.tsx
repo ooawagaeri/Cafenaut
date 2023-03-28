@@ -20,7 +20,7 @@ import Header from '../common/Header';
 import { User } from '../../../backend/src/user/user.interface';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
 import { ReviewList } from '../components/review/ReviewList';
-import { getUserReviews } from '../services/api_service';
+import { getUserDetail, getUserReviews } from '../services/api_service';
 
 export function Profile() {
   const { state } = useLocation();
@@ -34,14 +34,20 @@ export function Profile() {
     followers: [],
   });
 
+  const local_storage_user = JSON.parse(localStorage.getItem('user') || '');
+
   useEffect(() => {
     if (state === null) {
       // own profile
-      setUser(JSON.parse(localStorage.getItem('user') || ''));
+      setUser(local_storage_user);
     } else {
-      setUser(state);
+      getDetails(state.uid);
     }
-  }, []);
+  }, [state]);
+
+  const getDetails = async (uid: string) => {
+    await getUserDetail(uid).then((user) => setUser(user));
+  };
 
   useEffect(() => {
     getReviews(user.uid);
@@ -117,7 +123,7 @@ export function Profile() {
               </Stack>
             </Stack>
 
-            {state !== null && (
+            {(state !== null && state.uid !== local_storage_user.uid) && (
               <Button
                 w={'full'}
                 mt={8}
@@ -128,7 +134,9 @@ export function Profile() {
                   transform: 'translateY(-2px)',
                   boxShadow: 'lg',
                 }}
-                onClick={()=> console.log("TODO: add to following for the signed in user")}
+                onClick={() =>
+                  console.log('TODO: add to following for the signed in user')
+                }
               >
                 Follow
               </Button>
@@ -138,15 +146,15 @@ export function Profile() {
       </Center>
 
       <Center py={6}>
-        <Box maxW={'60%'}>
+        <Box w={'60%'}>
           <Card>
             <CardHeader>
               <Heading>Reviews posted by {user.name}</Heading>
             </CardHeader>
             <CardBody>
-              {reviews.map((review: ReviewModel, index) => (
+              {reviews.length > 0 ? reviews.map((review: ReviewModel, index) => (
                 <ReviewList key={index} review={review}></ReviewList>
-              ))}
+              )): <Text>{user.name} has not posted any reviews 😔</Text>}
             </CardBody>
           </Card>
         </Box>
