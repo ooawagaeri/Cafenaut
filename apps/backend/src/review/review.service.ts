@@ -77,6 +77,21 @@ export class ReviewService {
     return docSnap.data() as ReviewModel;
   }
 
+  public async getByCafe(cafe_id): Promise<ReviewModel[]> {
+    const reviewsSnapshot = await firebase
+      .firestore()
+      .collection('reviews')
+      .where('cafe_id', '==', cafe_id)
+      .get();
+
+    const reviews = [];
+    reviewsSnapshot.forEach((reviewDoc) => {
+      const review = reviewDoc.data() as ReviewModel;
+      reviews.push(review);
+    });
+    return reviews;
+  }
+
   public async reportReview(review_id): Promise<void> {
     const reviewRef = firebase.firestore().collection('reviews').doc(review_id);
     reviewRef.get().then(async (docSnap) => {

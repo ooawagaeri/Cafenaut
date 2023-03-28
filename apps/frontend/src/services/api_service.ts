@@ -3,6 +3,7 @@ import { CafeModel } from 'apps/backend/src/cafe/cafe.interface';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
 import axios from 'axios';
+
 const base_url = '/api/';
 
 export async function getAllCafes() {
@@ -16,8 +17,7 @@ export async function getCafeDetail(cafe_id: string): Promise<CafeModel> {
 }
 
 export async function postReview(review: ReviewModel) {
-  const res = await axios.post(base_url + 'review', review);
-  return res;
+  return await axios.post(base_url + 'review', review);
 }
 
 export async function getAllReviews() {
@@ -47,5 +47,10 @@ export async function getUserDetail(user_uid: string) {
   const res = await axios.get(base_url + 'user', {
     params: {user: {uid: user_uid}},
   });
+  return res.data;
+}
+
+export async function getAllCafesPins() {
+  const res = await axios.get(base_url + 'cafe/pins');
   return res.data;
 }

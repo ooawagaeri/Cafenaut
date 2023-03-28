@@ -8,3 +8,13 @@ export interface CafeModel {
   location: Location;
   rating: Ratings;
 }
+
+export interface CafePinModel {
+  name: string;
+  logo: string;
+  id: string;
+  location: Location;
+  rating: Ratings;
+  authenticity: number;
+  popularity: number;
+}
