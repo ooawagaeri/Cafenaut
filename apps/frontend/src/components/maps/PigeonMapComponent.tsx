@@ -49,7 +49,7 @@ export function PigeonMapComponent({data}: PigeonMapType) {
             <Popover placement='top'>
               <PopoverTrigger>
                 <IconButton
-                  icon={<CafePin size={pinSize}/>}
+                  icon={<CafePin authenticity={0.9} size={pinSize}/>}
                   variant='unstyled'
                   aria-label=''
                   _focus={{boxShadow: "none"}}
