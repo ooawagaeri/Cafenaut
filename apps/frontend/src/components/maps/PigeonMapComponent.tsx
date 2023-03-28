@@ -64,9 +64,9 @@ export function PigeonMapComponent({data}: PigeonMapType) {
                 <PopoverArrow/>
                 <PopoverCloseButton/>
                 {cafe.logo && (
-                  <Image src={cafe.logo} maxHeight='50px' maxWidth='auto' marginTop='9px'/>
+                  <Image src={cafe.logo} maxHeight='50px' maxWidth='100px' marginTop='9px'/>
                 )}
-                <PopoverHeader>{cafe.name}</PopoverHeader>
+                <PopoverHeader textAlign='center'>{cafe.name}</PopoverHeader>
                 <PopoverBody>
                   <Box display='flex' justifyContent='center'>
                     <ReactStars
