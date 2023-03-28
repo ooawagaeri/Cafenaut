@@ -1,16 +1,18 @@
-import { Box } from '@chakra-ui/layout';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
-import Header from '../common/Header';
-import { auth, logout } from '../services/firebase';
-import { PreviewReview } from '../components/review/PreviewReview';
-import { getAllReviews } from '../services/api_service';
+import { Card, CardBody, Text, Box } from '@chakra-ui/react';
 
-function Dashboard() {
+import Header from '../common/Header';
+import { auth } from '../services/firebase';
+import { ReviewList } from '../components/review/ReviewList';
+import { getAllReviews } from '../services/api_service';
+import UserContext from '../common/UserContext';
+
+export function Home() {
   const [user, loading, error] = useAuthState(auth);
-  const [name, setName] = useState('');
   const navigate = useNavigate();
+  const { userDetails, setUserDetails } = useContext(UserContext);
 
   const fetchFromBackend = async () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -28,7 +30,7 @@ function Dashboard() {
     fetch('/api/user', options)
       .then((res) => res.json())
       .then((results) => {
-        setName(results.name);
+        setUserDetails(results);
         localStorage.setItem('user', JSON.stringify(results));
       })
       .catch((error) => {
@@ -39,8 +41,6 @@ function Dashboard() {
   useEffect(() => {
     if (loading) return;
     if (!user) return navigate('/');
-
-    // fetchUserName();
     fetchFromBackend();
   }, [user, loading]);
 
@@ -58,11 +58,20 @@ function Dashboard() {
   return (
     <Box>
       <Header />
+      {(userDetails.following === undefined ||
+        userDetails.following.length === 0) && (
+        <Card>
+          <CardBody>
+            <Text>
+              You are not following anyone yet, so we are showing you reviews
+              posted by the community! 😁
+            </Text>
+          </CardBody>
+        </Card>
+      )}
       {reviews.map((review, index) => (
-        <PreviewReview key={index} review={review}></PreviewReview>
+        <ReviewList key={index} review={review}></ReviewList>
       ))}
     </Box>
   );
 }
-
-export default Dashboard;

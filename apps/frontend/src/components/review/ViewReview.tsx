@@ -22,11 +22,13 @@ import { ReviewModel } from 'apps/backend/src/review/review.interface';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
+import { useNavigate } from 'react-router-dom';
 import { getCafeDetail } from '../../services/api_service';
 
 export function ViewReview({ review }: { review: ReviewModel }) {
   const [cafeLogo, setCafeLogo] = useState('');
   const [cafeDetails, setCafeDetails] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     getDetails();
@@ -42,17 +44,28 @@ export function ViewReview({ review }: { review: ReviewModel }) {
     <Card>
       <CardHeader>
         <Heading size="md">{review.title}</Heading>
-        <Link onClick={() => console.log('TODO: link to profile page')}>
+        <Link
+          onClick={() =>
+            navigate(`/profile/${review.user_uid}`, {
+              state: { uid: review.user_uid },
+            })
+          }
+        >
           Written by: {review.user_name}
         </Link>
-        <Text color={'gray.500'}>{review.created_at.toLocaleDateString()}, {review.created_at.toLocaleTimeString()}</Text>
+        <Text color={'gray.500'}>
+          {review.created_at.toLocaleDateString()},{' '}
+          {review.created_at.toLocaleTimeString()}
+        </Text>
       </CardHeader>
 
       <CardBody>
         <HStack>
           <Link
             onClick={() =>
-              console.log('TODO: link to cafe page and pass cafeDetails')
+              navigate(`/cafe/${review.cafe_id}`, {
+                state: { ...cafeDetails, id: review.cafe_id },
+              })
             }
             size="md"
           >

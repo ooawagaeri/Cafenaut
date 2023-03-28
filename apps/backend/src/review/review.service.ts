@@ -55,8 +55,15 @@ export class ReviewService {
       // doc.data() is never undefined for query doc snapshots
       arr.push(doc.data());
     });
+    return this.sortReviewsByDate(arr);
+  }
 
-    return arr;
+  sortReviewsByDate(reviews: any[]) {
+    // If you are wondering why is there a '+' before new
+    // https://stackoverflow.com/questions/40248643/typescript-sort-by-date-not-working
+    return reviews.sort((review_a: ReviewModel, review_b: ReviewModel) => {
+      return +new Date(review_b.created_at) - +new Date(review_a.created_at);
+    });
   }
 
   public async get(review_id): Promise<ReviewModel> {

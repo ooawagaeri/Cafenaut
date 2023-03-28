@@ -8,7 +8,7 @@ export interface ReviewModel {
   aspects: Aspects;
   cafe_id: string;
   cafe_name: string;
-  rating?: Ratings;
+  rating: Ratings;
   sentiment?: number;
   spam?: number;
   chat_gpt?: number;

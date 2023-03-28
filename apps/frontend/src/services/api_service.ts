@@ -16,26 +16,30 @@ export async function getCafeDetail(cafe_id: string): Promise<CafeModel> {
   return res.data as CafeModel;
 }
 
+export async function getCafeReviews(cafe_id: string) {
+  let reviews = await getAllReviews();
+  reviews = reviews.filter((review: ReviewModel) => review.cafe_id === cafe_id);
+  return reviews;
+}
+
+export async function getUserReviews(uid: string) {
+  let reviews = await getAllReviews();
+  reviews = reviews.filter((review: ReviewModel) => review.user_uid === uid);
+  return reviews;
+}
+
 export async function postReview(review: ReviewModel) {
   return await axios.post(base_url + 'review', review);
 }
 
 export async function getAllReviews() {
   const res = await axios.get(base_url + 'review');
-
   const reviews = res.data;
+  // Map string to Date format in order to use the Date methods
   reviews.map((review: any) => {
-    review.created_at = new Date(review.created_at)
-  })
-  return sortReviewsByDate(reviews);
-}
-
-function sortReviewsByDate(reviews: []) {
-  // If you are wondering why is there a '+' before new
-  // https://stackoverflow.com/questions/40248643/typescript-sort-by-date-not-working
-  return reviews.sort((review_a: ReviewModel, review_b: ReviewModel) => {
-    return +new Date(review_b.created_at) - +new Date(review_a.created_at);
+    review.created_at = new Date(review.created_at);
   });
+  return reviews;
 }
 
 export async function getAllUsers() {
@@ -44,9 +48,7 @@ export async function getAllUsers() {
 }
 
 export async function getUserDetail(user_uid: string) {
-  const res = await axios.get(base_url + 'user', {
-    params: {user: {uid: user_uid}},
-  });
+  const res = await axios.get(base_url + 'user/' + user_uid);
   return res.data;
 }
 

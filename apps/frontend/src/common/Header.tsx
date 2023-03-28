@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import {
   Box,
   Flex,
@@ -24,10 +25,12 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { AddReviewSteps } from '../components/review/add_review/AddReviewSteps';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../services/firebase';
 
-const Links = ['Dashboard', 'Cafes', 'Explore', 'Users'];
+const Links = ['Home', 'Cafes', 'Explore', 'Users'];
 
-const NavLink = ({children}: { children: string }) => (
+const NavLink = ({ children }: { children: string }) => (
   <Link
     px={2}
     py={1}
@@ -43,6 +46,7 @@ const NavLink = ({children}: { children: string }) => (
 );
 
 export default function Header() {
+  const navigate = useNavigate();
   const {
     isOpen: isProfileOpen,
     onOpen: onProfileOpen,
@@ -105,31 +109,38 @@ export default function Header() {
             </HStack>
           </HStack>
 
-          <Flex alignItems={'center'}>
-            <Menu>
-              <MenuButton
-                as={Button}
-                rounded={'full'}
-                variant={'link'}
-                cursor={'pointer'}
-                minW={0}
-              >
-                <Avatar
-                  size={'sm'}
-                  src={
-                    'https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
-                  }
-                />
-              </MenuButton>
-              <MenuList>
-                <MenuItem>Profile</MenuItem>
-                <MenuItem>Settings</MenuItem>
-                <MenuDivider/>
-                <MenuItem>Sign-out</MenuItem>
-              </MenuList>
-            </Menu>
+            <Flex alignItems={'center'}>
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  rounded={'full'}
+                  variant={'link'}
+                  cursor={'pointer'}
+                  minW={0}
+                >
+                  <Avatar
+                    size={'sm'}
+                    name={JSON.parse(localStorage.getItem('user') || '').name}
+                  />
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={() => navigate(`/profile/self`)}>
+                    Profile
+                  </MenuItem>
+                  <MenuItem>Settings</MenuItem>
+                  <MenuDivider />
+                  <MenuItem
+                    onClick={() => {
+                      logout();
+                      navigate('/');
+                    }}
+                  >
+                    Signout
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            </Flex>
           </Flex>
-        </Flex>
 
         {isProfileOpen ? (
           <Box pb={4} display={{md: 'none'}}>
