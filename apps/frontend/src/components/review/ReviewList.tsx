@@ -17,13 +17,18 @@ import {
   ModalOverlay,
   useDisclosure,
 } from '@chakra-ui/react';
+import { Classification } from 'apps/backend/src/classifier/classification.interface';
+import { Ratings } from 'apps/backend/src/rating/rating.interface';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
+import { useContext } from 'react';
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
+import UserContext from '../../common/UserContext';
 import { ViewReview } from './ViewReview';
 
-export function PreviewReview({ review }: { review: ReviewModel }) {
+export function ReviewList({ review }: { review: ReviewModel }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { userDetails, setUserDetails } = useContext(UserContext);
 
   return (
     <Center py={6}>
@@ -45,7 +50,7 @@ export function PreviewReview({ review }: { review: ReviewModel }) {
       </Modal>
 
       <Box
-        maxW={'60%'}
+        maxW={'70%'}
         w={'full'}
         bg={useColorModeValue('white', 'gray.900')}
         boxShadow={'2xl'}
@@ -69,7 +74,13 @@ export function PreviewReview({ review }: { review: ReviewModel }) {
           halfIcon={<i className="fa fa-star-half-alt"></i>}
           fullIcon={<i className="fa fa-star"></i>}
           activeColor="#ffd700"
-          value={review.rating?.unweighted}
+          value={
+            review.rating[
+              Classification[
+                userDetails.classification
+              ].toLowerCase() as keyof Ratings
+            ]
+          }
           edit={false}
         />
         <Stack>
@@ -92,12 +103,13 @@ export function PreviewReview({ review }: { review: ReviewModel }) {
           <Text color={'gray.500'}>{review.body}</Text>
         </Stack>
         <Stack mt={6} direction={'row'} spacing={4} align={'center'}>
-          <Avatar
-            src={'https://avatars0.githubusercontent.com/u/1164541?v=4'}
-          />
+          <Avatar name={review.user_name} />
           <Stack direction={'column'} spacing={0} fontSize={'sm'}>
             <Text fontWeight={600}>{review.user_name}</Text>
-            <Text color={'gray.500'}>{review.created_at.toLocaleDateString()}, {review.created_at.toLocaleTimeString()}</Text>
+            <Text color={'gray.500'}>
+              {review.created_at.toLocaleDateString()},{' '}
+              {review.created_at.toLocaleTimeString()}
+            </Text>
           </Stack>
         </Stack>
       </Box>

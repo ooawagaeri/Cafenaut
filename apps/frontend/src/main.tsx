@@ -7,7 +7,11 @@ import { StepsTheme as Steps } from 'chakra-ui-steps';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Reset from './pages/Reset';
-import Dashboard from './pages/Dashboard';
+import { Home } from './pages/Home';
+import { CafeList } from './components/cafe/CafeList';
+import { Cafe } from './components/cafe/Cafe';
+import { Profile } from './pages/Profile';
+import { UserContextView } from './common/UserContextView';
 
 const theme = extendTheme({
   components: {
@@ -18,17 +22,23 @@ const theme = extendTheme({
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <StrictMode>
-    <ChakraProvider theme={theme}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/reset" element={<Reset />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
-      </Router>
-    </ChakraProvider>
+    <UserContextView>
+      <ChakraProvider theme={theme}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/reset" element={<Reset />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/cafes" element={<CafeList />} />
+            <Route path="/cafe/*" element={<Cafe />} />
+            <Route path="/profile/*" element={<Profile />} />
+          </Routes>
+        </Router>
+      </ChakraProvider>
+    </UserContextView>
   </StrictMode>
 );
