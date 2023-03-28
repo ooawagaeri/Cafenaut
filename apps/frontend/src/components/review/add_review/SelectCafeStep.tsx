@@ -18,7 +18,7 @@ export function SelectCafe({ setReview }: { setReview: any }) {
           onChange={(e) => {
             setReview((review: any) => {
               const cafe: CafeModel = cafes.filter(
-                (cafe: CafeModel) => cafe.name == e.target.value
+                (cafe: CafeModel) => cafe.name === e.target.value
               )[0];
               const newReview = { ...review };
               newReview.cafe_id = cafe.id;

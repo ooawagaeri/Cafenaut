@@ -11,7 +11,7 @@ import {
 const RADIUS = 1500;    // Start of w/ 1.5km radius
 const INCREMENT = 1000; // Increment radius by 1km
 const MAX_TRIES = 5;    // Max no. of retrievals
-const MIX_LOCS = 3;     // Min no. of loc found
+const MIX_LOCS = 2;     // Min no. of loc found
 
 // Maxwell Food Centre
 const CBD = {
