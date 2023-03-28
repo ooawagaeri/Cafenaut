@@ -1,15 +1,19 @@
 import { Box, Center, Stack, Image, Text, Grid } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
-import { useNavigate } from 'react-router-dom';
 
 import Header from '../../common/Header';
+import UserContext from '../../common/UserContext';
 import { getCafes } from '../../services/api_service';
+import { Classification } from 'apps/backend/src/classifier/classification.interface';
+import { Ratings } from 'apps/backend/src/rating/rating.interface';
 
 export function CafeList() {
   const [cafes, setCafes] = useState([]);
   const navigate = useNavigate();
+  const { userDetails, setUserDetails } = useContext(UserContext);
 
   useEffect(() => {
     getAll();
@@ -55,7 +59,13 @@ export function CafeList() {
                 halfIcon={<i className="fa fa-star-half-alt"></i>}
                 fullIcon={<i className="fa fa-star"></i>}
                 activeColor="#ffd700"
-                value={cafe['rating']['unweighted']}
+                value={
+                  cafe['rating'][
+                    Classification[
+                      userDetails.classification
+                    ].toLowerCase() as keyof Ratings
+                  ]
+                }
                 edit={false}
               />
               <Stack>

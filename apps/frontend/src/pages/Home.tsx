@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardBody, Text, Box } from '@chakra-ui/react';
@@ -7,20 +7,12 @@ import Header from '../common/Header';
 import { auth } from '../services/firebase';
 import { ReviewList } from '../components/review/ReviewList';
 import { getAllReviews } from '../services/api_service';
-import { User } from '../../../backend/src/user/user.interface';
-
+import UserContext from '../common/UserContext';
 
 export function Home() {
   const [user, loading, error] = useAuthState(auth);
-  const [userDetails, setUserDetails] = useState<User>({
-    uid: '',
-    email: '',
-    name: '',
-    following: [],
-    followers: [],
-    classification: 0
-  });
   const navigate = useNavigate();
+  const { userDetails, setUserDetails } = useContext(UserContext);
 
   const fetchFromBackend = async () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

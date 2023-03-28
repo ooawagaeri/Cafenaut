@@ -17,13 +17,18 @@ import {
   ModalOverlay,
   useDisclosure,
 } from '@chakra-ui/react';
+import { Classification } from 'apps/backend/src/classifier/classification.interface';
+import { Ratings } from 'apps/backend/src/rating/rating.interface';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
+import { useContext } from 'react';
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
+import UserContext from '../../common/UserContext';
 import { ViewReview } from './ViewReview';
 
 export function ReviewList({ review }: { review: ReviewModel }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { userDetails, setUserDetails } = useContext(UserContext);
 
   return (
     <Center py={6}>
@@ -69,7 +74,13 @@ export function ReviewList({ review }: { review: ReviewModel }) {
           halfIcon={<i className="fa fa-star-half-alt"></i>}
           fullIcon={<i className="fa fa-star"></i>}
           activeColor="#ffd700"
-          value={review.rating?.unweighted}
+          value={
+            review.rating[
+              Classification[
+                userDetails.classification
+              ].toLowerCase() as keyof Ratings
+            ]
+          }
           edit={false}
         />
         <Stack>
@@ -92,9 +103,7 @@ export function ReviewList({ review }: { review: ReviewModel }) {
           <Text color={'gray.500'}>{review.body}</Text>
         </Stack>
         <Stack mt={6} direction={'row'} spacing={4} align={'center'}>
-          <Avatar
-            name={review.user_name}
-          />
+          <Avatar name={review.user_name} />
           <Stack direction={'column'} spacing={0} fontSize={'sm'}>
             <Text fontWeight={600}>{review.user_name}</Text>
             <Text color={'gray.500'}>

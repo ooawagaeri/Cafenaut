@@ -8,17 +8,21 @@ import {
   Image,
   Text,
 } from '@chakra-ui/react';
+import { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
 
 import Header from '../../common/Header';
-import { useState, useEffect } from 'react';
 import { getCafeReviews } from '../../services/api_service';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
 import { ReviewList } from '../review/ReviewList';
+import { Classification } from 'apps/backend/src/classifier/classification.interface';
+import { Ratings } from 'apps/backend/src/rating/rating.interface';
+import UserContext from '../../common/UserContext';
 
 export function Cafe() {
+  const { userDetails, setUserDetails } = useContext(UserContext);
   const { state } = useLocation();
   const [reviews, setReviews] = useState([]);
   useEffect(() => {
@@ -52,7 +56,13 @@ export function Cafe() {
                 halfIcon={<i className="fa fa-star-half-alt"></i>}
                 fullIcon={<i className="fa fa-star"></i>}
                 activeColor="#ffd700"
-                value={state['rating']['unweighted']}
+                value={
+                  state['rating'][
+                    Classification[
+                      userDetails.classification
+                    ].toLowerCase() as keyof Ratings
+                  ]
+                }
                 edit={false}
               />
             </CardBody>

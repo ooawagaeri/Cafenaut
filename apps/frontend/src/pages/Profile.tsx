@@ -13,7 +13,7 @@ import {
   CardBody,
   CardHeader,
 } from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import Header from '../common/Header';
@@ -22,11 +22,12 @@ import { ReviewModel } from 'apps/backend/src/review/review.interface';
 import { ReviewList } from '../components/review/ReviewList';
 import { getUserDetail, getUserReviews } from '../services/api_service';
 import { Classification } from '../../../backend/src/classifier/classification.interface';
+import UserContext from '../common/UserContext';
 
 export function Profile() {
   const { state } = useLocation();
   const [reviews, setReviews] = useState([]);
-
+  const { userDetails, setUserDetails } = useContext(UserContext);
   const [user, setUser] = useState<User>({
     uid: '',
     email: '',
@@ -36,12 +37,10 @@ export function Profile() {
     classification: 0,
   });
 
-  const local_storage_user = JSON.parse(localStorage.getItem('user') || '');
-
   useEffect(() => {
     if (state === null) {
       // own profile
-      setUser(local_storage_user);
+      setUser(userDetails);
     } else {
       getDetails(state.uid);
     }
@@ -137,7 +136,7 @@ export function Profile() {
               </Stack>
             </Stack>
 
-            {state !== null && state.uid !== local_storage_user.uid && (
+            {state !== null && state.uid !== userDetails.uid && (
               <Button
                 w={'full'}
                 mt={8}
