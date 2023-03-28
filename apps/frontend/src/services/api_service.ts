@@ -1,6 +1,4 @@
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { CafeModel } from 'apps/backend/src/cafe/cafe.interface';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
 import axios from 'axios';
 

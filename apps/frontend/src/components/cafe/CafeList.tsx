@@ -1,12 +1,13 @@
 import { Box, Center, Stack, Image, Text, Grid } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
 
 import Header from '../../common/Header';
 import UserContext from '../../common/UserContext';
-import { getCafes } from '../../services/api_service';
+import { getAllCafes } from '../../services/api_service';
 import { Classification } from 'apps/backend/src/classifier/classification.interface';
 import { Ratings } from 'apps/backend/src/rating/rating.interface';
 
@@ -20,7 +21,7 @@ export function CafeList() {
   }, []);
 
   async function getAll() {
-    await getCafes().then((cafes) => setCafes(cafes));
+    await getAllCafes().then((cafes) => setCafes(cafes));
   }
 
   return (

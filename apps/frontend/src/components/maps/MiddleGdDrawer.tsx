@@ -7,8 +7,7 @@ import {
   DrawerOverlay, Stack, StackDivider, Text
 } from "@chakra-ui/react";
 import React from "react";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { Location } from "../../../../backend/src/middle-ground/location.interface";
+import { Location } from "apps/backend/src/middle-ground/location.interface";
 
 export function MiddleGdDrawer(props: {isOpen: boolean, onClose: () => void, clear: () => void, locations: Location[]}) {
   return (

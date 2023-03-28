@@ -1,4 +1,3 @@
-import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';

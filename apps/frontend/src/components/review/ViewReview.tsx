@@ -16,8 +16,6 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

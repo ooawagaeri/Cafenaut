@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
 

@@ -23,11 +23,10 @@ import {
 import ReactStars from 'react-rating-stars-component';
 import CafePin from './CafePin';
 import ContextMenu from "./ContextMenu";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { CafePinModel } from 'apps/backend/src/cafe/cafe.interface';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { Location } from 'apps/backend/src/middle-ground/location.interface';
 import { MiddleGdDrawer } from "./MiddleGdDrawer";
+import { useNavigate } from "react-router-dom";
 
 const defaultProps = {
   center: {
@@ -66,6 +65,8 @@ export function PigeonMap({data}: Type) {
     onOpen();
   };
   const clearPins = () => setLocations(initialState);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.addEventListener("click", handleRightClick);
@@ -156,7 +157,7 @@ export function PigeonMap({data}: Type) {
                     <Button
                       mt={4}
                       colorScheme='blue'
-                      onClick={() => console.log('View Cafe @chenler')}
+                      onClick={() => navigate(`/cafe/${cafe.id}`, { state: cafe })}
                     >
                       Visit cafe!
                     </Button>
