@@ -23,7 +23,7 @@ function Reset() {
 
   useEffect(() => {
     if (loading) return;
-    if (user) navigate('/dashboard');
+    if (user) navigate('/home');
   }, [user, loading, navigate]);
 
   return (

@@ -21,6 +21,7 @@ import { User } from '../../../backend/src/user/user.interface';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
 import { ReviewList } from '../components/review/ReviewList';
 import { getUserDetail, getUserReviews } from '../services/api_service';
+import { Classification } from '../../../backend/src/classifier/classification.interface';
 
 export function Profile() {
   const { state } = useLocation();
@@ -32,6 +33,7 @@ export function Profile() {
     name: '',
     following: [],
     followers: [],
+    classification: 0,
   });
 
   const local_storage_user = JSON.parse(localStorage.getItem('user') || '');
@@ -92,6 +94,18 @@ export function Profile() {
               <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
                 {user.name}
               </Heading>
+              {Classification[user.classification] === 'CASUAL_COFFEE' && (
+                <Text color={'gray.500'}>☕️ Casual Coffee</Text>
+              )}
+              {Classification[user.classification] === 'CONNOISSEUR_COFFEE' && (
+                <Text color={'gray.500'}>☕️ Coffee Connoisseur</Text>
+              )}
+              {Classification[user.classification] === 'CASUAL_TEA' && (
+                <Text color={'gray.500'}>🫖 Casual Tea</Text>
+              )}
+              {Classification[user.classification] === 'CONNOISSEUR_TEA' && (
+                <Text color={'gray.500'}>🫖 Tea Connoisseur</Text>
+              )}
             </Stack>
 
             <Stack direction={'row'} justify={'center'} spacing={6}>
@@ -123,7 +137,7 @@ export function Profile() {
               </Stack>
             </Stack>
 
-            {(state !== null && state.uid !== local_storage_user.uid) && (
+            {state !== null && state.uid !== local_storage_user.uid && (
               <Button
                 w={'full'}
                 mt={8}
@@ -152,9 +166,13 @@ export function Profile() {
               <Heading>Reviews posted by {user.name}</Heading>
             </CardHeader>
             <CardBody>
-              {reviews.length > 0 ? reviews.map((review: ReviewModel, index) => (
-                <ReviewList key={index} review={review}></ReviewList>
-              )): <Text>{user.name} has not posted any reviews 😔</Text>}
+              {reviews.length > 0 ? (
+                reviews.map((review: ReviewModel, index) => (
+                  <ReviewList key={index} review={review}></ReviewList>
+                ))
+              ) : (
+                <Text>{user.name} has not posted any reviews 😔</Text>
+              )}
             </CardBody>
           </Card>
         </Box>

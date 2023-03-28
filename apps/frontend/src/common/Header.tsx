@@ -27,7 +27,7 @@ import { AddReviewSteps } from '../components/review/add_review/AddReviewSteps';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../services/firebase';
 
-const Links = ['Dashboard', 'Cafes', 'Users'];
+const Links = ['Home', 'Cafes', 'Users'];
 
 const NavLink = ({ children }: { children: string }) => (
   <Link

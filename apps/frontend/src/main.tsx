@@ -7,7 +7,7 @@ import { StepsTheme as Steps } from 'chakra-ui-steps';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Reset from './pages/Reset';
-import Dashboard from './pages/Dashboard';
+import { Home } from './pages/Home';
 import { CafeList } from './components/cafe/CafeList';
 import { Cafe } from './components/cafe/Cafe';
 import { Profile } from './pages/Profile';
@@ -29,7 +29,7 @@ root.render(
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/reset" element={<Reset />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/cafes" element={<CafeList />} />
           <Route path="/cafe/*" element={<Cafe />} />
           <Route path="/profile/*" element={<Profile />} />

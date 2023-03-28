@@ -6,5 +6,5 @@ export interface User {
   name: string;
   following: string[];
   followers: string[];
-  classification?: Classification;
+  classification: Classification;
 }
