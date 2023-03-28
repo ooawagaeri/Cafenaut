@@ -15,8 +15,11 @@ import {
   Link,
   HStack,
 } from '@chakra-ui/react';
-import { ReviewModel } from 'apps/backend/src/review/review.interface';
 import { useEffect, useState } from 'react';
+
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { ReviewModel } from 'apps/backend/src/review/review.interface';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
 import { getCafeDetail } from '../../services/api_service';

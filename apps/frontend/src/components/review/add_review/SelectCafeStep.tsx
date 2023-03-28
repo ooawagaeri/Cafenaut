@@ -1,18 +1,15 @@
 import { FormControl, FormLabel, Select, Box } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
-import { CafeModel } from '../../../../../backend/src/cafe/cafe.interface';
-import { getCafes } from '../../../services/api_service';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { CafeModel } from 'apps/backend/src/cafe/cafe.interface';
+import { getAllCafes } from '../../../services/api_service';
 
 export function SelectCafe({ setReview }: { setReview: any }) {
   const [cafes, setCafes] = useState([]);
 
   useEffect(() => {
-    getAllCafes();
+    getAllCafes().then((cafes) => setCafes(cafes));
   }, []);
-
-  async function getAllCafes() {
-    await getCafes().then((cafes) => setCafes(cafes));
-  }
 
   return (
     <Box padding="5%">
