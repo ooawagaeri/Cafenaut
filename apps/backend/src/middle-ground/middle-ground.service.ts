@@ -8,9 +8,9 @@ import {
   isPointWithinRadius
 } from 'geolib';
 
-const RADIUS = 1000;    // Start of w/ 1km radius
-const INCREMENT = 2000; // Increment radius by 2km
-const MAX_TRIES = 5;    // Max no. of retrievals
+const RADIUS = 500;    // Start of w/ 500m radius
+const INCREMENT = 1000; // Increment distance by 1km
+const MAX_TRIES = 7;    // Max no. of retrievals
 const MIX_LOCS = 2;     // Min no. of loc found
 
 // Maxwell Food Centre
@@ -30,13 +30,13 @@ export class MiddleGroundService {
     throw new HttpException('Invalid location(s)!', HttpStatus.BAD_REQUEST);
   }
 
-  async retrieveNearbyCafes(midPoint: Location, allCafe: CafeModel[]): Promise<CafeModel[]> {
+  async retrieveNearbyCafes(midpoint: Location, allCafe: CafeModel[]): Promise<{ cafes: CafeModel[], radius: number, midpoint: Location }> {
     let radius = RADIUS;
-    let cafesFound = []
+    let cafesFound = [];
+    let currMidPoint = midpoint;
 
     for (let i = 0; i < MAX_TRIES; i++) {
-      const newCafes = await this.getAllCafesInRadius(allCafe, midPoint, radius);
-
+      const newCafes = await this.getAllCafesInRadius(allCafe, currMidPoint, radius);
       if (newCafes.length > cafesFound.length) {
         cafesFound = newCafes;
       }
@@ -49,10 +49,14 @@ export class MiddleGroundService {
 
       // Shift midpoint towards CBD
       radius += RADIUS;
-      const bearing = getGreatCircleBearing(midPoint, CBD);
-      midPoint = computeDestinationPoint(midPoint, INCREMENT, bearing);
+      const bearing = getGreatCircleBearing(currMidPoint, CBD);
+      currMidPoint = computeDestinationPoint(currMidPoint, INCREMENT, bearing);
     }
-    return cafesFound;
+    return {
+      cafes: cafesFound,
+      radius: radius,
+      midpoint: currMidPoint,
+    };
   }
 
   private async getAllCafesInRadius(allCafes: CafeModel[], midPoint: Location, radius: number): Promise<CafeModel[]> {
@@ -66,7 +70,7 @@ export class MiddleGroundService {
     return cafes;
   }
 
-  private static isValidLocation(loc:  false | Location) {
+  private static isValidLocation(loc: false | Location) {
     if (loc == false) {
       return false;
     }

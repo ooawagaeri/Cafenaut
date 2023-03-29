@@ -10,17 +10,22 @@ import React, { useState } from "react";
 import { CafePinModel } from "apps/backend/src/cafe/cafe.interface";
 import { Location } from "apps/backend/src/middle-ground/location.interface";
 import { getMiddleGround } from "../../services/api_service";
-import { CafeFound } from "./CafeFound";
+import { CafeCard } from "./CafeCard";
 
-export function MiddleGdDrawer(props: { isOpen: boolean, onClose: () => void, setCenter: (newCenter: [number, number]) => void, clear: () => void, locations: Location[] }) {
+export function MiddleGdDrawer(props: { isOpen: boolean, onClose: () => void, setCenter: (newCenter: [number, number]) => void, clear: () => void, drawCircle: (loc: [number, number], radius: number) => void, locations: Location[] }) {
   const [cafes, setCafes] = useState<CafePinModel[]>([]);
 
   const handleMid = async () => {
     const data = await getMiddleGround(props.locations);
+    if (data === undefined) {
+      console.error('Insufficient pins');
+      return;
+    }
+    console.log(data)
     const newCenter: [number, number] = [data.midpoint.latitude, data.midpoint.longitude];
     setCafes(data.cafes);
-    console.log(cafes);
     props.setCenter(newCenter);
+    props.drawCircle(newCenter, data.radius);
   }
 
   return (
@@ -49,7 +54,7 @@ export function MiddleGdDrawer(props: { isOpen: boolean, onClose: () => void, se
             <h3>Cafes Found:</h3>
             <Stack divider={<StackDivider/>} spacing='2'>
               {cafes.map((cafe) => (
-                <CafeFound key={cafe.id} cafe={cafe}/>
+                <CafeCard key={cafe.id} cafe={cafe}/>
               ))}
             </Stack>
           </DrawerBody>

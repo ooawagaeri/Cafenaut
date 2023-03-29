@@ -16,18 +16,24 @@ export class MiddleGroundController {
   }
 
   @Get()
-  async findCafes(@Req() request: Request): Promise<{ cafes: CafeModel[]; midpoint: Location }> {
+  async findCafes(@Req() request: Request): Promise<{ cafes: CafeModel[], midpoint: Location, radius: number }> {
+    if (request.query['locations'] === undefined) {
+      return undefined;
+    }
     const queryLocations = JSON.stringify(request.query['locations'] as string);
     const locations = JSON.parse(queryLocations) as Location[];
-
-    const midPoint = this.midGrdService.calculateCenter(locations);
+    if (locations.length < 2) {
+      return undefined;
+    }
+    const midpoint = this.midGrdService.calculateCenter(locations);
     const allCafes = await this.cafeService.getAllCafes();
-    const nearby = await this.midGrdService.retrieveNearbyCafes(midPoint, allCafes);
-    const cafePins = await this.reviewService.getCafePins(nearby);
+    const nearby = await this.midGrdService.retrieveNearbyCafes(midpoint, allCafes);
+    const cafePins = await this.reviewService.getCafePins(nearby.cafes);
 
     return {
       cafes: cafePins,
-      midpoint: midPoint,
+      midpoint: nearby.midpoint,
+      radius: nearby.radius,
     };
   }
 }

@@ -56,7 +56,7 @@ export async function getAllCafesPins() {
   return res.data;
 }
 
-export async function getMiddleGround(locations: Location[]): Promise<{ cafes: CafePinModel[]; midpoint: Location }> {
+export async function getMiddleGround(locations: Location[]): Promise<{ cafes: CafePinModel[], midpoint: Location, radius: number }> {
   const res = await axios.get(base_url + 'mid', {
     params: {
       locations,

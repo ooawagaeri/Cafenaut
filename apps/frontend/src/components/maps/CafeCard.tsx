@@ -13,7 +13,7 @@ import ReactStars from 'react-rating-stars-component';
 import { CafePinModel } from "apps/backend/src/cafe/cafe.interface";
 import { useNavigate } from "react-router-dom";
 
-export function CafeFound(props: { cafe: CafePinModel }) {
+export function CafeCard(props: { cafe: CafePinModel }) {
   const navigate = useNavigate();
 
   return (

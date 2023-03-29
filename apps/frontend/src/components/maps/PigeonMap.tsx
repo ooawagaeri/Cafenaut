@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Map, Marker, Overlay, ZoomControl } from 'pigeon-maps'
 import {
   Box,
+  Circle,
   IconButton,
   Popover,
   PopoverArrow,
@@ -16,7 +17,7 @@ import ContextMenu from "./ContextMenu";
 import { CafePinModel } from 'apps/backend/src/cafe/cafe.interface';
 import { Location } from 'apps/backend/src/middle-ground/location.interface';
 import { MiddleGdDrawer } from "./MiddleGdDrawer";
-import { CafeFound } from "./CafeFound";
+import { CafeCard } from "./CafeCard";
 
 const defaultProps = {
   center: {
@@ -49,22 +50,27 @@ export function PigeonMap({data}: Type) {
 
   // Middle-ground Pins
   const {isOpen, onOpen, onClose} = useDisclosure()
-  const [mouseLatLong, setMouseLatLong] = useState([0, 0]);
-  const [points, setPoints] = useState({
-    x: 0,
-    y: 0,
-  });
-  const initialState: Location[] = [];
-  const [locations, setLocations] = useState(initialState);
+  const [mouseLatLng, setMouseLatLng] = useState<[number, number]>([0, 0]);
+  const [contextMenuPos, setContextMenuPos] = useState({x: 0, y: 0});
+  const [pins, setPins] = useState<Location[]>([]);
+  const [circleLatLng, setCircleLatLng] = useState<[number, number]>([0, 0]);
+  const [circleRadius, setCircleRadius] = useState(0);
+  const clearPins = () => {
+    setPins([]);
+    setCircleRadius(0);
+  };
   const handleAppendPin = (loc: Location) => {
-    for (const item of locations) {
+    for (const item of pins) {
       if (item.latitude === loc.latitude && item.longitude === loc.longitude) {
         return;
       }
     }
-    setLocations(current => [...current, loc]);
+    setPins(current => [...current, loc]);
   };
-  const clearPins = () => setLocations(initialState);
+  const handleCircle = (loc: [number, number], radius: number) => {
+    setCircleLatLng(loc);
+    setCircleRadius((radius / 17) ** 2);
+  };
 
   useEffect(() => {
     window.addEventListener("click", handleRightClick);
@@ -79,10 +85,7 @@ export function PigeonMap({data}: Type) {
            onClick={(e) => {
              e.preventDefault();
              setLeftClicked(true);
-             setPoints({
-               x: e.pageX,
-               y: e.pageY,
-             });
+             setContextMenuPos({x: e.pageX, y: e.pageY});
            }}
            onContextMenu={(e) => {
              e.preventDefault();
@@ -98,14 +101,23 @@ export function PigeonMap({data}: Type) {
             handleRightClick();
           }}
           onClick={(pointData) => {
-            setMouseLatLong(pointData.latLng);
+            setMouseLatLng(pointData.latLng);
           }}>
           <ZoomControl/>
 
           {leftClicked && (
             // Left-click Marker
-            <Marker width={50} anchor={[mouseLatLong[0], mouseLatLong[1]]}
+            <Marker width={50} anchor={mouseLatLng}
                     onClick={() => setRightClicked(true)}/>
+          )}
+
+          {circleRadius !== 0 && (
+            // Search circle
+            <Overlay key='mid-circle' anchor={circleLatLng}
+                     offset={[circleRadius / 2 ** (19 - pinSize), circleRadius / 2 ** (19 - pinSize)]}>
+              <Circle size={`${circleRadius * 2 / 2 ** (19 - pinSize)}px`} bg='teal.300'
+                      opacity={0.3}/>
+            </Overlay>
           )}
 
           {data.map((cafe) => (
@@ -127,14 +139,14 @@ export function PigeonMap({data}: Type) {
                   <PopoverArrow/>
                   <PopoverCloseButton/>
                   <PopoverBody>
-                    <CafeFound cafe={cafe}/>
+                    <CafeCard cafe={cafe}/>
                   </PopoverBody>
                 </PopoverContent>
               </Popover>
             </Overlay>))}
 
 
-          {locations.map((loc: Location) => (
+          {pins.map((loc: Location) => (
             <Marker key={loc.latitude} width={50} anchor={[loc.latitude, loc.longitude]}
                     color='red' onClick={onOpen}/>
           ))}
@@ -144,16 +156,16 @@ export function PigeonMap({data}: Type) {
       {rightClicked && (
         <ContextMenu
           onClickPin={() => handleAppendPin({
-            latitude: mouseLatLong[0],
-            longitude: mouseLatLong[1],
+            latitude: mouseLatLng[0],
+            longitude: mouseLatLng[1],
           })}
           onClickOpen={onOpen}
-          x={points.x}
-          y={points.y}/>
+          x={contextMenuPos.x}
+          y={contextMenuPos.y}/>
       )}
 
       <MiddleGdDrawer isOpen={isOpen} onClose={onClose} setCenter={handleCenter} clear={clearPins}
-                      locations={locations}/>
+                      locations={pins} drawCircle={handleCircle}/>
     </Box>
   )
 }
