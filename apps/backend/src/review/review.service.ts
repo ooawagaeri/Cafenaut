@@ -59,7 +59,7 @@ export class ReviewService {
     return this.sortReviewsByDate(arr);
   }
 
-  sortReviewsByDate(reviews: any[]) {
+  sortReviewsByDate(reviews: ReviewModel[]) {
     // If you are wondering why is there a '+' before new
     // https://stackoverflow.com/questions/40248643/typescript-sort-by-date-not-working
     return reviews.sort((review_a: ReviewModel, review_b: ReviewModel) => {
