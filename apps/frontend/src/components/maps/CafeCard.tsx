@@ -5,13 +5,13 @@ import {
   CircularProgressLabel, Heading, Image,
   Text,
   Tooltip
-} from "@chakra-ui/react";
-import React from "react";
+} from '@chakra-ui/react';
+import React from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
-import { CafePinModel } from "apps/backend/src/cafe/cafe.interface";
-import { useNavigate } from "react-router-dom";
+import { CafePinModel } from 'apps/backend/src/cafe/cafe.interface';
+import { useNavigate } from 'react-router-dom';
 
 export function CafeCard(props: { cafe: CafePinModel }) {
   const navigate = useNavigate();

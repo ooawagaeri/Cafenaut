@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Map, Marker, Overlay, ZoomControl } from 'pigeon-maps'
 import {
   Box,
+  Button,
   Circle,
   IconButton,
   Popover,
@@ -13,11 +14,11 @@ import {
   useDisclosure
 } from '@chakra-ui/react';
 import CafePin from './CafePin';
-import ContextMenu from "./ContextMenu";
+import ContextMenu from './ContextMenu';
 import { CafePinModel } from 'apps/backend/src/cafe/cafe.interface';
 import { Location } from 'apps/backend/src/middle-ground/location.interface';
-import { MiddleGdDrawer } from "./MiddleGdDrawer";
-import { CafeCard } from "./CafeCard";
+import { MiddleGdDrawer } from './MiddleGdDrawer';
+import { CafeCard } from './CafeCard';
 
 const defaultProps = {
   center: {
@@ -69,13 +70,13 @@ export function PigeonMap({data}: Type) {
   };
   const handleCircle = (loc: [number, number], radius: number) => {
     setCircleLatLng(loc);
-    setCircleRadius((radius / 17) ** 2);
+    setCircleRadius(radius * 3);
   };
 
   useEffect(() => {
-    window.addEventListener("click", handleRightClick);
+    window.addEventListener('click', handleRightClick);
     return () => {
-      window.removeEventListener("click", handleRightClick);
+      window.removeEventListener('click', handleRightClick);
     };
   }, []);
 
@@ -155,16 +156,27 @@ export function PigeonMap({data}: Type) {
 
       {rightClicked && (
         <ContextMenu
-          onClickPin={() => handleAppendPin({
+          onAppendPin={() => handleAppendPin({
             latitude: mouseLatLng[0],
             longitude: mouseLatLng[1],
           })}
-          onClickOpen={onOpen}
+          onClear={clearPins}
           x={contextMenuPos.x}
           y={contextMenuPos.y}/>
       )}
 
-      <MiddleGdDrawer isOpen={isOpen} onClose={onClose} setCenter={handleCenter} clear={clearPins}
+      <Box style={{
+        position: 'absolute',
+        left: '30px',
+        bottom: '30px',
+        zIndex: 'sticky',
+      }}>
+        <Button onClick={onOpen} colorScheme='teal' size='lg'>
+          Open finder
+        </Button>
+      </Box>
+
+      <MiddleGdDrawer isOpen={isOpen} onClose={onClose} setCenter={handleCenter} onClear={clearPins}
                       locations={pins} drawCircle={handleCircle}/>
     </Box>
   )

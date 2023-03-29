@@ -1,23 +1,29 @@
 import {
-  Button, Drawer,
+  Button,
+  Drawer,
   DrawerBody,
   DrawerCloseButton,
-  DrawerContent, DrawerFooter,
+  DrawerContent,
+  DrawerFooter,
   DrawerHeader,
-  DrawerOverlay, Stack, StackDivider, Text
-} from "@chakra-ui/react";
-import React, { useState } from "react";
-import { CafePinModel } from "apps/backend/src/cafe/cafe.interface";
-import { Location } from "apps/backend/src/middle-ground/location.interface";
-import { getMiddleGround } from "../../services/api_service";
-import { CafeCard } from "./CafeCard";
+  DrawerOverlay,
+  Heading,
+  Stack,
+  StackDivider,
+  Text
+} from '@chakra-ui/react';
+import React, { useState } from 'react';
+import { CafePinModel } from 'apps/backend/src/cafe/cafe.interface';
+import { Location } from 'apps/backend/src/middle-ground/location.interface';
+import { getMiddleGround } from '../../services/api_service';
+import { CafeCard } from './CafeCard';
 
-export function MiddleGdDrawer(props: { isOpen: boolean, onClose: () => void, setCenter: (newCenter: [number, number]) => void, clear: () => void, drawCircle: (loc: [number, number], radius: number) => void, locations: Location[] }) {
+export function MiddleGdDrawer(props: { isOpen: boolean, onClose: () => void, setCenter: (newCenter: [number, number]) => void, onClear: () => void, drawCircle: (loc: [number, number], radius: number) => void, locations: Location[] }) {
   const [cafes, setCafes] = useState<CafePinModel[]>([]);
 
   const handleMid = async () => {
     const data = await getMiddleGround(props.locations);
-    if (data === undefined) {
+    if (data === undefined || data === null) {
       console.error('Insufficient pins');
       return;
     }
@@ -40,10 +46,12 @@ export function MiddleGdDrawer(props: { isOpen: boolean, onClose: () => void, se
         <DrawerHeader borderBottomWidth='1px'>Middle-ground Finder</DrawerHeader>
 
         <DrawerBody>
-          <Stack divider={<StackDivider/>} spacing='2'>
+          <Heading as='h4' size='sm'>Pin Locations:</Heading>
+          <Stack spacing='3px'>
             {props.locations.map((location) => (
               <Text key={location.latitude + ',' + location.longitude} pt='2' fontSize='sm'>
-                ({location.latitude}, {location.longitude})
+                Lat: {location.latitude}<br/>
+                Lng: {location.longitude}
               </Text>
             ))}
           </Stack>
@@ -51,7 +59,7 @@ export function MiddleGdDrawer(props: { isOpen: boolean, onClose: () => void, se
 
         {cafes.length > 0 &&
           <DrawerBody>
-            <h3>Cafes Found:</h3>
+            <Heading as='h4' size='sm'>Cafes Found:</Heading>
             <Stack divider={<StackDivider/>} spacing='2'>
               {cafes.map((cafe) => (
                 <CafeCard key={cafe.id} cafe={cafe}/>
@@ -61,7 +69,7 @@ export function MiddleGdDrawer(props: { isOpen: boolean, onClose: () => void, se
         }
 
         <DrawerFooter borderBottomWidth='1px'>
-          <Button variant='outline' mr={3} onClick={props.clear}>
+          <Button variant='outline' mr={3} onClick={props.onClear}>
             Clear all pins
           </Button>
           <Button colorScheme='blue' onClick={handleMid}>Calculate</Button>
