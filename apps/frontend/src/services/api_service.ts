@@ -1,4 +1,4 @@
-import { CafeModel } from 'apps/backend/src/cafe/cafe.interface';
+import { CafeModel, CafePinModel } from 'apps/backend/src/cafe/cafe.interface';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
 import { Location } from 'apps/backend/src/middle-ground/location.interface';
 import axios from 'axios';
@@ -56,7 +56,7 @@ export async function getAllCafesPins() {
   return res.data;
 }
 
-export async function getMiddleGround(locations: Location[]): Promise<{ cafes: CafeModel[]; midpoint: Location }> {
+export async function getMiddleGround(locations: Location[]): Promise<{ cafes: CafePinModel[]; midpoint: Location }> {
   const res = await axios.get(base_url + 'mid', {
     params: {
       locations,

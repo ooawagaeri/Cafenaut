@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ReviewModel } from './review.interface';
 import { AggregatedRating } from '../rating/aggregatedRating';
 import * as firebase from 'firebase-admin';
+import { CafePinModel } from "../cafe/cafe.interface";
 
 @Injectable()
 export class ReviewService {
@@ -82,6 +83,23 @@ export class ReviewService {
     }
 
     return docSnap.data() as ReviewModel;
+  }
+
+  public async getCafePins(cafes): Promise<CafePinModel[]> {
+    const cafePins = []
+    for (const cafe of cafes) {
+      const reviews = await this.getByCafe(cafe.id);
+      // Average authenticity
+      const authScores = reviews.map((r) => r.authenticity);
+      const authTotal = authScores.reduce((a, b) => a + b, 0);
+      const cafePin: CafePinModel = {
+        ...cafe,
+        popularity: reviews.length,
+        authenticity: authTotal / authScores.length,
+      };
+      cafePins.push(cafePin);
+    }
+    return cafePins;
   }
 
   public async getByCafe(cafe_id): Promise<ReviewModel[]> {

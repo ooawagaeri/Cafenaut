@@ -8,8 +8,8 @@ import {
   isPointWithinRadius
 } from 'geolib';
 
-const RADIUS = 1500;    // Start of w/ 1.5km radius
-const INCREMENT = 1000; // Increment radius by 1km
+const RADIUS = 1000;    // Start of w/ 1km radius
+const INCREMENT = 2000; // Increment radius by 2km
 const MAX_TRIES = 5;    // Max no. of retrievals
 const MIX_LOCS = 2;     // Min no. of loc found
 
@@ -48,7 +48,7 @@ export class MiddleGroundService {
       }
 
       // Shift midpoint towards CBD
-      radius += INCREMENT;
+      radius += RADIUS;
       const bearing = getGreatCircleBearing(midPoint, CBD);
       midPoint = computeDestinationPoint(midPoint, INCREMENT, bearing);
     }

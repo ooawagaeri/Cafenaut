@@ -18,21 +18,7 @@ export class CafeController {
   @Get('pins')
   async getCafePins(): Promise<CafePinModel[]> {
     const cafes = await this.cafeService.getAllCafes();
-
-    const cafePins = []
-    for (const cafe of cafes) {
-      const reviews = await this.reviewService.getByCafe(cafe.id);
-      // Average authenticity
-      const authScores = reviews.map((r) => r.authenticity);
-      const authTotal = authScores.reduce((a,b) => a + b, 0);
-      const cafePin = {
-        ...cafe,
-        popularity: reviews.length,
-        authenticity: authTotal / authScores.length,
-      };
-      cafePins.push(cafePin);
-    }
-    return cafePins;
+    return await this.reviewService.getCafePins(cafes);
   }
 
   @Get(':id')
