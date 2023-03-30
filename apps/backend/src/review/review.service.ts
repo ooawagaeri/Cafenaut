@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ReviewModel } from './review.interface';
 import { AggregatedRating } from '../rating/aggregatedRating';
 import * as firebase from 'firebase-admin';
+import { CafePinModel } from "../cafe/cafe.interface";
 
 @Injectable()
 export class ReviewService {
@@ -58,7 +59,7 @@ export class ReviewService {
     return this.sortReviewsByDate(arr);
   }
 
-  sortReviewsByDate(reviews: any[]) {
+  sortReviewsByDate(reviews: ReviewModel[]) {
     // If you are wondering why is there a '+' before new
     // https://stackoverflow.com/questions/40248643/typescript-sort-by-date-not-working
     return reviews.sort((review_a: ReviewModel, review_b: ReviewModel) => {
@@ -82,6 +83,38 @@ export class ReviewService {
     }
 
     return docSnap.data() as ReviewModel;
+  }
+
+  public async getCafePins(cafes): Promise<CafePinModel[]> {
+    const cafePins = []
+    for (const cafe of cafes) {
+      const reviews = await this.getByCafe(cafe.id);
+      // Average authenticity
+      const authScores = reviews.map((r) => r.authenticity);
+      const authTotal = authScores.reduce((a, b) => a + b, 0);
+      const cafePin: CafePinModel = {
+        ...cafe,
+        popularity: reviews.length,
+        authenticity: authTotal / authScores.length,
+      };
+      cafePins.push(cafePin);
+    }
+    return cafePins;
+  }
+
+  public async getByCafe(cafe_id): Promise<ReviewModel[]> {
+    const reviewsSnapshot = await firebase
+      .firestore()
+      .collection('reviews')
+      .where('cafe_id', '==', cafe_id)
+      .get();
+
+    const reviews = [];
+    reviewsSnapshot.forEach((reviewDoc) => {
+      const review = reviewDoc.data() as ReviewModel;
+      reviews.push(review);
+    });
+    return reviews;
   }
 
   public async reportReview(review_id): Promise<void> {

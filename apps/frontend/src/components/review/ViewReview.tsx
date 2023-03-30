@@ -15,8 +15,9 @@ import {
   Link,
   HStack,
 } from '@chakra-ui/react';
-import { ReviewModel } from 'apps/backend/src/review/review.interface';
 import { useEffect, useState } from 'react';
+import { ReviewModel } from 'apps/backend/src/review/review.interface';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
 import { useNavigate } from 'react-router-dom';

@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import {
   Box,
   Flex,
@@ -27,7 +28,7 @@ import { AddReviewSteps } from '../components/review/add_review/AddReviewSteps';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../services/firebase';
 
-const Links = ['Home', 'Cafes', 'Users'];
+const Links = ['Home', 'Cafes', 'Explore', 'Users'];
 
 const NavLink = ({ children }: { children: string }) => (
   <Link
@@ -58,56 +59,55 @@ export default function Header() {
   } = useDisclosure();
 
   return (
-    <>
-      <Box>
-        <Modal
-          size="4xl"
-          isOpen={isAddReviewModalOpen}
-          onClose={onAddReviewModalClose}
-        >
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>
-              Add Review (Please fill in aspects if applicable)
-            </ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <AddReviewSteps
-                onAddReviewModalClose={onAddReviewModalClose}
-              ></AddReviewSteps>
-            </ModalBody>
+    <Box>
+      <Modal
+        size="4xl"
+        isOpen={isAddReviewModalOpen}
+        onClose={onAddReviewModalClose}
+      >
+        <ModalOverlay/>
+        <ModalContent>
+          <ModalHeader>
+            Add Review (Please fill in aspects if applicable)
+          </ModalHeader>
+          <ModalCloseButton/>
+          <ModalBody>
+            <AddReviewSteps
+              onAddReviewModalClose={onAddReviewModalClose}
+            ></AddReviewSteps>
+          </ModalBody>
 
-            <ModalFooter>
-              <Button colorScheme="red" mr={3} onClick={onAddReviewModalClose}>
-                Cancel
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-
-        <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
-          <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
-            <IconButton
-              size={'md'}
-              icon={isProfileOpen ? <CloseIcon /> : <HamburgerIcon />}
-              aria-label={'Open Menu'}
-              display={{ md: 'none' }}
-              onClick={isProfileOpen ? onProfileClose : onProfileOpen}
-            />
-            <Button onClick={onAddReviewModalOpen} colorScheme="green">
-              Add Review
+          <ModalFooter>
+            <Button colorScheme="red" mr={3} onClick={onAddReviewModalClose}>
+              Cancel
             </Button>
-            <HStack spacing={8} alignItems={'center'}>
-              <HStack
-                as={'nav'}
-                spacing={4}
-                display={{ base: 'none', md: 'flex' }}
-              >
-                {Links.map((link) => (
-                  <NavLink key={link}>{link}</NavLink>
-                ))}
-              </HStack>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+        <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
+          <IconButton
+            size={'md'}
+            icon={isProfileOpen ? <CloseIcon/> : <HamburgerIcon/>}
+            aria-label={'Open Menu'}
+            display={{md: 'none'}}
+            onClick={isProfileOpen ? onProfileClose : onProfileOpen}
+          />
+          <Button onClick={onAddReviewModalOpen} colorScheme="green">
+            Add Review
+          </Button>
+          <HStack spacing={8} alignItems={'center'}>
+            <HStack
+              as={'nav'}
+              spacing={4}
+              display={{base: 'none', md: 'flex'}}
+            >
+              {Links.map((link) => (
+                <NavLink key={link}>{link}</NavLink>
+              ))}
             </HStack>
+          </HStack>
 
             <Flex alignItems={'center'}>
               <Menu>
@@ -142,17 +142,16 @@ export default function Header() {
             </Flex>
           </Flex>
 
-          {isProfileOpen ? (
-            <Box pb={4} display={{ md: 'none' }}>
-              <Stack as={'nav'} spacing={4}>
-                {Links.map((link) => (
-                  <NavLink key={link}>{link}</NavLink>
-                ))}
-              </Stack>
-            </Box>
-          ) : null}
-        </Box>
+        {isProfileOpen ? (
+          <Box pb={4} display={{md: 'none'}}>
+            <Stack as={'nav'} spacing={4}>
+              {Links.map((link) => (
+                <NavLink key={link}>{link}</NavLink>
+              ))}
+            </Stack>
+          </Box>
+        ) : null}
       </Box>
-    </>
+    </Box>
   );
 }

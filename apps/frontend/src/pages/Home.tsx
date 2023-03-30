@@ -46,14 +46,14 @@ export function Home() {
 
   const [reviews, setReviews] = useState([]);
 
-  useEffect(() => {
-    getReviews();
-  }, []);
-
   // TODO: Change to view followers reviews, then move all reviews to an "Explore" tab
   async function getReviews() {
     await getAllReviews().then((reviews) => setReviews(reviews));
   }
+
+  useEffect(() => {
+    getReviews();
+  }, []);
 
   return (
     <Box>

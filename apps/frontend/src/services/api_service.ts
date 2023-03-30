@@ -1,10 +1,11 @@
-import { CafeModel } from 'apps/backend/src/cafe/cafe.interface';
+import { CafeModel, CafePinModel } from 'apps/backend/src/cafe/cafe.interface';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
+import { Location } from 'apps/backend/src/middle-ground/location.interface';
 import axios from 'axios';
 
 const base_url = '/api/';
 
-export async function getCafes() {
+export async function getAllCafes() {
   const res = await axios.get(base_url + 'cafe');
   return res.data;
 }
@@ -27,8 +28,7 @@ export async function getUserReviews(uid: string) {
 }
 
 export async function postReview(review: ReviewModel) {
-  const res = await axios.post(base_url + 'review', review);
-  return res;
+  return await axios.post(base_url + 'review', review);
 }
 
 export async function getAllReviews() {
@@ -48,5 +48,19 @@ export async function getAllUsers() {
 
 export async function getUserDetail(user_uid: string) {
   const res = await axios.get(base_url + 'user/' + user_uid);
+  return res.data;
+}
+
+export async function getAllCafesPins() {
+  const res = await axios.get(base_url + 'cafe/pins');
+  return res.data;
+}
+
+export async function getMiddleGround(locations: Location[]): Promise<{ cafes: CafePinModel[], midpoint: Location, radius: number }> {
+  const res = await axios.get(base_url + 'mid', {
+    params: {
+      locations,
+    }
+  });
   return res.data;
 }
