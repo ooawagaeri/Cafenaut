@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import {
   Box,
   Flex,
@@ -27,6 +26,8 @@ import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { AddReviewSteps } from '../components/review/add_review/AddReviewSteps';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../services/firebase';
+import { useContext } from 'react';
+import UserContext from './UserContext';
 
 const Links = ['Home', 'Cafes', 'Explore', 'Users'];
 
@@ -46,6 +47,7 @@ const NavLink = ({ children }: { children: string }) => (
 );
 
 export default function Header() {
+  const { userDetails, setUserDetails } = useContext(UserContext);
   const navigate = useNavigate();
   const {
     isOpen: isProfileOpen,
@@ -57,6 +59,11 @@ export default function Header() {
     onOpen: onAddReviewModalOpen,
     onClose: onAddReviewModalClose,
   } = useDisclosure();
+  const handleLogout = () => {
+    logout();
+    localStorage.clear();
+    navigate('/');
+  };
 
   return (
     <Box>
@@ -65,12 +72,12 @@ export default function Header() {
         isOpen={isAddReviewModalOpen}
         onClose={onAddReviewModalClose}
       >
-        <ModalOverlay/>
+        <ModalOverlay />
         <ModalContent>
           <ModalHeader>
             Add Review (Please fill in aspects if applicable)
           </ModalHeader>
-          <ModalCloseButton/>
+          <ModalCloseButton />
           <ModalBody>
             <AddReviewSteps
               onAddReviewModalClose={onAddReviewModalClose}
@@ -89,9 +96,9 @@ export default function Header() {
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
-            icon={isProfileOpen ? <CloseIcon/> : <HamburgerIcon/>}
+            icon={isProfileOpen ? <CloseIcon /> : <HamburgerIcon />}
             aria-label={'Open Menu'}
-            display={{md: 'none'}}
+            display={{ md: 'none' }}
             onClick={isProfileOpen ? onProfileClose : onProfileOpen}
           />
           <Button onClick={onAddReviewModalOpen} colorScheme="green">
@@ -101,7 +108,7 @@ export default function Header() {
             <HStack
               as={'nav'}
               spacing={4}
-              display={{base: 'none', md: 'flex'}}
+              display={{ base: 'none', md: 'flex' }}
             >
               {Links.map((link) => (
                 <NavLink key={link}>{link}</NavLink>
@@ -109,41 +116,31 @@ export default function Header() {
             </HStack>
           </HStack>
 
-            <Flex alignItems={'center'}>
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  rounded={'full'}
-                  variant={'link'}
-                  cursor={'pointer'}
-                  minW={0}
-                >
-                  <Avatar
-                    size={'sm'}
-                    name={JSON.parse(localStorage.getItem('user') || '').name}
-                  />
-                </MenuButton>
-                <MenuList>
-                  <MenuItem onClick={() => navigate(`/profile/self`)}>
-                    Profile
-                  </MenuItem>
-                  <MenuItem>Settings</MenuItem>
-                  <MenuDivider />
-                  <MenuItem
-                    onClick={() => {
-                      logout();
-                      navigate('/');
-                    }}
-                  >
-                    Signout
-                  </MenuItem>
-                </MenuList>
-              </Menu>
-            </Flex>
+          <Flex alignItems={'center'}>
+            <Menu>
+              <MenuButton
+                as={Button}
+                rounded={'full'}
+                variant={'link'}
+                cursor={'pointer'}
+                minW={0}
+              >
+                <Avatar size={'sm'} name={userDetails.name} />
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={() => navigate(`/profile/self`)}>
+                  Profile
+                </MenuItem>
+                <MenuItem>Settings</MenuItem>
+                <MenuDivider />
+                <MenuItem onClick={() => handleLogout()}>Signout</MenuItem>
+              </MenuList>
+            </Menu>
           </Flex>
+        </Flex>
 
         {isProfileOpen ? (
-          <Box pb={4} display={{md: 'none'}}>
+          <Box pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
               {Links.map((link) => (
                 <NavLink key={link}>{link}</NavLink>

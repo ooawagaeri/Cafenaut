@@ -7,9 +7,19 @@ interface MyProviderProps {
 }
 
 export function UserContextView({ children }: MyProviderProps) {
-  const [userDetails, setUserDetails] = useState<User>(
-    JSON.parse(localStorage.getItem('user') || '')
-  );
+  const user =
+    localStorage.getItem('user') === null
+      ? {
+          uid: '',
+          email: '',
+          name: '',
+          following: [],
+          followers: [],
+          classification: 0,
+        }
+      : JSON.parse(localStorage.getItem('user') || '');
+
+  const [userDetails, setUserDetails] = useState<User>(user);
 
   return (
     <UserContext.Provider value={{ userDetails, setUserDetails }}>
