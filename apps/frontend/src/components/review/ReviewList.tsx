@@ -21,6 +21,7 @@ import { Classification } from 'apps/backend/src/classifier/classification.inter
 import { Ratings } from 'apps/backend/src/rating/rating.interface';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
 import { useContext } from 'react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
 import UserContext from '../../common/UserContext';

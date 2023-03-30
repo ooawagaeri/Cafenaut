@@ -6,15 +6,20 @@ import {
   Text,
   Tooltip
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useContext } from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
 import { CafePinModel } from 'apps/backend/src/cafe/cafe.interface';
 import { useNavigate } from 'react-router-dom';
+import UserContext from '../../common/UserContext';
+import { Classification } from 'apps/backend/src/classifier/classification.interface';
+import { Ratings } from 'apps/backend/src/rating/rating.interface';
+
 
 export function CafeCard(props: { cafe: CafePinModel }) {
   const navigate = useNavigate();
+  const {userDetails} = useContext(UserContext);
 
   return (
     <Box>
@@ -33,7 +38,13 @@ export function CafeCard(props: { cafe: CafePinModel }) {
           halfIcon={<i className='fa fa-star-half-alt'></i>}
           fullIcon={<i className='fa fa-star'></i>}
           activeColor='#ffd700'
-          value={props.cafe.rating.unweighted}
+          value={
+            props.cafe.rating[
+              Classification[
+                userDetails.classification
+                ].toLowerCase() as keyof Ratings
+              ]
+          }
           edit={false}/>
       </Box>
       <Box display='flex' justifyContent='center'>

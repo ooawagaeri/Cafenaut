@@ -171,7 +171,7 @@ export function PigeonMap({data}: Type) {
         bottom: '30px',
         zIndex: 'sticky',
       }}>
-        <Button onClick={onOpen} colorScheme='teal' size='lg'>
+        <Button onClick={onOpen} colorScheme='green' size='lg'>
           Open finder
         </Button>
       </Box>
