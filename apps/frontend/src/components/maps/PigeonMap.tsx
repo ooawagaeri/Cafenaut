@@ -19,6 +19,7 @@ import { CafePinModel } from 'apps/backend/src/cafe/cafe.interface';
 import { Location } from 'apps/backend/src/middle-ground/location.interface';
 import { MiddleGdDrawer } from './MiddleGdDrawer';
 import { CafeCard } from './CafeCard';
+import Instructions from "./Instructions";
 
 const defaultProps = {
   center: {
@@ -175,6 +176,8 @@ export function PigeonMap({data}: Type) {
           Open finder
         </Button>
       </Box>
+
+      <Instructions/>
 
       <MiddleGdDrawer isOpen={isOpen} onClose={onClose} setCenter={handleCenter} onClear={clearPins}
                       locations={pins} drawCircle={handleCircle}/>
