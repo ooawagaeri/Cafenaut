@@ -14,6 +14,8 @@ import {
   Image,
   Link,
   HStack,
+  Flex,
+  Spacer,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
@@ -41,23 +43,43 @@ export function ViewReview({ review }: { review: ReviewModel }) {
   return (
     <Card>
       <CardHeader>
-        <Heading size="md">{review.title}</Heading>
-        <Link
-          onClick={() =>
-            navigate(`/profile/${review.user_uid}`, {
-              state: { uid: review.user_uid },
-            })
-          }
-        >
-          Written by: {review.user_name}
-        </Link>
-        <Text color={'gray.500'}>
-          {review.created_at.toLocaleDateString()},{' '}
-          {review.created_at.toLocaleTimeString()}
-        </Text>
+        <Flex>
+          <Stack>
+            <Heading size="md">{review.title}</Heading>
+            <Link
+              onClick={() =>
+                navigate(`/profile/${review.user_uid}`, {
+                  state: { uid: review.user_uid },
+                })
+              }
+            >
+              Posted by: {review.user_name}
+            </Link>
+            <Text color={'gray.500'}>
+              {review.created_at.toLocaleDateString()},{' '}
+              {review.created_at.toLocaleTimeString()}
+            </Text>
+          </Stack>
+          <Spacer />
+          <HStack>
+            <Link
+              onClick={() =>
+                navigate(`/cafe/${review.cafe_id}`, {
+                  state: { ...cafeDetails, id: review.cafe_id },
+                })
+              }
+              size="md"
+            >
+              {review.cafe_name}
+            </Link>
+            {cafeLogo && (
+              <Image src={cafeLogo} maxHeight={'100px'} maxWidth={'auto'} />
+            )}
+          </HStack>
+        </Flex>
       </CardHeader>
 
-      <CardBody>
+      {/* <CardBody>
         <HStack>
           <Link
             onClick={() =>
@@ -73,7 +95,7 @@ export function ViewReview({ review }: { review: ReviewModel }) {
             <Image src={cafeLogo} maxHeight={'50px'} maxWidth={'auto'} />
           )}
         </HStack>
-      </CardBody>
+      </CardBody> */}
 
       <CardBody>
         <Stack divider={<StackDivider />} spacing="4">

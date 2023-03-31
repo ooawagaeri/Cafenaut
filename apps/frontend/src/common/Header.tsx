@@ -46,7 +46,7 @@ const NavLink = ({ children }: { children: string }) => (
   </Link>
 );
 
-export default function Header({ setPostedReview }: { setPostedReview: any }) {
+export default function Header({ setPostedReview }: { setPostedReview?: any }) {
   const { userDetails, setUserDetails } = useContext(UserContext);
   const navigate = useNavigate();
   const {
