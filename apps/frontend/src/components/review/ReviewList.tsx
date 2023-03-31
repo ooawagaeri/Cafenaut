@@ -30,10 +30,12 @@ import ReactStars from 'react-rating-stars-component';
 import UserContext from '../../common/UserContext';
 import { followUser, getUserDetail } from '../../services/api_service';
 import { ViewReview } from './ViewReview';
+import Authenticity from '../authenticity-senti/Authenticity';
+import Sentiment from '../authenticity-senti/Sentiment';
 
-export function ReviewList({ review }: { review: ReviewModel }) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { userDetails, setUserDetails } = useContext(UserContext);
+export function ReviewList({review}: { review: ReviewModel }) {
+  const {isOpen, onOpen, onClose} = useDisclosure();
+  const {userDetails, setUserDetails} = useContext(UserContext);
   const toast = useToast();
 
   const follow = () => {
@@ -53,17 +55,17 @@ export function ReviewList({ review }: { review: ReviewModel }) {
 
   return (
     <Center py={6}>
-      <Modal size="5xl" isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
+      <Modal size='5xl' isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay/>
         <ModalContent>
           <ModalHeader>Review</ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton/>
           <ModalBody>
             <ViewReview review={review}></ViewReview>
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button colorScheme='blue' mr={3} onClick={onClose}>
               Close
             </Button>
           </ModalFooter>
@@ -81,8 +83,8 @@ export function ReviewList({ review }: { review: ReviewModel }) {
         cursor={'pointer'}
       >
         {review.image_url && (
-          <Box bg={'gray.100'} mt={-6} mx={-6} mb={6} position="relative">
-            <Image src={review.image_url} />
+          <Box bg={'gray.100'} mt={-6} mx={-6} mb={6} position='relative'>
+            <Image src={review.image_url}/>
           </Box>
         )}
 
@@ -91,24 +93,24 @@ export function ReviewList({ review }: { review: ReviewModel }) {
             count={5}
             size={24}
             isHalf={true}
-            emptyIcon={<i className="far fa-star"></i>}
-            halfIcon={<i className="fa fa-star-half-alt"></i>}
-            fullIcon={<i className="fa fa-star"></i>}
-            activeColor="#ffd700"
+            emptyIcon={<i className='far fa-star'></i>}
+            halfIcon={<i className='fa fa-star-half-alt'></i>}
+            fullIcon={<i className='fa fa-star'></i>}
+            activeColor='#ffd700'
             value={
               review.rating[
                 Classification[
                   userDetails.classification
-                ].toLowerCase() as keyof Ratings
-              ]
+                  ].toLowerCase() as keyof Ratings
+                ]
             }
             edit={false}
           />
-          <Spacer />
+          <Spacer/>
           {userDetails.uid !== review.user_uid &&
             (userDetails.following === undefined ||
               !userDetails.following.includes(review.user_uid)) && (
-              <Button colorScheme="blue" onClick={() => follow()}>
+              <Button colorScheme='green' onClick={() => follow()} variant='ghost' size='md'>
                 + Follow {review.user_name}
               </Button>
             )}
@@ -143,7 +145,7 @@ export function ReviewList({ review }: { review: ReviewModel }) {
           align={'center'}
           onClick={onOpen}
         >
-          <Avatar name={review.user_name} />
+          <Avatar name={review.user_name}/>
           <Stack direction={'column'} spacing={0} fontSize={'sm'}>
             <Text fontWeight={600}>{review.user_name}</Text>
             <Text color={'gray.500'}>
@@ -151,6 +153,10 @@ export function ReviewList({ review }: { review: ReviewModel }) {
               {review.created_at.toLocaleTimeString()}
             </Text>
           </Stack>
+          <Spacer/>
+          <Sentiment value={review.sentiment}/>
+          <Spacer/>
+          <Authenticity value={review.authenticity}/>
         </Stack>
       </Box>
     </Center>
