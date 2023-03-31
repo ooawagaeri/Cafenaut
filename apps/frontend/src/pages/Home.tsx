@@ -62,7 +62,7 @@ export function Home() {
         userDetails.following.length === 0) && (
         <Card>
           <CardBody>
-            <Text>
+            <Text align={'center'}>
               You are not following anyone yet, so we are showing you reviews
               posted by the community! 😁
             </Text>

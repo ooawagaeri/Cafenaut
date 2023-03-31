@@ -12,6 +12,7 @@ import {
   Card,
   CardBody,
   CardHeader,
+  useToast,
 } from '@chakra-ui/react';
 import { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -20,7 +21,12 @@ import Header from '../common/Header';
 import { User } from '../../../backend/src/user/user.interface';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
 import { ReviewList } from '../components/review/ReviewList';
-import { getUserDetail, getUserReviews } from '../services/api_service';
+import {
+  followUser,
+  getUserDetail,
+  getUserReviews,
+  unfollowUser,
+} from '../services/api_service';
 import { Classification } from '../../../backend/src/classifier/classification.interface';
 import UserContext from '../common/UserContext';
 
@@ -36,6 +42,37 @@ export function Profile() {
     followers: [],
     classification: 0,
   });
+  const toast = useToast();
+
+  const follow = () => {
+    followUser(userDetails.uid, state.uid).then(() =>
+      getUserDetail(userDetails.uid).then((result) => {
+        setUserDetails(result);
+        localStorage.setItem('user', JSON.stringify(result));
+      })
+    );
+    toast({
+      title: 'Followed!',
+      status: 'success',
+      duration: 9000,
+      isClosable: true,
+    });
+  };
+
+  const unfollow = () => {
+    unfollowUser(userDetails.uid, state.uid).then(() =>
+      getUserDetail(userDetails.uid).then((result) => {
+        setUserDetails(result);
+        localStorage.setItem('user', JSON.stringify(result));
+      })
+    );
+    toast({
+      title: 'Unfollowed',
+      status: 'error',
+      duration: 9000,
+      isClosable: true,
+    });
+  };
 
   useEffect(() => {
     if (state === null) {
@@ -44,7 +81,7 @@ export function Profile() {
     } else {
       getDetails(state.uid);
     }
-  }, [state]);
+  }, [state, userDetails]);
 
   const getDetails = async (uid: string) => {
     await getUserDetail(uid).then((user) => setUser(user));
@@ -136,24 +173,42 @@ export function Profile() {
               </Stack>
             </Stack>
 
-            {state !== null && state.uid !== userDetails.uid && (
-              <Button
-                w={'full'}
-                mt={8}
-                bg={useColorModeValue('#151f21', 'gray.900')}
-                color={'white'}
-                rounded={'md'}
-                _hover={{
-                  transform: 'translateY(-2px)',
-                  boxShadow: 'lg',
-                }}
-                onClick={() =>
-                  console.log('TODO: add to following for the signed in user')
-                }
-              >
-                Follow
-              </Button>
-            )}
+            {state !== null &&
+              state.uid !== userDetails.uid &&
+              (userDetails.following === undefined ||
+                !userDetails.following.includes(state.uid)) && (
+                <Button
+                  w={'full'}
+                  mt={8}
+                  colorScheme="blue"
+                  rounded={'md'}
+                  _hover={{
+                    transform: 'translateY(-2px)',
+                    boxShadow: 'lg',
+                  }}
+                  onClick={() => follow()}
+                >
+                  + Follow
+                </Button>
+              )}
+
+            {state !== null &&
+              userDetails.following !== undefined &&
+              userDetails.following.includes(state.uid) && (
+                <Button
+                  w={'full'}
+                  mt={8}
+                  rounded={'md'}
+                  _hover={{
+                    transform: 'translateY(-2px)',
+                    boxShadow: 'lg',
+                  }}
+                  colorScheme="red"
+                  onClick={() => unfollow()}
+                >
+                  Unfollow
+                </Button>
+              )}
           </Box>
         </Box>
       </Center>

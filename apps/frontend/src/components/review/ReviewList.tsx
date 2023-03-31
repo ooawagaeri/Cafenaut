@@ -16,6 +16,9 @@ import {
   ModalHeader,
   ModalOverlay,
   useDisclosure,
+  Flex,
+  Spacer,
+  useToast,
 } from '@chakra-ui/react';
 import { Classification } from 'apps/backend/src/classifier/classification.interface';
 import { Ratings } from 'apps/backend/src/rating/rating.interface';
@@ -25,11 +28,28 @@ import { useContext } from 'react';
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
 import UserContext from '../../common/UserContext';
+import { followUser, getUserDetail } from '../../services/api_service';
 import { ViewReview } from './ViewReview';
 
 export function ReviewList({ review }: { review: ReviewModel }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { userDetails, setUserDetails } = useContext(UserContext);
+  const toast = useToast();
+
+  const follow = () => {
+    followUser(userDetails.uid, review.user_uid).then(() =>
+      getUserDetail(userDetails.uid).then((result) => {
+        setUserDetails(result);
+        localStorage.setItem('user', JSON.stringify(result));
+      })
+    );
+    toast({
+      title: 'Followed!',
+      status: 'success',
+      duration: 9000,
+      isClosable: true,
+    });
+  };
 
   return (
     <Center py={6}>
@@ -59,7 +79,6 @@ export function ReviewList({ review }: { review: ReviewModel }) {
         p={6}
         overflow={'hidden'}
         cursor={'pointer'}
-        onClick={onOpen}
       >
         {review.image_url && (
           <Box bg={'gray.100'} mt={-6} mx={-6} mb={6} position="relative">
@@ -67,23 +86,33 @@ export function ReviewList({ review }: { review: ReviewModel }) {
           </Box>
         )}
 
-        <ReactStars
-          count={5}
-          size={24}
-          isHalf={true}
-          emptyIcon={<i className="far fa-star"></i>}
-          halfIcon={<i className="fa fa-star-half-alt"></i>}
-          fullIcon={<i className="fa fa-star"></i>}
-          activeColor="#ffd700"
-          value={
-            review.rating[
-              Classification[
-                userDetails.classification
-              ].toLowerCase() as keyof Ratings
-            ]
-          }
-          edit={false}
-        />
+        <Flex>
+          <ReactStars
+            count={5}
+            size={24}
+            isHalf={true}
+            emptyIcon={<i className="far fa-star"></i>}
+            halfIcon={<i className="fa fa-star-half-alt"></i>}
+            fullIcon={<i className="fa fa-star"></i>}
+            activeColor="#ffd700"
+            value={
+              review.rating[
+                Classification[
+                  userDetails.classification
+                ].toLowerCase() as keyof Ratings
+              ]
+            }
+            edit={false}
+          />
+          <Spacer />
+          {userDetails.uid !== review.user_uid &&
+            (userDetails.following === undefined ||
+              !userDetails.following.includes(review.user_uid)) && (
+              <Button colorScheme="blue" onClick={() => follow()}>
+                + Follow {review.user_name}
+              </Button>
+            )}
+        </Flex>
         <Stack>
           <Text
             color={'green.500'}
@@ -91,6 +120,7 @@ export function ReviewList({ review }: { review: ReviewModel }) {
             fontWeight={800}
             fontSize={'sm'}
             letterSpacing={1.1}
+            onClick={onOpen}
           >
             {review.cafe_name}
           </Text>
@@ -98,12 +128,21 @@ export function ReviewList({ review }: { review: ReviewModel }) {
             color={useColorModeValue('gray.700', 'white')}
             fontSize={'2xl'}
             fontFamily={'body'}
+            onClick={onOpen}
           >
             {review.title}
           </Heading>
-          <Text color={'gray.500'}>{review.body}</Text>
+          <Text color={'gray.500'} onClick={onOpen}>
+            {review.body}
+          </Text>
         </Stack>
-        <Stack mt={6} direction={'row'} spacing={4} align={'center'}>
+        <Stack
+          mt={6}
+          direction={'row'}
+          spacing={4}
+          align={'center'}
+          onClick={onOpen}
+        >
           <Avatar name={review.user_name} />
           <Stack direction={'column'} spacing={0} fontSize={'sm'}>
             <Text fontWeight={600}>{review.user_name}</Text>
