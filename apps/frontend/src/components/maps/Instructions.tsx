@@ -1,6 +1,6 @@
 import { Box, Heading, IconButton, Slide, useDisclosure } from '@chakra-ui/react'
-import { QuestionIcon } from "@chakra-ui/icons";
-import React from "react";
+import { QuestionIcon } from '@chakra-ui/icons';
+import React from 'react';
 
 export default function Instructions() {
   const {isOpen, onToggle} = useDisclosure()
@@ -29,10 +29,10 @@ export default function Instructions() {
               You can click around to adjust its location if needed.
             </li>
             <li><b>Adding the pin to a middle-ground finder:</b> Once you've dropped a pin,
-              right-click on the pin to bring up the options menu. From there, select "Add finder
-              pin" This will add the pin to a list of saved locations that you can access later.
+              right-click on the pin to bring up the options menu. From there, select 'Add finder
+              pin' This will add the pin to a list of saved locations that you can access later.
             </li>
-            <li><b>Accessing middle-ground finder:</b> Select "Open finder" and execute "Calculate"
+            <li><b>Accessing middle-ground finder:</b> Select 'Open finder' and execute 'Calculate'
               when you have at least 2 pins dropped!
             </li>
             <li><b>Viewing cafe details:</b> To view details about a cafe, look for the cafe icon on
