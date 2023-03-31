@@ -6,7 +6,7 @@ import { Card, CardBody, Text, Box } from '@chakra-ui/react';
 import Header from '../common/Header';
 import { auth } from '../services/firebase';
 import { ReviewList } from '../components/review/ReviewList';
-import { getAllReviews } from '../services/api_service';
+import { getAllReviews, getFollowingReviews } from '../services/api_service';
 import UserContext from '../common/UserContext';
 
 export function Home() {
@@ -47,18 +47,26 @@ export function Home() {
 
   const [reviews, setReviews] = useState([]);
 
-  // TODO: Change to view followers reviews, then move all reviews to an "Explore" tab
   async function getReviews() {
-    await getAllReviews().then((reviews) => setReviews(reviews));
+    if (
+      userDetails.following !== undefined &&
+      userDetails.following.length > 0
+    ) {
+      await getFollowingReviews(userDetails.following).then((reviews) =>
+        setReviews(reviews)
+      );
+    } else {
+      await getAllReviews().then((reviews) => setReviews(reviews));
+    }
   }
 
   useEffect(() => {
     getReviews();
-  }, [postedReview]);
+  }, [postedReview, userDetails]);
 
   return (
     <Box>
-      <Header setPostedReview={setPostedReview}/>
+      <Header setPostedReview={setPostedReview} />
       {(userDetails.following === undefined ||
         userDetails.following.length === 0) && (
         <Card>

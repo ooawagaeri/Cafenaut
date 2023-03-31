@@ -29,7 +29,7 @@ import { logout } from '../services/firebase';
 import { useContext } from 'react';
 import UserContext from './UserContext';
 
-const Links = ['Home', 'Cafes', 'Explore', 'Users'];
+const Links = ['Home', 'Explore', 'Cafes', 'Maps'];
 
 const NavLink = ({ children }: { children: string }) => (
   <Link

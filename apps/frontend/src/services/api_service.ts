@@ -42,6 +42,17 @@ export async function getAllReviews() {
   return reviews;
 }
 
+export async function getFollowingReviews(following: string[]) {
+  const res = await axios.get(base_url + 'review');
+  let reviews = res.data;
+  // Map string to Date format in order to use the Date methods
+  reviews.map((review: any) => {
+    review.created_at = new Date(review.created_at);
+  });
+  reviews = reviews.filter((review: ReviewModel) => following.includes(review.user_uid));
+  return reviews;
+}
+
 export async function getAllUsers() {
   const res = await axios.get(base_url + 'user/all');
   return res.data;

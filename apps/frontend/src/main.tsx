@@ -11,7 +11,8 @@ import { CafeList } from './components/cafe/CafeList';
 import { Cafe } from './components/cafe/Cafe';
 import { Profile } from './pages/Profile';
 import { UserContextView } from './common/UserContextView';
-import Explore from './pages/Explore';
+import Maps from './pages/Maps';
+import { Explore } from './pages/Explore';
 
 const theme = extendTheme({
   components: {
@@ -34,7 +35,8 @@ root.render(
           <Route path="/home" element={<Home />} />
           <Route path="/cafes" element={<CafeList />} />
           <Route path="/cafe/*" element={<Cafe />} />
-          <Route path="/explore" element={<Explore/>}/>
+          <Route path="/maps" element={<Maps />} />
+          <Route path="/explore" element={<Explore />} />
           <Route path="/profile/*" element={<Profile />} />
         </Routes>
       </Router>
