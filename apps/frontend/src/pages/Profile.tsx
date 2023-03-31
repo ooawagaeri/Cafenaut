@@ -13,6 +13,14 @@ import {
   CardBody,
   CardHeader,
   useToast,
+  useDisclosure,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
 } from '@chakra-ui/react';
 import { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -29,10 +37,12 @@ import {
 } from '../services/api_service';
 import { Classification } from '../../../backend/src/classifier/classification.interface';
 import UserContext from '../common/UserContext';
+import { Users } from '../components/profile/Users';
 
 export function Profile() {
   const { state } = useLocation();
   const [reviews, setReviews] = useState([]);
+  const [postedReview, setPostedReview] = useState(false);
   const { userDetails, setUserDetails } = useContext(UserContext);
   const [user, setUser] = useState<User>({
     uid: '',
@@ -43,6 +53,16 @@ export function Profile() {
     classification: 0,
   });
   const toast = useToast();
+  const {
+    isOpen: isFollowingOpen,
+    onOpen: onFollowingOpen,
+    onClose: onFollowingClose,
+  } = useDisclosure();
+  const {
+    isOpen: isFollowersOpen,
+    onOpen: onFollowersOpen,
+    onClose: onFollowersClose,
+  } = useDisclosure();
 
   const follow = () => {
     followUser(userDetails.uid, state.uid).then(() =>
@@ -89,7 +109,7 @@ export function Profile() {
 
   useEffect(() => {
     getReviews(user.uid);
-  }, [user]);
+  }, [postedReview, user]);
 
   async function getReviews(uid: string) {
     await getUserReviews(uid).then((reviews) => setReviews(reviews));
@@ -98,6 +118,47 @@ export function Profile() {
   return (
     <Box>
       <Header />
+
+      <Modal isOpen={isFollowingOpen} onClose={onFollowingClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Following</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Users
+              users_uid={user.following ? user.following : []}
+              onClose={onFollowingClose}
+            ></Users>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button mr={3} onClick={onFollowingClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={isFollowersOpen} onClose={onFollowersClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Followers</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Users
+              users_uid={user.followers ? user.followers : []}
+              onClose={onFollowersClose}
+            ></Users>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button mr={3} onClick={onFollowersClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
       <Center py={6}>
         <Box
           maxW={'60%'}
@@ -146,7 +207,7 @@ export function Profile() {
 
             <Stack direction={'row'} justify={'center'} spacing={6}>
               <Stack
-                onClick={() => console.log('TODO: open Following modal')}
+                onClick={() => onFollowingOpen()}
                 cursor={'pointer'}
                 spacing={0}
                 align={'center'}
@@ -159,7 +220,7 @@ export function Profile() {
                 </Text>
               </Stack>
               <Stack
-                onClick={() => console.log('TODO: open Followers modal')}
+                onClick={() => onFollowersOpen()}
                 cursor={'pointer'}
                 spacing={0}
                 align={'center'}
