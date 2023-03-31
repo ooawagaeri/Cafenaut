@@ -1,22 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import Header from '../common/Header';
-import { Box } from '@chakra-ui/layout';
-import { PigeonMap } from "../components/maps/PigeonMap";
-import { getAllCafesPins } from "../services/api_service";
+import { useContext, useEffect, useState } from 'react';
+import { Card, CardBody, Text, Box } from '@chakra-ui/react';
 
-const Explore = () => {
-  const [cafes, setCafes] = useState([]);
+import Header from '../common/Header';
+import { ReviewList } from '../components/review/ReviewList';
+import { getAllReviews } from '../services/api_service';
+import UserContext from '../common/UserContext';
+
+export function Explore() {
+  const { userDetails, setUserDetails } = useContext(UserContext);
+  const [postedReview, setPostedReview] = useState(false);
+  const [reviews, setReviews] = useState([]);
+
+  async function getReviews() {
+    await getAllReviews().then((reviews) => setReviews(reviews));
+  }
 
   useEffect(() => {
-    getAllCafesPins().then((cafes) => setCafes(cafes));
-  }, []);
+    getReviews();
+  }, [postedReview, userDetails]);
 
   return (
     <Box>
-      <Header/>
-      <PigeonMap data={cafes}/>
+      <Header setPostedReview={setPostedReview} />
+      <Card>
+        <CardBody>
+          <Text align={'center'}>
+            Showing you reviews posted by the community! 😁
+          </Text>
+        </CardBody>
+      </Card>
+      {reviews.map((review, index) => (
+        <ReviewList key={index} review={review}></ReviewList>
+      ))}
     </Box>
-  )
-};
-
-export default Explore;
+  );
+}

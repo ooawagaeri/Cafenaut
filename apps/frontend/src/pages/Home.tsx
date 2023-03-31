@@ -6,13 +6,14 @@ import { Card, CardBody, Text, Box } from '@chakra-ui/react';
 import Header from '../common/Header';
 import { auth } from '../services/firebase';
 import { ReviewList } from '../components/review/ReviewList';
-import { getAllReviews } from '../services/api_service';
+import { getAllReviews, getFollowingReviews } from '../services/api_service';
 import UserContext from '../common/UserContext';
 
 export function Home() {
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
   const { userDetails, setUserDetails } = useContext(UserContext);
+  const [postedReview, setPostedReview] = useState(false);
 
   const fetchFromBackend = async () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -46,23 +47,31 @@ export function Home() {
 
   const [reviews, setReviews] = useState([]);
 
-  // TODO: Change to view followers reviews, then move all reviews to an "Explore" tab
   async function getReviews() {
-    await getAllReviews().then((reviews) => setReviews(reviews));
+    if (
+      userDetails.following !== undefined &&
+      userDetails.following.length > 0
+    ) {
+      await getFollowingReviews(userDetails.following).then((reviews) =>
+        setReviews(reviews)
+      );
+    } else {
+      await getAllReviews().then((reviews) => setReviews(reviews));
+    }
   }
 
   useEffect(() => {
     getReviews();
-  }, []);
+  }, [postedReview, userDetails]);
 
   return (
     <Box>
-      <Header />
+      <Header setPostedReview={setPostedReview} />
       {(userDetails.following === undefined ||
         userDetails.following.length === 0) && (
         <Card>
           <CardBody>
-            <Text>
+            <Text align={'center'}>
               You are not following anyone yet, so we are showing you reviews
               posted by the community! 😁
             </Text>

@@ -12,6 +12,15 @@ import {
   Card,
   CardBody,
   CardHeader,
+  useToast,
+  useDisclosure,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
 } from '@chakra-ui/react';
 import { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -20,13 +29,20 @@ import Header from '../common/Header';
 import { User } from '../../../backend/src/user/user.interface';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
 import { ReviewList } from '../components/review/ReviewList';
-import { getUserDetail, getUserReviews } from '../services/api_service';
+import {
+  followUser,
+  getUserDetail,
+  getUserReviews,
+  unfollowUser,
+} from '../services/api_service';
 import { Classification } from '../../../backend/src/classifier/classification.interface';
 import UserContext from '../common/UserContext';
+import { Users } from '../components/profile/Users';
 
 export function Profile() {
   const { state } = useLocation();
   const [reviews, setReviews] = useState([]);
+  const [postedReview, setPostedReview] = useState(false);
   const { userDetails, setUserDetails } = useContext(UserContext);
   const [user, setUser] = useState<User>({
     uid: '',
@@ -36,6 +52,47 @@ export function Profile() {
     followers: [],
     classification: 0,
   });
+  const toast = useToast();
+  const {
+    isOpen: isFollowingOpen,
+    onOpen: onFollowingOpen,
+    onClose: onFollowingClose,
+  } = useDisclosure();
+  const {
+    isOpen: isFollowersOpen,
+    onOpen: onFollowersOpen,
+    onClose: onFollowersClose,
+  } = useDisclosure();
+
+  const follow = () => {
+    followUser(userDetails.uid, state.uid).then(() =>
+      getUserDetail(userDetails.uid).then((result) => {
+        setUserDetails(result);
+        localStorage.setItem('user', JSON.stringify(result));
+      })
+    );
+    toast({
+      title: 'Followed!',
+      status: 'success',
+      duration: 9000,
+      isClosable: true,
+    });
+  };
+
+  const unfollow = () => {
+    unfollowUser(userDetails.uid, state.uid).then(() =>
+      getUserDetail(userDetails.uid).then((result) => {
+        setUserDetails(result);
+        localStorage.setItem('user', JSON.stringify(result));
+      })
+    );
+    toast({
+      title: 'Unfollowed',
+      status: 'error',
+      duration: 9000,
+      isClosable: true,
+    });
+  };
 
   useEffect(() => {
     if (state === null) {
@@ -44,7 +101,7 @@ export function Profile() {
     } else {
       getDetails(state.uid);
     }
-  }, [state]);
+  }, [state, userDetails]);
 
   const getDetails = async (uid: string) => {
     await getUserDetail(uid).then((user) => setUser(user));
@@ -52,7 +109,7 @@ export function Profile() {
 
   useEffect(() => {
     getReviews(user.uid);
-  }, [user]);
+  }, [postedReview, user]);
 
   async function getReviews(uid: string) {
     await getUserReviews(uid).then((reviews) => setReviews(reviews));
@@ -61,6 +118,47 @@ export function Profile() {
   return (
     <Box>
       <Header />
+
+      <Modal isOpen={isFollowingOpen} onClose={onFollowingClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Following</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Users
+              users_uid={user.following ? user.following : []}
+              onClose={onFollowingClose}
+            ></Users>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button mr={3} onClick={onFollowingClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={isFollowersOpen} onClose={onFollowersClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Followers</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Users
+              users_uid={user.followers ? user.followers : []}
+              onClose={onFollowersClose}
+            ></Users>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button mr={3} onClick={onFollowersClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
       <Center py={6}>
         <Box
           maxW={'60%'}
@@ -109,7 +207,7 @@ export function Profile() {
 
             <Stack direction={'row'} justify={'center'} spacing={6}>
               <Stack
-                onClick={() => console.log('TODO: open Following modal')}
+                onClick={() => onFollowingOpen()}
                 cursor={'pointer'}
                 spacing={0}
                 align={'center'}
@@ -122,7 +220,7 @@ export function Profile() {
                 </Text>
               </Stack>
               <Stack
-                onClick={() => console.log('TODO: open Followers modal')}
+                onClick={() => onFollowersOpen()}
                 cursor={'pointer'}
                 spacing={0}
                 align={'center'}
@@ -136,24 +234,42 @@ export function Profile() {
               </Stack>
             </Stack>
 
-            {state !== null && state.uid !== userDetails.uid && (
-              <Button
-                w={'full'}
-                mt={8}
-                bg={useColorModeValue('#151f21', 'gray.900')}
-                color={'white'}
-                rounded={'md'}
-                _hover={{
-                  transform: 'translateY(-2px)',
-                  boxShadow: 'lg',
-                }}
-                onClick={() =>
-                  console.log('TODO: add to following for the signed in user')
-                }
-              >
-                Follow
-              </Button>
-            )}
+            {state !== null &&
+              state.uid !== userDetails.uid &&
+              (userDetails.following === undefined ||
+                !userDetails.following.includes(state.uid)) && (
+                <Button
+                  w={'full'}
+                  mt={8}
+                  colorScheme="blue"
+                  rounded={'md'}
+                  _hover={{
+                    transform: 'translateY(-2px)',
+                    boxShadow: 'lg',
+                  }}
+                  onClick={() => follow()}
+                >
+                  + Follow
+                </Button>
+              )}
+
+            {state !== null &&
+              userDetails.following !== undefined &&
+              userDetails.following.includes(state.uid) && (
+                <Button
+                  w={'full'}
+                  mt={8}
+                  rounded={'md'}
+                  _hover={{
+                    transform: 'translateY(-2px)',
+                    boxShadow: 'lg',
+                  }}
+                  colorScheme="red"
+                  onClick={() => unfollow()}
+                >
+                  Unfollow
+                </Button>
+              )}
           </Box>
         </Box>
       </Center>
