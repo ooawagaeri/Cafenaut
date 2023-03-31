@@ -17,13 +17,15 @@ import {
   Flex,
   Spacer,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
 import { useNavigate } from 'react-router-dom';
 import { getCafeDetail } from '../../services/api_service';
+import Sentiment from "../authenticity-senti/Sentiment";
+import Authenticity from "../authenticity-senti/Authenticity";
 
 export function ViewReview({ review }: { review: ReviewModel }) {
   const [cafeLogo, setCafeLogo] = useState('');
@@ -59,6 +61,10 @@ export function ViewReview({ review }: { review: ReviewModel }) {
               {review.created_at.toLocaleDateString()},{' '}
               {review.created_at.toLocaleTimeString()}
             </Text>
+            <Spacer/>
+            <Sentiment value={review.sentiment}/>
+            <Text fontWeight={600} size='sm'>Authenticity:</Text>
+            <Authenticity value={review.authenticity}/>
           </Stack>
           <Spacer />
           <HStack>
@@ -78,25 +84,6 @@ export function ViewReview({ review }: { review: ReviewModel }) {
           </HStack>
         </Flex>
       </CardHeader>
-
-      {/* <CardBody>
-        <HStack>
-          <Link
-            onClick={() =>
-              navigate(`/cafe/${review.cafe_id}`, {
-                state: { ...cafeDetails, id: review.cafe_id },
-              })
-            }
-            size="md"
-          >
-            {review.cafe_name}
-          </Link>
-          {cafeLogo && (
-            <Image src={cafeLogo} maxHeight={'50px'} maxWidth={'auto'} />
-          )}
-        </HStack>
-      </CardBody> */}
-
       <CardBody>
         <Stack divider={<StackDivider />} spacing="4">
           <Box>
