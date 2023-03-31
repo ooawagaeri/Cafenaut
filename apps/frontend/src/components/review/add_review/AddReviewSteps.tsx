@@ -1,6 +1,6 @@
 import { Flex, Button } from '@chakra-ui/react';
 import { Step, Steps, useSteps } from 'chakra-ui-steps';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { CoffeeStep } from './CoffeeStep';
 import { SelectCafe } from './SelectCafeStep';
@@ -12,26 +12,30 @@ import { CuisineStep } from './CuisineStep';
 import { SpecialityStep } from './SpecialityStep';
 import { AmenitiesStep } from './AmenitiesStep';
 import { PetStep } from './PetStep';
+import { OverallStep } from './OverallStep';
 
 import { ReviewModel } from '../../../../../backend/src/review/review.interface';
 import { postReview } from '../../../services/api_service';
-import { OverallStep } from './OverallStep';
+import UserContext from 'apps/frontend/src/common/UserContext';
 
 export function AddReviewSteps({
   onAddReviewModalClose,
+  setPostedReview
 }: {
   onAddReviewModalClose: any;
+  setPostedReview: any;
 }) {
   const { nextStep, prevStep, setStep, reset, activeStep } = useSteps({
     initialStep: 0,
   });
 
+  const { userDetails, setUserDetails } = useContext(UserContext);
+
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user') || '');
     setReview((review: any) => {
       const newReview = { ...review };
-      newReview.user_uid = user.uid;
-      newReview.user_name = user.name;
+      newReview.user_uid = userDetails.uid;
+      newReview.user_name = userDetails.name;
       return newReview;
     });
   }, []);
@@ -119,6 +123,13 @@ export function AddReviewSteps({
     },
     cafe_id: '',
     cafe_name: '',
+    rating: {
+      unweighted: 0,
+      casual_coffee: 0,
+      connoisseur_coffee: 0,
+      casual_tea: 0,
+      connoisseur_tea: 0,
+    },
   };
   const [review, setReview] = useState(reviewOutput);
 
@@ -170,6 +181,7 @@ export function AddReviewSteps({
     console.log(review);
     await postReview(review).then((res) => {
       console.log(res);
+      setPostedReview(true);
       onAddReviewModalClose();
     });
   };

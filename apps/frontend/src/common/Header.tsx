@@ -46,7 +46,7 @@ const NavLink = ({ children }: { children: string }) => (
   </Link>
 );
 
-export default function Header() {
+export default function Header({ setPostedReview }: { setPostedReview: any }) {
   const { userDetails, setUserDetails } = useContext(UserContext);
   const navigate = useNavigate();
   const {
@@ -81,6 +81,7 @@ export default function Header() {
           <ModalBody>
             <AddReviewSteps
               onAddReviewModalClose={onAddReviewModalClose}
+              setPostedReview={setPostedReview}
             ></AddReviewSteps>
           </ModalBody>
 

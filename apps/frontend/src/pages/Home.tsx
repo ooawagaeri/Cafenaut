@@ -13,6 +13,7 @@ export function Home() {
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
   const { userDetails, setUserDetails } = useContext(UserContext);
+  const [postedReview, setPostedReview] = useState(false);
 
   const fetchFromBackend = async () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -53,11 +54,11 @@ export function Home() {
 
   useEffect(() => {
     getReviews();
-  }, []);
+  }, [postedReview]);
 
   return (
     <Box>
-      <Header />
+      <Header setPostedReview={setPostedReview}/>
       {(userDetails.following === undefined ||
         userDetails.following.length === 0) && (
         <Card>
