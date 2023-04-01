@@ -1,8 +1,8 @@
 import {
   Box,
   Button,
-  CircularProgress,
-  CircularProgressLabel, Heading, Image,
+  Heading,
+  Image,
   Text,
   Tooltip
 } from '@chakra-ui/react';
@@ -13,9 +13,9 @@ import ReactStars from 'react-rating-stars-component';
 import { CafePinModel } from 'apps/backend/src/cafe/cafe.interface';
 import { useNavigate } from 'react-router-dom';
 import UserContext from '../../common/UserContext';
+import Authenticity from '../authenticity-senti/Authenticity'
 import { Classification } from 'apps/backend/src/classifier/classification.interface';
 import { Ratings } from 'apps/backend/src/rating/rating.interface';
-
 
 export function CafeCard(props: { cafe: CafePinModel }) {
   const navigate = useNavigate();
@@ -48,11 +48,7 @@ export function CafeCard(props: { cafe: CafePinModel }) {
           edit={false}/>
       </Box>
       <Box display='flex' justifyContent='center'>
-        <Tooltip label='Authenticity %' placement='right'>
-          <CircularProgress value={props.cafe.authenticity * 100}>
-            <CircularProgressLabel>{Math.round(props.cafe.authenticity * 100)}%</CircularProgressLabel>
-          </CircularProgress>
-        </Tooltip>
+        <Authenticity value={props.cafe.authenticity}/>
       </Box>
       <Box textAlign='center'>
         <Tooltip label='Total no. of reviews' placement='right'>
