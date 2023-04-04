@@ -47,9 +47,9 @@ export function CafeList() {
               onClick={() => navigate(`/cafe/${cafe['id']}`, { state: cafe })}
             >
               {cafe['logo'] && (
-                <Box bg={'gray.100'} mt={-6} mx={-6} mb={6} position="relative">
+                <Center bg={'gray.100'} mt={-6} mx={-6} mb={6} position="relative" height={'450px'}>
                   <Image src={cafe['logo']} />
-                </Box>
+                </Center>
               )}
 
               <ReactStars
