@@ -134,6 +134,15 @@ export class ReviewService {
     });
   }
 
+  private normalizeStringToStemTokens(text: string) {
+    const tokenizer = new WordTokenizer();
+    const content = tokenizer.tokenize(
+      text
+        .toLowerCase()
+        .replace(/[^a-zA-Z0-9 ]/g, ''));
+    return content.map(word => PorterStemmer.stem(word));
+  }
+
   public async updateKeyTerms(review_id): Promise<void> {
     const reviewRef = firebase.firestore().collection('reviews').doc(review_id);
     reviewRef.get().then(async (docSnap) => {
@@ -147,13 +156,7 @@ export class ReviewService {
           review.aspects.amenities.free_text, review.aspects.pet.free_text
         ];
 
-        const tokenizer = new WordTokenizer();
-        const content = tokenizer.tokenize(
-          content_arr
-            .join(' ')
-            .toLowerCase()
-            .replace(/[^a-zA-Z0-9 ]/g, ''));
-        const stemmedContent = content.map(word => PorterStemmer.stem(word));
+        const stemmedContent = this.normalizeStringToStemTokens(content_arr.join(' '));
         const toUpdate = {
           search_terms: [...new Set(stemmedContent)],
         };
@@ -167,6 +170,7 @@ export class ReviewService {
   }
 
   public async search(queryText: string, reviewToSearch: ReviewModel): Promise<ReviewModel[]> {
+    // Converts review boolean-fields to binary
     function makeBinaryCompare(review: ReviewModel) {
       const stringBinary = [
         review.aspects.coffee.beans.arabica,
@@ -203,29 +207,50 @@ export class ReviewService {
     }
 
     const searchBinaryCompare = makeBinaryCompare(reviewToSearch);
+    // Empty query, return all
     if (queryText === "" && searchBinaryCompare === 0) {
-      // Empty query, return all
       return await this.getAll();
     }
 
     let arrayResults: ReviewModel[];
     const setResults = new Set<ReviewModel>();
+    // Filter reviews based on text
     if (queryText !== "") {
       const reviewRef = firebase.firestore().collection('reviews');
-      const processedQueryText = PorterStemmer.stem(queryText.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, ''));
-      const reviewSnapshot = await reviewRef
-        .where('search_terms', 'array-contains', processedQueryText)
-        .get();
-      const reviewDocs = reviewSnapshot.docs
 
-      reviewDocs.forEach(doc => {
-        setResults.add(doc.data() as ReviewModel);
-      });
+      const setIds = new Set<string>();
+      const stemmedQueryTexts = this.normalizeStringToStemTokens(queryText);
+
+      if (stemmedQueryTexts.length == 1) {
+        // Get all docs
+        const reviewSnapshot = await reviewRef
+          .where('search_terms', 'array-contains', stemmedQueryTexts[0])
+          .get();
+        reviewSnapshot.docs.forEach(doc => {
+          setResults.add(doc.data() as ReviewModel);
+        });
+      } else {
+        // Get overlapping docs
+        for (const stemmedQueryText of stemmedQueryTexts) {
+          const reviewSnapshot = await reviewRef
+            .where('search_terms', 'array-contains', stemmedQueryText)
+            .get();
+          reviewSnapshot.docs.forEach(doc => {
+            if (setIds.has(doc.id)) {
+              setResults.add(doc.data() as ReviewModel)
+            } else {
+              setIds.add(doc.id);
+            }
+          });
+        }
+      }
+
       arrayResults = Array.from(setResults);
     } else {
       arrayResults = await this.getAll();
     }
 
+    // Filter reviews based on boolean-fields
     if (searchBinaryCompare > 0) {
       arrayResults = arrayResults.filter((value) => {
         const binaryCompare = makeBinaryCompare(value);

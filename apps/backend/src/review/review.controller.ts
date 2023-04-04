@@ -41,8 +41,8 @@ export class ReviewController {
   @Post()
   async postReview(@Body() post: ReviewModel): Promise<void> {
     const reviewId = await this.reviewService.create(post);
-    // Async update scores
-    this.authenticityService.calculateAllAspects(reviewId)
+    // Sync update scores
+    await this.authenticityService.calculateAllAspects(reviewId)
       .then(() => console.log('Updating scores...'));
     // Async update class
     this.classifierService.retrieveUserClassification(post.user_uid)
