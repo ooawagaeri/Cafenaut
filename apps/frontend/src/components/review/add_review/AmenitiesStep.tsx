@@ -1,4 +1,5 @@
 import { FormControl, FormLabel, Box, Textarea } from '@chakra-ui/react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
 

@@ -14,7 +14,7 @@ import { AmenitiesStep } from './AmenitiesStep';
 import { PetStep } from './PetStep';
 import { OverallStep } from './OverallStep';
 
-import { ReviewModel } from '../../../../../backend/src/review/review.interface';
+import { ReviewModel } from 'apps/backend/src/review/review.interface';
 import { postReview } from '../../../services/api_service';
 import UserContext from 'apps/frontend/src/common/UserContext';
 
@@ -144,28 +144,28 @@ export function AddReviewSteps({
     },
     {
       label: 'Coffee',
-      content: <CoffeeStep setReview={setReview}></CoffeeStep>,
+      content: <CoffeeStep setReview={setReview} isAdd={true}></CoffeeStep>,
     },
-    { label: 'Tea', content: <TeaStep setReview={setReview}></TeaStep> },
+    { label: 'Tea', content: <TeaStep setReview={setReview} isAdd={true}></TeaStep> },
     {
       label: 'Ambience',
-      content: <AmbienceStep setReview={setReview}></AmbienceStep>,
+      content: <AmbienceStep setReview={setReview} isAdd={true}></AmbienceStep>,
     },
     {
       label: 'Work/Study Friendly',
-      content: <WorkFriendlyStep setReview={setReview}></WorkFriendlyStep>,
+      content: <WorkFriendlyStep setReview={setReview} isAdd={true}></WorkFriendlyStep>,
     },
     {
       label: 'Pricing',
-      content: <PricingStep setReview={setReview}></PricingStep>,
+      content: <PricingStep setReview={setReview} isAdd={true}></PricingStep>,
     },
     {
       label: 'Cuisine',
-      content: <CuisineStep setReview={setReview}></CuisineStep>,
+      content: <CuisineStep setReview={setReview} isAdd={true}></CuisineStep>,
     },
     {
       label: 'Speciality',
-      content: <SpecialityStep setReview={setReview}></SpecialityStep>,
+      content: <SpecialityStep setReview={setReview} isAdd={true}></SpecialityStep>,
     },
     {
       label: 'Amenities',
@@ -173,7 +173,7 @@ export function AddReviewSteps({
     },
     {
       label: 'Pet-Friendliness',
-      content: <PetStep setReview={setReview}></PetStep>,
+      content: <PetStep setReview={setReview} isAdd={true}></PetStep>,
     },
   ];
 
@@ -187,7 +187,7 @@ export function AddReviewSteps({
   };
 
   return (
-    <Flex flexDir="column" width="100%">
+    <Flex flexDir="column" width="94%">
       <Steps onClickStep={(step) => setStep(step)} activeStep={activeStep}>
         {steps.map(({ label, content }) => (
           <Step label={label} key={label}>

@@ -91,3 +91,17 @@ export async function getMiddleGround(
   });
   return res.data;
 }
+
+
+export async function searchReviews(
+  value: string,
+  reviewToSearch: ReviewModel,
+): Promise<{ reviews: ReviewModel[] }> {
+  const res = await axios.get(base_url + 'search', {
+    params: {
+      value,
+      reviewToSearch,
+    },
+  });
+  return res.data;
+}
