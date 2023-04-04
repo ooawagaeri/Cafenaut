@@ -178,9 +178,7 @@ export function AddReviewSteps({
   ];
 
   const createReview = async () => {
-    console.log(review);
     await postReview(review).then((res) => {
-      console.log(res);
       setPostedReview(true);
       onAddReviewModalClose();
     });

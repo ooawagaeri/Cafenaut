@@ -49,32 +49,31 @@ export function PricingStep({setReview, isAdd}: { setReview: any, isAdd: boolean
             </Checkbox>
           </Stack>
         </CheckboxGroup>
-        <FormLabel paddingTop={'2%'}>Average Price($)</FormLabel>
-        <NumberInput
-          onChange={(e) => {
-            setReview((review: any) => {
-              const newReview = {...review};
-              newReview.aspects.price.avg_price = e;
-              return newReview;
-            });
-          }}
-          min={1}
-        >
-          <NumberInputField/>
-          <NumberInputStepper>
-            <NumberIncrementStepper/>
-            <NumberDecrementStepper/>
-          </NumberInputStepper>
-        </NumberInput>
         {isAdd && (
-          <><FormLabel paddingTop={'2%'}>Thoughts on Price</FormLabel><Textarea
-            onChange={(e) => {
-              setReview((review: any) => {
-                const newReview = {...review};
-                newReview.aspects.price.free_text = e.target.value;
-                return newReview;
-              });
-            }}/></>
+          <><FormLabel paddingTop={'2%'}>Average Price($)</FormLabel>
+            <NumberInput
+              onChange={(e) => {
+                setReview((review: any) => {
+                  const newReview = {...review};
+                  newReview.aspects.price.avg_price = e;
+                  return newReview;
+                });
+              }}
+              min={1}
+            >
+              <NumberInputField/>
+              <NumberInputStepper>
+                <NumberIncrementStepper/>
+                <NumberDecrementStepper/>
+              </NumberInputStepper>
+            </NumberInput><FormLabel paddingTop={'2%'}>Thoughts on Price</FormLabel><Textarea
+              onChange={(e) => {
+                setReview((review: any) => {
+                  const newReview = {...review};
+                  newReview.aspects.price.free_text = e.target.value;
+                  return newReview;
+                });
+              }}/></>
         )}
       </FormControl>
       {isAdd && (

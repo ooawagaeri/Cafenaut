@@ -3,6 +3,7 @@ import { ReviewModel } from './review.interface';
 import { AggregatedRating } from '../rating/aggregatedRating';
 import * as firebase from 'firebase-admin';
 import { CafePinModel } from "../cafe/cafe.interface";
+import { PorterStemmer, WordTokenizer } from "natural";
 
 @Injectable()
 export class ReviewService {
@@ -53,7 +54,6 @@ export class ReviewService {
     const arr = [];
 
     querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
       arr.push(doc.data());
     });
     return this.sortReviewsByDate(arr);
@@ -132,5 +132,108 @@ export class ReviewService {
         throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
       }
     });
+  }
+
+  public async updateKeyTerms(review_id): Promise<void> {
+    const reviewRef = firebase.firestore().collection('reviews').doc(review_id);
+    reviewRef.get().then(async (docSnap) => {
+      if (docSnap.exists) {
+        const review = docSnap.data() as ReviewModel;
+        const content_arr = [review.title, review.body, review.aspects.coffee.free_text,
+          review.aspects.tea.free_text, review.aspects.ambience.free_text,
+          review.aspects.ambience.lighting, review.aspects.ambience.vibe,
+          review.aspects.price.free_text, review.aspects.work_friendly.free_text,
+          review.aspects.cuisine.free_text, review.aspects.speciality.free_text,
+          review.aspects.amenities.free_text, review.aspects.pet.free_text
+        ];
+
+        const tokenizer = new WordTokenizer();
+        const content = tokenizer.tokenize(
+          content_arr
+            .join(' ')
+            .toLowerCase()
+            .replace(/[^a-zA-Z0-9 ]/g, ''));
+        const stemmedContent = content.map(word => PorterStemmer.stem(word));
+        const toUpdate = {
+          search_terms: [...new Set(stemmedContent)],
+        };
+        await reviewRef.update(toUpdate);
+        console.log('Review search terms updated.');
+      } else {
+        console.log('No such Review!');
+        throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+      }
+    });
+  }
+
+  public async search(queryText: string, reviewToSearch: ReviewModel): Promise<ReviewModel[]> {
+    function makeBinaryCompare(review: ReviewModel) {
+      const stringBinary = [
+        review.aspects.coffee.beans.arabica,
+        review.aspects.coffee.beans.excelsa,
+        review.aspects.coffee.beans.liberica,
+        review.aspects.coffee.beans.robusta,
+        review.aspects.coffee.milk.low_fat,
+        review.aspects.coffee.milk.almond,
+        review.aspects.coffee.milk.oat,
+        review.aspects.coffee.milk.soy,
+        review.aspects.coffee.non_caffeinated,
+        review.aspects.tea.tea_leaves.black,
+        review.aspects.tea.tea_leaves.green,
+        review.aspects.tea.tea_leaves.oolong,
+        review.aspects.tea.tea_leaves.pu_erh,
+        review.aspects.tea.tea_leaves.white,
+        review.aspects.tea.milk.low_fat,
+        review.aspects.tea.milk.almond,
+        review.aspects.tea.milk.oat,
+        review.aspects.tea.milk.soy,
+        review.aspects.ambience.alfresco,
+        review.aspects.work_friendly.charging_ports,
+        review.aspects.work_friendly.wifi,
+        review.aspects.price.student,
+        review.aspects.price.elderly,
+        review.aspects.cuisine.serve_food,
+        review.aspects.speciality.present,
+        review.aspects.pet.friendly,
+      ].map((item) => {
+        const value = item === undefined ? false : item
+        return value.toString() === 'true' ? '1' : '0'
+      }).join('');
+      return parseInt(stringBinary, 2)
+    }
+
+    const searchBinaryCompare = makeBinaryCompare(reviewToSearch);
+    if (queryText === "" && searchBinaryCompare === 0) {
+      // Empty query, return all
+      return await this.getAll();
+    }
+
+    let arrayResults: ReviewModel[];
+    const setResults = new Set<ReviewModel>();
+    if (queryText !== "") {
+      const reviewRef = firebase.firestore().collection('reviews');
+      const processedQueryText = PorterStemmer.stem(queryText.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, ''));
+      const reviewSnapshot = await reviewRef
+        .where('search_terms', 'array-contains', processedQueryText)
+        .get();
+      const reviewDocs = reviewSnapshot.docs
+
+      reviewDocs.forEach(doc => {
+        setResults.add(doc.data() as ReviewModel);
+      });
+      arrayResults = Array.from(setResults);
+    } else {
+      arrayResults = await this.getAll();
+    }
+
+    if (searchBinaryCompare > 0) {
+      arrayResults = arrayResults.filter((value) => {
+        const binaryCompare = makeBinaryCompare(value);
+        const overlap = binaryCompare & searchBinaryCompare;
+        return overlap == searchBinaryCompare;
+      });
+    }
+
+    return this.sortReviewsByDate(arrayResults);
   }
 }

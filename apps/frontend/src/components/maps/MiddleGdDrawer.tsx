@@ -27,7 +27,6 @@ export function MiddleGdDrawer(props: { isOpen: boolean, onClose: () => void, se
       console.error('Insufficient pins');
       return;
     }
-    console.log(data)
     const newCenter: [number, number] = [data.midpoint.latitude, data.midpoint.longitude];
     setCafes(data.cafes);
     props.setCenter(newCenter);

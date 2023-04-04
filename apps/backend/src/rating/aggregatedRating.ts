@@ -80,13 +80,10 @@ export class AggregatedRating {
         let total = 0;
         let num_of_aspects = 0;
         this.all_aspects.forEach((aspect) => {
-          console.log(aspect);
-          console.log(review.aspects[aspect]);
           if (
             review.aspects[aspect].sub_rating !== 0 &&
             review.aspects[aspect].free_text !== ''
           ) {
-            console.log(aspect);
             total += review.aspects[aspect].sub_rating;
             num_of_aspects += 1;
           }

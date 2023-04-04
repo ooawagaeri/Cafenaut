@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Input,
@@ -25,7 +25,7 @@ import ExpandFilter from './ExpandFilter';
 import { BsSliders2 } from 'react-icons/all';
 import { searchReviews } from "../../services/api_service";
 
-export default function SearchBar({setReviews}: { setReviews: Dispatch<SetStateAction<ReviewModel[]>> }) {
+export default function SearchBar({setReviews}: { setReviews: (reviews: ReviewModel[]) => void }) {
   const {isOpen, onToggle} = useDisclosure();
   const [value, setValue] = React.useState('');
 
@@ -130,7 +130,7 @@ export default function SearchBar({setReviews}: { setReviews: Dispatch<SetStateA
 
   const handleSearch = async () => {
     const reviews = await searchReviews(value, review);
-    setReviews(reviews.reviews);
+    setReviews(reviews);
   }
 
   return (

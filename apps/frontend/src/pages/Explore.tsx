@@ -26,7 +26,7 @@ export function Explore() {
       <Header setPostedReview={setPostedReview}/>
       <Card>
         <CardBody>
-          <SearchBar setReviews={setReviews}/>
+          <SearchBar setReviews={(reviews) => setReviews(reviews)}/>
         </CardBody>
       </Card>
       {reviews.map((review, index) => (

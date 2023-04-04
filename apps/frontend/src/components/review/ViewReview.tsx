@@ -142,11 +142,6 @@ export function ViewReview({ review }: { review: ReviewModel }) {
             ) : (
               <Tag colorScheme='red'>Robusta</Tag>
             )}
-            {review.aspects.coffee.beans.arabica ? (
-              <Tag colorScheme='teal'>Arabica</Tag>
-            ) : (
-              <Tag colorScheme='red'>Arabica</Tag>
-            )}
             <Text>Milk options</Text>
             {review.aspects.coffee.milk.low_fat ? (
               <Tag colorScheme='teal'>Low Fat</Tag>
