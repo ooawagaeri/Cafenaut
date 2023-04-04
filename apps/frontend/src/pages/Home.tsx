@@ -52,7 +52,9 @@ export function Home() {
       userDetails.following !== undefined &&
       userDetails.following.length > 0
     ) {
-      await getFollowingReviews(userDetails.following).then((reviews) =>
+      const include_own: string[] = [...userDetails.following]
+      include_own.push(userDetails.uid);
+      await getFollowingReviews(include_own).then((reviews) =>
         setReviews(reviews)
       );
     } else {

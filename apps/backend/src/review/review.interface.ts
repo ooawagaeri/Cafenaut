@@ -14,7 +14,7 @@ export interface ReviewModel {
   chat_gpt?: number;
   authenticity?: number;
   reports?: number;
-  image_url?: string;
+  image_url?: string[];
   created_at: Date;
   search_terms?: string[];
 }

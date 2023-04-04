@@ -83,9 +83,9 @@ export function ReviewList({review}: { review: ReviewModel }) {
         cursor={'pointer'}
       >
         {review.image_url && (
-          <Box bg={'gray.100'} mt={-6} mx={-6} mb={6} position='relative'>
-            <Image src={review.image_url}/>
-          </Box>
+          <Center onClick={onOpen} bg={'gray.100'} mt={-6} mx={-6} mb={6} position='relative'>
+            <Image src={review.image_url[0]}/>
+          </Center>
         )}
 
         <Flex>
