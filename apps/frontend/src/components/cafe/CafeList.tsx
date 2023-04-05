@@ -7,7 +7,7 @@ import ReactStars from 'react-rating-stars-component';
 
 import Header from '../../common/Header';
 import UserContext from '../../common/UserContext';
-import { getAllCafes } from '../../services/api_service';
+import { getAllCafesWithDetails } from '../../services/api_service';
 import { Classification } from 'apps/backend/src/classifier/classification.interface';
 import { Ratings } from 'apps/backend/src/rating/rating.interface';
 
@@ -21,7 +21,7 @@ export function CafeList() {
   }, []);
 
   async function getAll() {
-    await getAllCafes().then((cafes) => setCafes(cafes));
+    await getAllCafesWithDetails().then((cafes) => setCafes(cafes));
   }
 
   return (

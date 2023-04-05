@@ -6,9 +6,12 @@ import {
   Flex,
   Heading,
   Image,
+  Spacer,
+  Stack,
   Text,
+  Tooltip,
 } from '@chakra-ui/react';
-import { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -21,10 +24,11 @@ import { ReviewList } from '../review/ReviewList';
 import { Classification } from 'apps/backend/src/classifier/classification.interface';
 import { Ratings } from 'apps/backend/src/rating/rating.interface';
 import UserContext from '../../common/UserContext';
+import Authenticity from "../authenticity-senti/Authenticity";
 
 export function Cafe() {
-  const { userDetails, setUserDetails } = useContext(UserContext);
-  const { state } = useLocation();
+  const {userDetails, setUserDetails} = useContext(UserContext);
+  const {state} = useLocation();
   const [reviews, setReviews] = useState([]);
   useEffect(() => {
     getReviews();
@@ -36,7 +40,7 @@ export function Cafe() {
 
   return (
     <Box>
-      <Header />
+      <Header/>
       <Flex paddingTop={'5%'} paddingLeft={'10%'} paddingRight={'10%'}>
         <Box w="70%" padding={'1%'}>
           <Card>
@@ -46,26 +50,41 @@ export function Cafe() {
             <CardBody>
               {state['logo'] && (
                 <Box bg={'gray.100'} mt={-6} mx={-6} mb={6} position="relative">
-                  <Image src={state['logo']} />
+                  <Image src={state['logo']}/>
                 </Box>
               )}
-              <ReactStars
-                count={5}
-                size={24}
-                isHalf={true}
-                emptyIcon={<i className="far fa-star"></i>}
-                halfIcon={<i className="fa fa-star-half-alt"></i>}
-                fullIcon={<i className="fa fa-star"></i>}
-                activeColor="#ffd700"
-                value={
-                  state['rating'][
-                    Classification[
-                      userDetails.classification
-                    ].toLowerCase() as keyof Ratings
-                  ]
-                }
-                edit={false}
-              />
+              <Heading as='h4' size='md'>Overall Statistics:</Heading>
+              <Stack
+                mt={6}
+                direction={'row'}
+                spacing={4}
+                align={'center'}
+              >
+                <Tooltip label='Average rating' placement='right'>
+                  <ReactStars
+                    count={5}
+                    size={24}
+                    isHalf={true}
+                    emptyIcon={<i className='far fa-star'></i>}
+                    halfIcon={<i className='fa fa-star-half-alt'></i>}
+                    fullIcon={<i className='fa fa-star'></i>}
+                    activeColor='#ffd700'
+                    value={
+                      state['rating'][
+                        Classification[
+                          userDetails.classification
+                          ].toLowerCase() as keyof Ratings
+                        ]
+                    }
+                    edit={false}/>
+                </Tooltip>
+                <Spacer/>
+                <Tooltip label='Total no. of reviews' placement='right'>
+                  <Text>Reviews: {state['popularity']}</Text>
+                </Tooltip>
+                <Spacer/>
+                <Authenticity value={state['authenticity']}/>
+              </Stack>
             </CardBody>
           </Card>
         </Box>

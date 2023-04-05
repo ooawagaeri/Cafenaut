@@ -88,18 +88,22 @@ export class ReviewService {
   public async getCafePins(cafes): Promise<CafePinModel[]> {
     const cafePins = []
     for (const cafe of cafes) {
-      const reviews = await this.getByCafe(cafe.id);
-      // Average authenticity
-      const authScores = reviews.map((r) => r.authenticity);
-      const authTotal = authScores.reduce((a, b) => a + b, 0);
-      const cafePin: CafePinModel = {
-        ...cafe,
-        popularity: reviews.length,
-        authenticity: authTotal / authScores.length,
-      };
+      const cafePin = await this.getCafePin(cafe);
       cafePins.push(cafePin);
     }
     return cafePins;
+  }
+
+  private async getCafePin(cafe): Promise<CafePinModel> {
+    const reviews = await this.getByCafe(cafe.id);
+    // Average authenticity
+    const authScores = reviews.map((r) => r.authenticity);
+    const authTotal = authScores.reduce((a, b) => a + b, 0);
+    return {
+      ...cafe,
+      popularity: reviews.length,
+      authenticity: authTotal / authScores.length,
+    };
   }
 
   public async getByCafe(cafe_id): Promise<ReviewModel[]> {

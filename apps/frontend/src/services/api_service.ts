@@ -76,7 +76,7 @@ export async function unfollowUser(own_uid: string, following_uid: string) {
   });
 }
 
-export async function getAllCafesPins() {
+export async function getAllCafesWithDetails() {
   const res = await axios.get(base_url + 'cafe/pins');
   return res.data;
 }
