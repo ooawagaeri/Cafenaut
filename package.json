@@ -18,7 +18,7 @@
     "chakra-ui-steps": "^2.0.4",
     "firebase": "^9.17.1",
     "firebase-admin": "^11.5.0",
-    "framer-motion": "^10.2.4",
+    "framer-motion": "^7.0.0",
     "geolib": "^3.3.3",
     "ml-classify-text": "^2.0.1",
     "natural": "^6.2.0",

@@ -3,6 +3,7 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Center,
   Flex,
   Heading,
   Image,
@@ -11,7 +12,7 @@ import {
   Text,
   Tooltip,
 } from '@chakra-ui/react';
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -41,54 +42,47 @@ export function Cafe() {
   return (
     <Box>
       <Header/>
-      <Flex paddingTop={'5%'} paddingLeft={'10%'} paddingRight={'10%'}>
-        <Box w="70%" padding={'1%'}>
+      <Flex paddingTop={'5%'} paddingLeft={'10%'} paddingRight={'10%'} alignContent={"center"}
+            justifyContent={"center"}>
+        <Box w={'30%'} padding={'1%'}>
           <Card>
             <CardHeader>
               <Heading>{state['name']}</Heading>
             </CardHeader>
             <CardBody>
               {state['logo'] && (
-                <Box bg={'gray.100'} mt={-6} mx={-6} mb={6} position="relative">
+                <Center
+                  bg={'gray.100'}
+                  mt={-5}
+                  mx={-5}
+                  mb={5}
+                  position="relative"
+                  maxH={'300px'}
+                >
                   <Image src={state['logo']}/>
-                </Box>
+                </Center>
               )}
-              <Heading as='h4' size='md'>Overall Statistics:</Heading>
-              <Stack
-                mt={6}
-                direction={'row'}
-                spacing={4}
-                align={'center'}
-              >
-                <Tooltip label='Average rating' placement='right'>
-                  <ReactStars
-                    count={5}
-                    size={24}
-                    isHalf={true}
-                    emptyIcon={<i className='far fa-star'></i>}
-                    halfIcon={<i className='fa fa-star-half-alt'></i>}
-                    fullIcon={<i className='fa fa-star'></i>}
-                    activeColor='#ffd700'
-                    value={
-                      state['rating'][
-                        Classification[
-                          userDetails.classification
-                          ].toLowerCase() as keyof Ratings
-                        ]
-                    }
-                    edit={false}/>
-                </Tooltip>
-                <Spacer/>
-                <Tooltip label='Total no. of reviews' placement='right'>
-                  <Text>Reviews: {state['popularity']}</Text>
-                </Tooltip>
-                <Spacer/>
-                <Authenticity value={state['authenticity']}/>
-              </Stack>
+              <ReactStars
+                count={5}
+                size={24}
+                isHalf={true}
+                emptyIcon={<i className="far fa-star"></i>}
+                halfIcon={<i className="fa fa-star-half-alt"></i>}
+                fullIcon={<i className="fa fa-star"></i>}
+                activeColor="#ffd700"
+                value={
+                  state['rating'][
+                    Classification[
+                      userDetails.classification
+                      ].toLowerCase() as keyof Ratings
+                    ]
+                }
+                edit={false}
+              />
             </CardBody>
           </Card>
         </Box>
-        <Box w="130%" padding={'1%'}>
+        <Box w={'60%'} padding={'1%'}>
           <Card>
             <CardHeader>
               <Heading>Reviews for {state['name']}</Heading>
