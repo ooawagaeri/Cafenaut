@@ -3,7 +3,6 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Center,
   Flex,
   Heading,
   Image,
@@ -51,34 +50,39 @@ export function Cafe() {
             </CardHeader>
             <CardBody>
               {state['logo'] && (
-                <Center
-                  bg={'gray.100'}
-                  mt={-5}
-                  mx={-5}
-                  mb={5}
-                  position="relative"
-                  maxH={'300px'}
-                >
+                <Box bg={'gray.100'} mt={-6} mx={-6} mb={6} position="relative">
                   <Image src={state['logo']}/>
-                </Center>
+                </Box>
               )}
-              <ReactStars
-                count={5}
-                size={24}
-                isHalf={true}
-                emptyIcon={<i className="far fa-star"></i>}
-                halfIcon={<i className="fa fa-star-half-alt"></i>}
-                fullIcon={<i className="fa fa-star"></i>}
-                activeColor="#ffd700"
-                value={
-                  state['rating'][
-                    Classification[
-                      userDetails.classification
-                      ].toLowerCase() as keyof Ratings
-                    ]
-                }
-                edit={false}
-              />
+              <Heading as='h4' size='md'>Overall Statistics:</Heading>
+              <Stack mt={6} direction={'row'} spacing={4} align={'center'}>
+                <Tooltip label='Average rating' placement='right'>
+                  <Box>
+                    <ReactStars
+                      count={5}
+                      size={24}
+                      isHalf={true}
+                      emptyIcon={<i className='far fa-star'></i>}
+                      halfIcon={<i className='fa fa-star-half-alt'></i>}
+                      fullIcon={<i className='fa fa-star'></i>}
+                      activeColor='#ffd700'
+                      value={
+                        state['rating'][
+                          Classification[
+                            userDetails.classification
+                            ].toLowerCase() as keyof Ratings
+                          ]
+                      }
+                      edit={false}/>
+                  </Box>
+                </Tooltip>
+                <Spacer/>
+                <Tooltip label='Total no. of reviews' placement='right'>
+                  <Text>Reviews: {state['popularity']}</Text>
+                </Tooltip>
+                <Spacer/>
+                <Authenticity value={state['authenticity']}/>
+              </Stack>
             </CardBody>
           </Card>
         </Box>
