@@ -24,8 +24,8 @@ import { Ratings } from 'apps/backend/src/rating/rating.interface';
 import UserContext from '../../common/UserContext';
 
 export function Cafe() {
-  const { userDetails, setUserDetails } = useContext(UserContext);
-  const { state } = useLocation();
+  const {userDetails, setUserDetails} = useContext(UserContext);
+  const {state} = useLocation();
   const [reviews, setReviews] = useState([]);
   useEffect(() => {
     getReviews();
@@ -37,9 +37,10 @@ export function Cafe() {
 
   return (
     <Box>
-      <Header />
-      <Flex paddingTop={'5%'} paddingLeft={'10%'} paddingRight={'10%'}>
-        <Box w={'400px'} padding={'1%'}>
+      <Header/>
+      <Flex paddingTop={'5%'} paddingLeft={'10%'} paddingRight={'10%'} alignContent={"center"}
+            justifyContent={"center"}>
+        <Box w={'30%'} padding={'1%'}>
           <Card>
             <CardHeader>
               <Heading>{state['name']}</Heading>
@@ -48,13 +49,13 @@ export function Cafe() {
               {state['logo'] && (
                 <Center
                   bg={'gray.100'}
-                  mt={-6}
-                  mx={-6}
-                  mb={6}
+                  mt={-5}
+                  mx={-5}
+                  mb={5}
                   position="relative"
                   maxH={'300px'}
                 >
-                  <Image src={state['logo']} />
+                  <Image src={state['logo']}/>
                 </Center>
               )}
               <ReactStars
@@ -69,15 +70,15 @@ export function Cafe() {
                   state['rating'][
                     Classification[
                       userDetails.classification
-                    ].toLowerCase() as keyof Ratings
-                  ]
+                      ].toLowerCase() as keyof Ratings
+                    ]
                 }
                 edit={false}
               />
             </CardBody>
           </Card>
         </Box>
-        <Box w={'800px'} padding={'1%'}>
+        <Box w={'60%'} padding={'1%'}>
           <Card>
             <CardHeader>
               <Heading>Reviews for {state['name']}</Heading>
