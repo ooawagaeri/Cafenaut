@@ -1,4 +1,4 @@
-import { CircularProgress, CircularProgressLabel, Tooltip } from '@chakra-ui/react';
+import { Box, CircularProgress, CircularProgressLabel, Tooltip } from '@chakra-ui/react';
 import React from 'react';
 
 export default function Authenticity(props: { value: number | undefined }) {
@@ -6,10 +6,12 @@ export default function Authenticity(props: { value: number | undefined }) {
   const hue = `hue-rotate(${120 * percent}deg)`;
   const labelValue = Math.round(percent * 100)
   return (
-    <Tooltip label='Authenticity %' placement='right'>
-      <CircularProgress value={percent * 100} color='red.400' filter={hue}>
-        <CircularProgressLabel>{labelValue}%</CircularProgressLabel>
-      </CircularProgress>
-    </Tooltip>
+    <Box>
+      <Tooltip label='Authenticity %' placement='right'>
+        <CircularProgress value={percent * 100} color='red.400' filter={hue}>
+          <CircularProgressLabel>{labelValue}%</CircularProgressLabel>
+        </CircularProgress>
+      </Tooltip>
+    </Box>
   );
 }

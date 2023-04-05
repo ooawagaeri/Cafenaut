@@ -100,11 +100,12 @@ export function ViewReview({ review }: { review: ReviewModel }) {
                 })
               }
               size='md'
+              m='2%'
             >
               {review.cafe_name}
             </Link>
             {cafeLogo && (
-              <Image src={cafeLogo} maxHeight={'100px'} maxWidth={'auto'} />
+              <Image src={cafeLogo} maxHeight={'100px'} maxWidth={'auto'} m='2%'/>
             )}
           </HStack>
         </Flex>
