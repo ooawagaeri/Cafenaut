@@ -1,4 +1,10 @@
-import { Box, IconButton, useBreakpointValue, Image } from '@chakra-ui/react';
+import {
+  Box,
+  IconButton,
+  useBreakpointValue,
+  Image,
+  Center,
+} from '@chakra-ui/react';
 import React, { Key } from 'react';
 import { BiLeftArrowAlt, BiRightArrowAlt } from 'react-icons/bi';
 import Slider from 'react-slick';

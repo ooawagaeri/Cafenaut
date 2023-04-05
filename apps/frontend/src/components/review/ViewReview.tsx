@@ -64,12 +64,7 @@ export function ViewReview({ review }: { review: ReviewModel }) {
       <CardHeader>
         <Flex>
           <Stack>
-            <HStack>
-              <Heading size="md">{review.title}</Heading>
-              <Button colorScheme={'red'} onClick={reportSpam}>
-                Report
-              </Button>
-            </HStack>
+            <Heading size="md">{review.title}</Heading>
             <Link
               onClick={() =>
                 navigate(`/profile/${review.user_uid}`, {
@@ -464,6 +459,13 @@ export function ViewReview({ review }: { review: ReviewModel }) {
           </Box>
 
           <ViewImages images={review.image_url}></ViewImages>
+
+          <Flex>
+            <Spacer></Spacer>
+            <Button size="sm" colorScheme={'red'} onClick={reportSpam}>
+              Report
+            </Button>
+          </Flex>
         </Stack>
       </CardBody>
     </Card>
