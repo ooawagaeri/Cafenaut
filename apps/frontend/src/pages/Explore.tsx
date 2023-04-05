@@ -5,8 +5,8 @@ import Header from '../common/Header';
 import { ReviewList } from '../components/review/ReviewList';
 import { getAllReviews } from '../services/api_service';
 import UserContext from '../common/UserContext';
-import SearchBar from "../components/search/SearchBar";
-import { ReviewModel } from "../../../backend/src/review/review.interface";
+import SearchBar from '../components/search/SearchBar';
+import { ReviewModel } from 'apps/backend/src/review/review.interface';
 
 export function Explore() {
   const {userDetails, setUserDetails} = useContext(UserContext);
