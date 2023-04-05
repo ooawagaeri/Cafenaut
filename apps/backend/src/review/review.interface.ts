@@ -1,6 +1,7 @@
 import { Ratings } from '../rating/rating.interface';
 
 export interface ReviewModel {
+  uid?: string;
   title: string;
   body: string;
   user_uid: string;

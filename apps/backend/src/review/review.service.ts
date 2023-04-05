@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ReviewModel } from './review.interface';
 import { AggregatedRating } from '../rating/aggregatedRating';
 import * as firebase from 'firebase-admin';
-import { CafePinModel } from "../cafe/cafe.interface";
+import { CafePinModel } from '../cafe/cafe.interface';
 
 @Injectable()
 export class ReviewService {
@@ -54,7 +54,9 @@ export class ReviewService {
 
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
-      arr.push(doc.data());
+      const reviewDetails = doc.data();
+      reviewDetails.uid = doc.id;
+      arr.push(reviewDetails);
     });
     return this.sortReviewsByDate(arr);
   }
@@ -82,11 +84,14 @@ export class ReviewService {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
 
-    return docSnap.data() as ReviewModel;
+    const reviewDetails = docSnap.data();
+    reviewDetails.uid = docSnap.id;
+
+    return reviewDetails as ReviewModel;
   }
 
   public async getCafePins(cafes): Promise<CafePinModel[]> {
-    const cafePins = []
+    const cafePins = [];
     for (const cafe of cafes) {
       const reviews = await this.getByCafe(cafe.id);
       // Average authenticity

@@ -16,6 +16,8 @@ import {
   HStack,
   Flex,
   Spacer,
+  Button,
+  useToast,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -23,7 +25,7 @@ import { useEffect, useState } from 'react';
 import ReactStars from 'react-rating-stars-component';
 import { useNavigate } from 'react-router-dom';
 
-import { getCafeDetail } from '../../services/api_service';
+import { getCafeDetail, reportReview } from '../../services/api_service';
 import Sentiment from '../authenticity-senti/Sentiment';
 import Authenticity from '../authenticity-senti/Authenticity';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
@@ -33,6 +35,7 @@ export function ViewReview({ review }: { review: ReviewModel }) {
   const [cafeLogo, setCafeLogo] = useState('');
   const [cafeDetails, setCafeDetails] = useState({});
   const navigate = useNavigate();
+  const toast = useToast();
 
   useEffect(() => {
     getDetails();
@@ -44,12 +47,29 @@ export function ViewReview({ review }: { review: ReviewModel }) {
     setCafeLogo(cafe_details.logo);
   };
 
+  const reportSpam = async () => {
+    if (review.uid) {
+      await reportReview(review.uid).then(() => console.log('Reported!'));
+    }
+    toast({
+      title: 'Reported',
+      status: 'warning',
+      duration: 9000,
+      isClosable: true,
+    });
+  };
+
   return (
     <Card>
       <CardHeader>
         <Flex>
           <Stack>
-            <Heading size="md">{review.title}</Heading>
+            <HStack>
+              <Heading size="md">{review.title}</Heading>
+              <Button colorScheme={'red'} onClick={reportSpam}>
+                Report
+              </Button>
+            </HStack>
             <Link
               onClick={() =>
                 navigate(`/profile/${review.user_uid}`, {
@@ -65,11 +85,14 @@ export function ViewReview({ review }: { review: ReviewModel }) {
             </Text>
             <Spacer />
             <Sentiment value={review.sentiment} />
-            <Text fontWeight={600} size="sm">
-              Authenticity:
-            </Text>
-            <Authenticity value={review.authenticity} />
+            <HStack>
+              <Text fontWeight={600} size="sm">
+                Authenticity:
+              </Text>
+              <Authenticity value={review.authenticity} />
+            </HStack>
           </Stack>
+
           <Spacer />
           <HStack>
             <Link
