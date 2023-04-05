@@ -53,6 +53,9 @@ export function ReviewList({review}: { review: ReviewModel }) {
     });
   };
 
+  const userClass = Classification[userDetails.classification] === undefined ? "unweighted" : Classification[userDetails.classification]
+  const ratingKey = review.rating[userClass.toLowerCase() as keyof Ratings]
+
   return (
     <Center py={6}>
       <Modal size='5xl' isOpen={isOpen} onClose={onClose}>
@@ -97,13 +100,7 @@ export function ReviewList({review}: { review: ReviewModel }) {
             halfIcon={<i className='fa fa-star-half-alt'></i>}
             fullIcon={<i className='fa fa-star'></i>}
             activeColor='#ffd700'
-            value={
-              review.rating[
-                Classification[
-                  userDetails.classification
-                  ].toLowerCase() as keyof Ratings
-                ]
-            }
+            value={ratingKey}
             edit={false}
           />
           <Spacer/>

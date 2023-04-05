@@ -14,26 +14,29 @@ import { AmenitiesStep } from './AmenitiesStep';
 import { PetStep } from './PetStep';
 import { OverallStep } from './OverallStep';
 
-import { ReviewModel } from '../../../../../backend/src/review/review.interface';
+import { ReviewModel } from 'apps/backend/src/review/review.interface';
 import { postReview } from '../../../services/api_service';
 import UserContext from 'apps/frontend/src/common/UserContext';
 
-export function AddReviewSteps({
-  onAddReviewModalClose,
-  setPostedReview
-}: {
-  onAddReviewModalClose: any;
-  setPostedReview: any;
-}) {
-  const { nextStep, prevStep, setStep, reset, activeStep } = useSteps({
+export function AddReviewSteps(
+  {
+    onAddReviewModalClose,
+    setPostedReview
+  }: {
+    onAddReviewModalClose: any;
+    setPostedReview: any;
+  }) {
+  const {nextStep, prevStep, setStep, reset, activeStep} = useSteps({
     initialStep: 0,
   });
 
-  const { userDetails, setUserDetails } = useContext(UserContext);
+  const {userDetails, setUserDetails} = useContext(UserContext);
+
+  const [isFinished, setIsFinished] = useState(false);
 
   useEffect(() => {
     setReview((review: any) => {
-      const newReview = { ...review };
+      const newReview = {...review};
       newReview.user_uid = userDetails.uid;
       newReview.user_name = userDetails.name;
       return newReview;
@@ -144,28 +147,28 @@ export function AddReviewSteps({
     },
     {
       label: 'Coffee',
-      content: <CoffeeStep setReview={setReview}></CoffeeStep>,
+      content: <CoffeeStep setReview={setReview} isAdd={true}></CoffeeStep>,
     },
-    { label: 'Tea', content: <TeaStep setReview={setReview}></TeaStep> },
+    {label: 'Tea', content: <TeaStep setReview={setReview} isAdd={true}></TeaStep>},
     {
       label: 'Ambience',
-      content: <AmbienceStep setReview={setReview}></AmbienceStep>,
+      content: <AmbienceStep setReview={setReview} isAdd={true}></AmbienceStep>,
     },
     {
       label: 'Work/Study Friendly',
-      content: <WorkFriendlyStep setReview={setReview}></WorkFriendlyStep>,
+      content: <WorkFriendlyStep setReview={setReview} isAdd={true}></WorkFriendlyStep>,
     },
     {
       label: 'Pricing',
-      content: <PricingStep setReview={setReview}></PricingStep>,
+      content: <PricingStep setReview={setReview} isAdd={true}></PricingStep>,
     },
     {
       label: 'Cuisine',
-      content: <CuisineStep setReview={setReview}></CuisineStep>,
+      content: <CuisineStep setReview={setReview} isAdd={true}></CuisineStep>,
     },
     {
       label: 'Speciality',
-      content: <SpecialityStep setReview={setReview}></SpecialityStep>,
+      content: <SpecialityStep setReview={setReview} isAdd={true}></SpecialityStep>,
     },
     {
       label: 'Amenities',
@@ -173,23 +176,22 @@ export function AddReviewSteps({
     },
     {
       label: 'Pet-Friendliness',
-      content: <PetStep setReview={setReview}></PetStep>,
+      content: <PetStep setReview={setReview} isAdd={true}></PetStep>,
     },
   ];
 
   const createReview = async () => {
-    console.log(review);
-    await postReview(review).then((res) => {
-      console.log(res);
+    setIsFinished(true);
+    await postReview(review).then(() => {
       setPostedReview(true);
       onAddReviewModalClose();
     });
   };
 
   return (
-    <Flex flexDir="column" width="100%">
+    <Flex flexDir="column" width="94%">
       <Steps onClickStep={(step) => setStep(step)} activeStep={activeStep}>
-        {steps.map(({ label, content }) => (
+        {steps.map(({label, content}) => (
           <Step label={label} key={label}>
             {content}
           </Step>
@@ -215,6 +217,8 @@ export function AddReviewSteps({
           <Button
             size="sm"
             onClick={activeStep === steps.length - 1 ? createReview : nextStep}
+            isLoading={isFinished}
+            colorScheme={activeStep === steps.length - 1 ? 'green' : 'gray'}
           >
             {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
           </Button>

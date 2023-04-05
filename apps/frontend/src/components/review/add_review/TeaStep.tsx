@@ -7,10 +7,11 @@ import {
   Stack,
   Textarea,
 } from '@chakra-ui/react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
 
-export function TeaStep({ setReview }: { setReview: any }) {
+export function TeaStep({setReview, isAdd}: { setReview: any, isAdd: boolean }) {
   return (
     <Box padding="5%">
       <FormControl as="fieldset">
@@ -20,7 +21,7 @@ export function TeaStep({ setReview }: { setReview: any }) {
             <Checkbox
               onChange={(e) => {
                 setReview((review: any) => {
-                  const newReview = { ...review };
+                  const newReview = {...review};
                   newReview.aspects.tea.tea_leaves.black = e.target.checked;
                   return newReview;
                 });
@@ -32,7 +33,7 @@ export function TeaStep({ setReview }: { setReview: any }) {
             <Checkbox
               onChange={(e) => {
                 setReview((review: any) => {
-                  const newReview = { ...review };
+                  const newReview = {...review};
                   newReview.aspects.tea.tea_leaves.green = e.target.checked;
                   return newReview;
                 });
@@ -44,7 +45,7 @@ export function TeaStep({ setReview }: { setReview: any }) {
             <Checkbox
               onChange={(e) => {
                 setReview((review: any) => {
-                  const newReview = { ...review };
+                  const newReview = {...review};
                   newReview.aspects.tea.tea_leaves.oolong = e.target.checked;
                   return newReview;
                 });
@@ -56,7 +57,7 @@ export function TeaStep({ setReview }: { setReview: any }) {
             <Checkbox
               onChange={(e) => {
                 setReview((review: any) => {
-                  const newReview = { ...review };
+                  const newReview = {...review};
                   newReview.aspects.tea.tea_leaves.pu_erh = e.target.checked;
                   return newReview;
                 });
@@ -68,7 +69,7 @@ export function TeaStep({ setReview }: { setReview: any }) {
             <Checkbox
               onChange={(e) => {
                 setReview((review: any) => {
-                  const newReview = { ...review };
+                  const newReview = {...review};
                   newReview.aspects.tea.tea_leaves.white = e.target.checked;
                   return newReview;
                 });
@@ -87,7 +88,7 @@ export function TeaStep({ setReview }: { setReview: any }) {
             <Checkbox
               onChange={(e) => {
                 setReview((review: any) => {
-                  const newReview = { ...review };
+                  const newReview = {...review};
                   newReview.aspects.tea.milk.low_fat = e.target.checked;
                   return newReview;
                 });
@@ -99,7 +100,7 @@ export function TeaStep({ setReview }: { setReview: any }) {
             <Checkbox
               onChange={(e) => {
                 setReview((review: any) => {
-                  const newReview = { ...review };
+                  const newReview = {...review};
                   newReview.aspects.tea.milk.almond = e.target.checked;
                   return newReview;
                 });
@@ -111,7 +112,7 @@ export function TeaStep({ setReview }: { setReview: any }) {
             <Checkbox
               onChange={(e) => {
                 setReview((review: any) => {
-                  const newReview = { ...review };
+                  const newReview = {...review};
                   newReview.aspects.tea.milk.oat = e.target.checked;
                   return newReview;
                 });
@@ -123,7 +124,7 @@ export function TeaStep({ setReview }: { setReview: any }) {
             <Checkbox
               onChange={(e) => {
                 setReview((review: any) => {
-                  const newReview = { ...review };
+                  const newReview = {...review};
                   newReview.aspects.tea.milk.soy = e.target.checked;
                   return newReview;
                 });
@@ -134,30 +135,32 @@ export function TeaStep({ setReview }: { setReview: any }) {
             </Checkbox>
           </Stack>
         </CheckboxGroup>
-        <FormLabel paddingTop={'2%'}>Thoughts on Tea</FormLabel>
-        <Textarea
-          onChange={(e) => {
+        {isAdd && (
+          <><FormLabel paddingTop={'2%'}>Thoughts on Tea</FormLabel><Textarea
+            onChange={(e) => {
+              setReview((review: any) => {
+                const newReview = {...review};
+                newReview.aspects.tea.free_text = e.target.value;
+                return newReview;
+              });
+            }}
+            placeholder="Tea!"/></>
+        )}
+      </FormControl>
+      {isAdd && (
+        <ReactStars
+          count={5}
+          onChange={(newRating: number) => {
             setReview((review: any) => {
-              const newReview = { ...review };
-              newReview.aspects.tea.free_text = e.target.value;
+              const newReview = {...review};
+              newReview.aspects.tea.sub_rating = newRating;
               return newReview;
             });
           }}
-          placeholder="Tea!"
+          size={30}
+          activeColor="#ffd700"
         />
-      </FormControl>
-      <ReactStars
-        count={5}
-        onChange={(newRating: number) => {
-          setReview((review: any) => {
-            const newReview = { ...review };
-            newReview.aspects.tea.sub_rating = newRating;
-            return newReview;
-          });
-        }}
-        size={30}
-        activeColor="#ffd700"
-      />
+      )}
     </Box>
   );
 }
