@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Card, CardBody, Box } from '@chakra-ui/react';
+import { Card, CardBody, Box, Text, Center } from '@chakra-ui/react';
 
 import Header from '../common/Header';
 import { ReviewList } from '../components/review/ReviewList';
@@ -29,9 +29,15 @@ export function Explore() {
           <SearchBar setReviews={(reviews) => setReviews(reviews)}/>
         </CardBody>
       </Card>
-      {reviews.map((review, index) => (
-        <ReviewList key={index} review={review}></ReviewList>
-      ))}
+      {reviews.length > 0 ? (
+        reviews.map((review: ReviewModel, index) => (
+          <ReviewList key={index} review={review}></ReviewList>
+        ))
+      ) : (
+        <Center p='20px'>
+          <Text>No such review(s) found!</Text>
+        </Center>
+      )}
     </Box>
   );
 }
