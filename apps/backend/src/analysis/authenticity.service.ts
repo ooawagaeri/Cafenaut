@@ -24,7 +24,7 @@ export class AuthenticityService {
   public async calculateAllAspects(reviewId: string): Promise<void> {
     const reviewRef = firebase.firestore().collection("reviews").doc(reviewId);
     // Details to set
-    reviewRef.get().then(async (docSnapshot) => {
+    await reviewRef.get().then(async (docSnapshot) => {
       if (docSnapshot.exists) {
         const review = docSnapshot.data() as ReviewModel;
         review.sentiment = await this.sentimentAnalyser.analysePost(review);

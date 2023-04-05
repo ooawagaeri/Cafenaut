@@ -18,22 +18,25 @@ import { ReviewModel } from 'apps/backend/src/review/review.interface';
 import { postReview } from '../../../services/api_service';
 import UserContext from 'apps/frontend/src/common/UserContext';
 
-export function AddReviewSteps({
-  onAddReviewModalClose,
-  setPostedReview
-}: {
-  onAddReviewModalClose: any;
-  setPostedReview: any;
-}) {
-  const { nextStep, prevStep, setStep, reset, activeStep } = useSteps({
+export function AddReviewSteps(
+  {
+    onAddReviewModalClose,
+    setPostedReview
+  }: {
+    onAddReviewModalClose: any;
+    setPostedReview: any;
+  }) {
+  const {nextStep, prevStep, setStep, reset, activeStep} = useSteps({
     initialStep: 0,
   });
 
-  const { userDetails, setUserDetails } = useContext(UserContext);
+  const {userDetails, setUserDetails} = useContext(UserContext);
+
+  const [isFinished, setIsFinished] = useState(false);
 
   useEffect(() => {
     setReview((review: any) => {
-      const newReview = { ...review };
+      const newReview = {...review};
       newReview.user_uid = userDetails.uid;
       newReview.user_name = userDetails.name;
       return newReview;
@@ -146,7 +149,7 @@ export function AddReviewSteps({
       label: 'Coffee',
       content: <CoffeeStep setReview={setReview} isAdd={true}></CoffeeStep>,
     },
-    { label: 'Tea', content: <TeaStep setReview={setReview} isAdd={true}></TeaStep> },
+    {label: 'Tea', content: <TeaStep setReview={setReview} isAdd={true}></TeaStep>},
     {
       label: 'Ambience',
       content: <AmbienceStep setReview={setReview} isAdd={true}></AmbienceStep>,
@@ -178,7 +181,8 @@ export function AddReviewSteps({
   ];
 
   const createReview = async () => {
-    await postReview(review).then((res) => {
+    setIsFinished(true);
+    await postReview(review).then(() => {
       setPostedReview(true);
       onAddReviewModalClose();
     });
@@ -187,7 +191,7 @@ export function AddReviewSteps({
   return (
     <Flex flexDir="column" width="94%">
       <Steps onClickStep={(step) => setStep(step)} activeStep={activeStep}>
-        {steps.map(({ label, content }) => (
+        {steps.map(({label, content}) => (
           <Step label={label} key={label}>
             {content}
           </Step>
@@ -213,6 +217,8 @@ export function AddReviewSteps({
           <Button
             size="sm"
             onClick={activeStep === steps.length - 1 ? createReview : nextStep}
+            isLoading={isFinished}
+            colorScheme={activeStep === steps.length - 1 ? 'green' : 'gray'}
           >
             {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
           </Button>
