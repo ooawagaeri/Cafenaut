@@ -2,8 +2,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ReviewModel } from './review.interface';
 import { AggregatedRating } from '../rating/aggregatedRating';
 import * as firebase from 'firebase-admin';
-import { CafePinModel } from "../cafe/cafe.interface";
-import { PorterStemmer, WordTokenizer } from "natural";
+import { CafePinModel } from '../cafe/cafe.interface';
+import { PorterStemmer, WordTokenizer } from 'natural';
 
 @Injectable()
 export class ReviewService {
@@ -54,7 +54,10 @@ export class ReviewService {
     const arr = [];
 
     querySnapshot.forEach((doc) => {
-      arr.push(doc.data());
+      // doc.data() is never undefined for query doc snapshots
+      const reviewDetails = doc.data();
+      reviewDetails.uid = doc.id;
+      arr.push(reviewDetails);
     });
     return this.sortReviewsByDate(arr);
   }
@@ -82,11 +85,14 @@ export class ReviewService {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
 
-    return docSnap.data() as ReviewModel;
+    const reviewDetails = docSnap.data();
+    reviewDetails.uid = docSnap.id;
+
+    return reviewDetails as ReviewModel;
   }
 
   public async getCafePins(cafes): Promise<CafePinModel[]> {
-    const cafePins = []
+    const cafePins = [];
     for (const cafe of cafes) {
       const reviews = await this.getByCafe(cafe.id);
       // Average authenticity
@@ -137,10 +143,9 @@ export class ReviewService {
   private normalizeStringToStemTokens(text: string) {
     const tokenizer = new WordTokenizer();
     const content = tokenizer.tokenize(
-      text
-        .toLowerCase()
-        .replace(/[^a-zA-Z0-9 ]/g, ''));
-    return content.map(word => PorterStemmer.stem(word));
+      text.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, '')
+    );
+    return content.map((word) => PorterStemmer.stem(word));
   }
 
   public async updateKeyTerms(review_id): Promise<void> {
@@ -148,15 +153,25 @@ export class ReviewService {
     reviewRef.get().then(async (docSnap) => {
       if (docSnap.exists) {
         const review = docSnap.data() as ReviewModel;
-        const content_arr = [review.title, review.body, review.aspects.coffee.free_text,
-          review.aspects.tea.free_text, review.aspects.ambience.free_text,
-          review.aspects.ambience.lighting, review.aspects.ambience.vibe,
-          review.aspects.price.free_text, review.aspects.work_friendly.free_text,
-          review.aspects.cuisine.free_text, review.aspects.speciality.free_text,
-          review.aspects.amenities.free_text, review.aspects.pet.free_text
+        const content_arr = [
+          review.title,
+          review.body,
+          review.aspects.coffee.free_text,
+          review.aspects.tea.free_text,
+          review.aspects.ambience.free_text,
+          review.aspects.ambience.lighting,
+          review.aspects.ambience.vibe,
+          review.aspects.price.free_text,
+          review.aspects.work_friendly.free_text,
+          review.aspects.cuisine.free_text,
+          review.aspects.speciality.free_text,
+          review.aspects.amenities.free_text,
+          review.aspects.pet.free_text,
         ];
 
-        const stemmedContent = this.normalizeStringToStemTokens(content_arr.join(' '));
+        const stemmedContent = this.normalizeStringToStemTokens(
+          content_arr.join(' ')
+        );
         const toUpdate = {
           search_terms: [...new Set(stemmedContent)],
         };
@@ -169,7 +184,10 @@ export class ReviewService {
     });
   }
 
-  public async search(queryText: string, reviewToSearch: ReviewModel): Promise<ReviewModel[]> {
+  public async search(
+    queryText: string,
+    reviewToSearch: ReviewModel
+  ): Promise<ReviewModel[]> {
     // Converts review boolean-fields to binary
     function makeBinaryCompare(review: ReviewModel) {
       const stringBinary = [
@@ -199,23 +217,25 @@ export class ReviewService {
         review.aspects.cuisine.serve_food,
         review.aspects.speciality.present,
         review.aspects.pet.friendly,
-      ].map((item) => {
-        const value = item === undefined ? false : item
-        return value.toString() === 'true' ? '1' : '0'
-      }).join('');
-      return parseInt(stringBinary, 2)
+      ]
+        .map((item) => {
+          const value = item === undefined ? false : item;
+          return value.toString() === 'true' ? '1' : '0';
+        })
+        .join('');
+      return parseInt(stringBinary, 2);
     }
 
     const searchBinaryCompare = makeBinaryCompare(reviewToSearch);
     // Empty query, return all
-    if (queryText === "" && searchBinaryCompare === 0) {
+    if (queryText === '' && searchBinaryCompare === 0) {
       return await this.getAll();
     }
 
     let arrayResults: ReviewModel[];
     const setResults = new Set<ReviewModel>();
     // Filter reviews based on text
-    if (queryText !== "") {
+    if (queryText !== '') {
       const reviewRef = firebase.firestore().collection('reviews');
 
       const setIds = new Set<string>();
@@ -226,7 +246,7 @@ export class ReviewService {
         const reviewSnapshot = await reviewRef
           .where('search_terms', 'array-contains', stemmedQueryTexts[0])
           .get();
-        reviewSnapshot.docs.forEach(doc => {
+        reviewSnapshot.docs.forEach((doc) => {
           setResults.add(doc.data() as ReviewModel);
         });
       } else {
@@ -235,9 +255,9 @@ export class ReviewService {
           const reviewSnapshot = await reviewRef
             .where('search_terms', 'array-contains', stemmedQueryText)
             .get();
-          reviewSnapshot.docs.forEach(doc => {
+          reviewSnapshot.docs.forEach((doc) => {
             if (setIds.has(doc.id)) {
-              setResults.add(doc.data() as ReviewModel)
+              setResults.add(doc.data() as ReviewModel);
             } else {
               setIds.add(doc.id);
             }

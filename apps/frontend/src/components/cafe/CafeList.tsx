@@ -47,7 +47,14 @@ export function CafeList() {
               onClick={() => navigate(`/cafe/${cafe['id']}`, { state: cafe })}
             >
               {cafe['logo'] && (
-                <Center bg={'gray.100'} mt={-6} mx={-6} mb={6} position="relative" height={'450px'}>
+                <Center
+                  bg={'gray.100'}
+                  mt={-6}
+                  mx={-6}
+                  mb={6}
+                  position="relative"
+                  maxH={'400px'}
+                >
                   <Image src={cafe['logo']} />
                 </Center>
               )}

@@ -50,6 +50,16 @@ export async function getFollowingReviews(following: string[]) {
   return reviews;
 }
 
+export async function reportReview(review_id: string) {
+  const res = await axios.post(base_url + 'review/report/' + review_id);
+  return res.data;
+}
+
+export async function getReview(review_id: string) {
+  const res = await axios.get(base_url + 'review/' + review_id);
+  return res.data;
+}
+
 export async function getAllUsers() {
   const res = await axios.get(base_url + 'user/all');
   return res.data;
