@@ -65,10 +65,9 @@ export class AuthenticityService {
   }
 
   private static findAuthenticity(review: ReviewModel) {
-    // Assume user classification is coffee connoisseur
-    // and equal weightage of sus-ness
+    // Assume user classification is unweighted -- fair weights
     const ratingSenti = AuthenticityService
-      .findRatingSentiment(review.rating.connoisseur_coffee, review.sentiment)
+      .findRatingSentiment(review.rating.unweighted, review.sentiment)
 
     // When review is reported, treat as normal until >= 3
     let reportScore;
