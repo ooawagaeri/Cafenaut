@@ -3,6 +3,7 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Center,
   Flex,
   Heading,
   Image,
@@ -38,16 +39,23 @@ export function Cafe() {
     <Box>
       <Header />
       <Flex paddingTop={'5%'} paddingLeft={'10%'} paddingRight={'10%'}>
-        <Box w="70%" padding={'1%'}>
+        <Box w={'400px'} padding={'1%'}>
           <Card>
             <CardHeader>
               <Heading>{state['name']}</Heading>
             </CardHeader>
             <CardBody>
               {state['logo'] && (
-                <Box bg={'gray.100'} mt={-6} mx={-6} mb={6} position="relative">
+                <Center
+                  bg={'gray.100'}
+                  mt={-6}
+                  mx={-6}
+                  mb={6}
+                  position="relative"
+                  maxH={'300px'}
+                >
                   <Image src={state['logo']} />
-                </Box>
+                </Center>
               )}
               <ReactStars
                 count={5}
@@ -69,7 +77,7 @@ export function Cafe() {
             </CardBody>
           </Card>
         </Box>
-        <Box w="130%" padding={'1%'}>
+        <Box w={'800px'} padding={'1%'}>
           <Card>
             <CardHeader>
               <Heading>Reviews for {state['name']}</Heading>

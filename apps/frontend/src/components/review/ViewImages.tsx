@@ -43,7 +43,7 @@ export function ViewImages({ images }: { images: any }) {
         <Box>
           <IconButton
             aria-label="left-arrow"
-            colorScheme="messenger"
+            colorScheme="gray"
             borderRadius="full"
             position="absolute"
             left={side}
@@ -56,7 +56,7 @@ export function ViewImages({ images }: { images: any }) {
           </IconButton>
           <IconButton
             aria-label="right-arrow"
-            colorScheme="messenger"
+            colorScheme="gray"
             borderRadius="full"
             position="absolute"
             right={side}

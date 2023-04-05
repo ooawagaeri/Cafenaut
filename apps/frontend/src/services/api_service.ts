@@ -101,3 +101,21 @@ export async function getMiddleGround(
   });
   return res.data;
 }
+
+
+export async function searchReviews(
+  value: string,
+  reviewToSearch: ReviewModel,
+): Promise<ReviewModel[]> {
+  const res = await axios.get(base_url + 'review/search', {
+    params: {
+      value,
+      reviewToSearch,
+    },
+  });
+  const reviews = res.data.reviews as ReviewModel[];
+  reviews.map((review: ReviewModel) => {
+    review.created_at = new Date(review.created_at);
+  });
+  return reviews;
+}

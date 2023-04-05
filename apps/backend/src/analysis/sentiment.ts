@@ -4,11 +4,13 @@ import { Analyser } from "./analyzer";
 // Manual defined values for café specific words
 const options = {
   extras: {
-    "noisy": -2,
+    "noisy": -1,
     "mediocre": -1,
     "stale ": -2,
     "dry": -1,
     "splatter": -1,
+    "beautiful": 1,
+    "10/10": 1,
   }
 }
 

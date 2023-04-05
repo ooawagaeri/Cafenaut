@@ -17,6 +17,7 @@ export interface ReviewModel {
   reports?: number;
   image_url?: string[];
   created_at: Date;
+  search_terms?: string[];
 }
 
 interface Aspect {
@@ -94,7 +95,7 @@ interface Speciality extends Aspect {
   present: boolean;
 }
 
-interface Amenities extends Aspect {}
+type Amenities = Aspect
 
 interface Pet extends Aspect {
   friendly: boolean;

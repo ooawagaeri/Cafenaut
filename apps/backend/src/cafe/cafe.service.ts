@@ -12,7 +12,6 @@ export class CafeService {
       .get();
     if (snapshot.exists) {
       snapshot.data();
-      console.log(snapshot.data());
     } else {
       console.log('No such Cafe!');
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);

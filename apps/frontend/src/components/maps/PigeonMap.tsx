@@ -62,6 +62,10 @@ export function PigeonMap({data}: Type) {
     setCircleRadius(0);
   };
   const handleAppendPin = (loc: Location) => {
+    if (0 === loc.latitude && 0 === loc.longitude) {
+      return;
+    }
+
     for (const item of pins) {
       if (item.latitude === loc.latitude && item.longitude === loc.longitude) {
         return;
