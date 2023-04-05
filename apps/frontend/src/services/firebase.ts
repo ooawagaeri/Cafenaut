@@ -8,6 +8,7 @@ import {
   signOut,
 } from 'firebase/auth';
 import { getFirestore, setDoc, doc } from 'firebase/firestore';
+import { Classification } from 'apps/backend/src/classifier/classification.interface';
 
 // Reference: https://blog.logrocket.com/user-authentication-firebase-react-apps/
 //            https://github.com/atharvadeosthale/firebase-auth-article/tree/master/src
@@ -46,6 +47,9 @@ const registerWithEmailAndPassword = async (
     await setDoc(doc(db, 'users', user.uid), {
       name,
       email,
+      followers: [],
+      following: [],
+      classification: Classification.UNWEIGHTED,
     });
   } catch (err) {
     console.error(err);
