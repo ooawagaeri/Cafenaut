@@ -3,6 +3,7 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Center,
   Flex,
   Heading,
   Image,
@@ -24,11 +25,11 @@ import { ReviewList } from '../review/ReviewList';
 import { Classification } from 'apps/backend/src/classifier/classification.interface';
 import { Ratings } from 'apps/backend/src/rating/rating.interface';
 import UserContext from '../../common/UserContext';
-import Authenticity from "../authenticity-senti/Authenticity";
+import Authenticity from '../authenticity-senti/Authenticity';
 
 export function Cafe() {
-  const {userDetails, setUserDetails} = useContext(UserContext);
-  const {state} = useLocation();
+  const { userDetails, setUserDetails } = useContext(UserContext);
+  const { state } = useLocation();
   const [reviews, setReviews] = useState([]);
   useEffect(() => {
     getReviews();
@@ -40,48 +41,62 @@ export function Cafe() {
 
   return (
     <Box>
-      <Header/>
-      <Flex paddingTop={'5%'} paddingLeft={'10%'} paddingRight={'10%'} alignContent={"center"}
-            justifyContent={"center"}>
-        <Box w={'30%'} padding={'1%'}>
+      <Header />
+      <Flex
+        paddingTop={'5%'}
+        paddingLeft={'10%'}
+        paddingRight={'10%'}
+        alignContent={'center'}
+        justifyContent={'center'}
+      >
+        <Box minW={'200px'} maxW={'500px'} padding={'1%'}>
           <Card>
             <CardHeader>
               <Heading>{state['name']}</Heading>
             </CardHeader>
             <CardBody>
               {state['logo'] && (
-                <Box bg={'gray.100'} mt={-6} mx={-6} mb={6} position="relative">
-                  <Image src={state['logo']}/>
-                </Box>
+                <Center
+                  bg={'gray.100'}
+                  mt={-6}
+                  mx={-6}
+                  mb={6}
+                  position="relative"
+                >
+                  <Image src={state['logo']} />
+                </Center>
               )}
-              <Heading as='h4' size='md'>Overall Statistics:</Heading>
+              <Heading as="h4" size="md">
+                Overall Statistics:
+              </Heading>
               <Stack mt={6} direction={'row'} spacing={4} align={'center'}>
-                <Tooltip label='Average rating' placement='right'>
+                <Tooltip label="Average rating" placement="right">
                   <Box>
                     <ReactStars
                       count={5}
                       size={24}
                       isHalf={true}
-                      emptyIcon={<i className='far fa-star'></i>}
-                      halfIcon={<i className='fa fa-star-half-alt'></i>}
-                      fullIcon={<i className='fa fa-star'></i>}
-                      activeColor='#ffd700'
+                      emptyIcon={<i className="far fa-star"></i>}
+                      halfIcon={<i className="fa fa-star-half-alt"></i>}
+                      fullIcon={<i className="fa fa-star"></i>}
+                      activeColor="#ffd700"
                       value={
                         state['rating'][
                           Classification[
                             userDetails.classification
-                            ].toLowerCase() as keyof Ratings
-                          ]
+                          ].toLowerCase() as keyof Ratings
+                        ]
                       }
-                      edit={false}/>
+                      edit={false}
+                    />
                   </Box>
                 </Tooltip>
-                <Spacer/>
-                <Tooltip label='Total no. of reviews' placement='right'>
+                <Spacer />
+                <Tooltip label="Total no. of reviews" placement="right">
                   <Text>Reviews: {state['popularity']}</Text>
                 </Tooltip>
-                <Spacer/>
-                <Authenticity value={state['authenticity']}/>
+                <Spacer />
+                <Authenticity value={state['authenticity']} />
               </Stack>
             </CardBody>
           </Card>
