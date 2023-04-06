@@ -14,7 +14,7 @@ import { Ratings } from 'apps/backend/src/rating/rating.interface';
 export function CafeList() {
   const [cafes, setCafes] = useState([]);
   const navigate = useNavigate();
-  const { userDetails, setUserDetails } = useContext(UserContext);
+  const {userDetails, setUserDetails} = useContext(UserContext);
 
   useEffect(() => {
     getAll();
@@ -26,12 +26,12 @@ export function CafeList() {
 
   return (
     <Box>
-      <Header />
+      <Header/>
       <Grid
         padding={'1%'}
-        h="200px"
-        templateRows="repeat(3, 1fr)"
-        templateColumns="repeat(3, 1fr)"
+        h='200px'
+        templateRows='repeat(3, 1fr)'
+        templateColumns='repeat(3, 1fr)'
         gap={3}
       >
         {cafes.map((cafe, index) => (
@@ -44,7 +44,7 @@ export function CafeList() {
               p={6}
               overflow={'hidden'}
               cursor={'pointer'}
-              onClick={() => navigate(`/cafe/${cafe['id']}`, { state: cafe })}
+              onClick={() => navigate(`/cafe/${cafe['id']}`, {state: cafe})}
             >
               {cafe['logo'] && (
                 <Center
@@ -52,10 +52,9 @@ export function CafeList() {
                   mt={-6}
                   mx={-6}
                   mb={6}
-                  position="relative"
-                  maxH={'400px'}
+                  position='relative'
                 >
-                  <Image src={cafe['logo']} />
+                  <Image h={'300px'} src={cafe['logo']} p={5} fit={'contain'}/>
                 </Center>
               )}
 
@@ -63,16 +62,16 @@ export function CafeList() {
                 count={5}
                 size={24}
                 isHalf={true}
-                emptyIcon={<i className="far fa-star"></i>}
-                halfIcon={<i className="fa fa-star-half-alt"></i>}
-                fullIcon={<i className="fa fa-star"></i>}
-                activeColor="#ffd700"
+                emptyIcon={<i className='far fa-star'></i>}
+                halfIcon={<i className='fa fa-star-half-alt'></i>}
+                fullIcon={<i className='fa fa-star'></i>}
+                activeColor='#ffd700'
                 value={
                   cafe['rating'][
                     Classification[
                       userDetails.classification
-                    ].toLowerCase() as keyof Ratings
-                  ]
+                      ].toLowerCase() as keyof Ratings
+                    ]
                 }
                 edit={false}
               />

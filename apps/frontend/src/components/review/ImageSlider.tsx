@@ -3,13 +3,12 @@ import {
   IconButton,
   useBreakpointValue,
   Image,
-  Center,
 } from '@chakra-ui/react';
 import React, { Key } from 'react';
 import { BiLeftArrowAlt, BiRightArrowAlt } from 'react-icons/bi';
 import Slider from 'react-slick';
 
-export function ViewImages({ images }: { images: any }) {
+export function ImageSlider({ images }: { images: any }) {
   // Settings for the slider
   const settings = {
     dots: true,

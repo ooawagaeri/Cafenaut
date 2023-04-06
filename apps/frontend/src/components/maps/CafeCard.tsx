@@ -23,9 +23,9 @@ export function CafeCard(props: { cafe: CafePinModel }) {
 
   return (
     <Box>
-      <Box display='flex' justifyContent='center'>
+      <Box display='flex' justifyContent='center' mt={2} mb={3}>
         {props.cafe.logo && (
-          <Image src={props.cafe.logo} maxHeight='50px' maxWidth='100px' marginTop='9px'/>
+          <Image src={props.cafe.logo} maxHeight='50px' maxWidth='100px'/>
         )}
       </Box>
       <Heading as='h5' size='sm' textAlign='center'>{props.cafe.name}</Heading>

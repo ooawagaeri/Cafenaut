@@ -21,7 +21,7 @@ import ReactStars from 'react-rating-stars-component';
 import Header from '../../common/Header';
 import { getCafeReviews } from '../../services/api_service';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
-import { ReviewList } from '../review/ReviewList';
+import { Review } from '../review/Review';
 import { Classification } from 'apps/backend/src/classifier/classification.interface';
 import { Ratings } from 'apps/backend/src/rating/rating.interface';
 import UserContext from '../../common/UserContext';
@@ -59,11 +59,11 @@ export function Cafe() {
                 <Center
                   bg={'gray.100'}
                   mt={-6}
-                  mx={-6}
+                  mx={-5}
                   mb={6}
                   position='relative'
                 >
-                  <Image src={state['logo']}/>
+                  <Image minHeight={'300px'} src={state['logo']} p={5} fit={'contain'}/>
                 </Center>
               )}
               <Heading as='h4' size='md'>Overall Statistics:</Heading>
@@ -106,7 +106,7 @@ export function Cafe() {
             <CardBody>
               {reviews.length > 0 ? (
                 reviews.map((review: ReviewModel, index) => (
-                  <ReviewList key={index} review={review}></ReviewList>
+                  <Review key={index} review={review}></Review>
                 ))
               ) : (
                 <Text>No Reviews for this Cafe 😔</Text>

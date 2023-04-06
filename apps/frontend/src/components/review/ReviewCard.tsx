@@ -29,9 +29,9 @@ import { getCafeDetail, reportReview } from '../../services/api_service';
 import Sentiment from '../authenticity-senti/Sentiment';
 import Authenticity from '../authenticity-senti/Authenticity';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
-import { ViewImages } from './ViewImages';
+import { ImageSlider } from './ImageSlider';
 
-export function ViewReview({review}: { review: ReviewModel }) {
+export function ReviewCard({review}: { review: ReviewModel }) {
   const [cafeLogo, setCafeLogo] = useState('');
   const [cafeDetails, setCafeDetails] = useState({});
   const navigate = useNavigate();
@@ -458,7 +458,7 @@ export function ViewReview({review}: { review: ReviewModel }) {
             </Text>
           </Box>
 
-          <ViewImages images={review.image_url}></ViewImages>
+          <ImageSlider images={review.image_url}></ImageSlider>
 
           <Flex>
             <Spacer></Spacer>

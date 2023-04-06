@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
-import { Card, CardBody, Box, Text, Center } from '@chakra-ui/react';
+import { Card, CardBody, Box } from '@chakra-ui/react';
 
 import Header from '../common/Header';
-import { ReviewList } from '../components/review/ReviewList';
 import { getAllReviews } from '../services/api_service';
 import UserContext from '../common/UserContext';
 import SearchBar from '../components/search/SearchBar';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
+import ReviewList from "../components/review/ReviewList";
 
 export function Explore() {
   const {userDetails, setUserDetails} = useContext(UserContext);
@@ -29,15 +29,7 @@ export function Explore() {
           <SearchBar setReviews={(reviews) => setReviews(reviews)}/>
         </CardBody>
       </Card>
-      {reviews.length > 0 ? (
-        reviews.map((review: ReviewModel, index) => (
-          <ReviewList key={index} review={review}></ReviewList>
-        ))
-      ) : (
-        <Center p='20px'>
-          <Text>No such review(s) found!</Text>
-        </Center>
-      )}
+      <ReviewList reviews={reviews} subText={'No such review(s) found!'}/>
     </Box>
   );
 }

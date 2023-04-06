@@ -135,7 +135,7 @@ export default function SearchBar({setReviews}: { setReviews: (reviews: ReviewMo
 
   return (
     <Box display='flex' justifyContent='center'>
-      <Stack w={'70%'} spacing={0}>
+      <Stack w={'50%'} spacing={0}>
         <HStack>
           <InputGroup>
             <Input value={value} placeholder='Search'
