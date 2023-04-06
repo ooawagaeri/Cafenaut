@@ -5,14 +5,14 @@ import { Card, CardBody, Text, Box } from '@chakra-ui/react';
 
 import Header from '../common/Header';
 import { auth } from '../services/firebase';
-import { ReviewList } from '../components/review/ReviewList';
 import { getAllReviews, getFollowingReviews } from '../services/api_service';
 import UserContext from '../common/UserContext';
+import ReviewList from "../components/review/ReviewList";
 
 export function Home() {
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
-  const { userDetails, setUserDetails } = useContext(UserContext);
+  const {userDetails, setUserDetails} = useContext(UserContext);
   const [postedReview, setPostedReview] = useState(false);
 
   const fetchFromBackend = async () => {
@@ -68,7 +68,7 @@ export function Home() {
 
   return (
     <Box>
-      <Header setPostedReview={setPostedReview} />
+      <Header setPostedReview={setPostedReview}/>
       {(userDetails.following === undefined ||
         userDetails.following.length === 0) && (
         <Card>
@@ -80,9 +80,7 @@ export function Home() {
           </CardBody>
         </Card>
       )}
-      {reviews.map((review, index) => (
-        <ReviewList key={index} review={review}></ReviewList>
-      ))}
+      <ReviewList reviews={reviews} subText={'Loading...'}/>
     </Box>
   );
 }

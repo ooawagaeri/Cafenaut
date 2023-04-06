@@ -28,7 +28,7 @@ import { useLocation } from 'react-router-dom';
 import Header from '../common/Header';
 import { User } from '../../../backend/src/user/user.interface';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
-import { ReviewList } from '../components/review/ReviewList';
+import { Review } from '../components/review/Review';
 import {
   followUser,
   getUserDetail,
@@ -283,7 +283,7 @@ export function Profile() {
             <CardBody>
               {reviews.length > 0 ? (
                 reviews.map((review: ReviewModel, index) => (
-                  <ReviewList key={index} review={review}></ReviewList>
+                  <Review key={index} review={review}></Review>
                 ))
               ) : (
                 <Text>{user.name} has not posted any reviews 😔</Text>

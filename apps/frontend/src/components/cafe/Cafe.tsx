@@ -7,7 +7,10 @@ import {
   Flex,
   Heading,
   Image,
+  Spacer,
+  Stack,
   Text,
+  Tooltip,
 } from '@chakra-ui/react';
 import { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -18,10 +21,11 @@ import ReactStars from 'react-rating-stars-component';
 import Header from '../../common/Header';
 import { getCafeReviews } from '../../services/api_service';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
-import { ReviewList } from '../review/ReviewList';
+import { Review } from '../review/Review';
 import { Classification } from 'apps/backend/src/classifier/classification.interface';
 import { Ratings } from 'apps/backend/src/rating/rating.interface';
 import UserContext from '../../common/UserContext';
+import Authenticity from '../authenticity-senti/Authenticity';
 
 export function Cafe() {
   const {userDetails, setUserDetails} = useContext(UserContext);
@@ -38,9 +42,14 @@ export function Cafe() {
   return (
     <Box>
       <Header/>
-      <Flex paddingTop={'5%'} paddingLeft={'10%'} paddingRight={'10%'} alignContent={"center"}
-            justifyContent={"center"}>
-        <Box w={'30%'} padding={'1%'}>
+      <Flex
+        paddingTop={'5%'}
+        paddingLeft={'10%'}
+        paddingRight={'10%'}
+        alignContent={'center'}
+        justifyContent={'center'}
+      >
+        <Box minW={'200px'} maxW={'500px'} padding={'1%'}>
           <Card>
             <CardHeader>
               <Heading>{state['name']}</Heading>
@@ -49,32 +58,43 @@ export function Cafe() {
               {state['logo'] && (
                 <Center
                   bg={'gray.100'}
-                  mt={-5}
+                  mt={-6}
                   mx={-5}
-                  mb={5}
-                  position="relative"
-                  maxH={'300px'}
+                  mb={6}
+                  position='relative'
                 >
-                  <Image src={state['logo']}/>
+                  <Image minHeight={'300px'} src={state['logo']} p={5} fit={'contain'}/>
                 </Center>
               )}
-              <ReactStars
-                count={5}
-                size={24}
-                isHalf={true}
-                emptyIcon={<i className="far fa-star"></i>}
-                halfIcon={<i className="fa fa-star-half-alt"></i>}
-                fullIcon={<i className="fa fa-star"></i>}
-                activeColor="#ffd700"
-                value={
-                  state['rating'][
-                    Classification[
-                      userDetails.classification
-                      ].toLowerCase() as keyof Ratings
-                    ]
-                }
-                edit={false}
-              />
+              <Heading as='h4' size='md'>Overall Statistics:</Heading>
+              <Stack mt={6} direction={'row'} spacing={4} align={'center'}>
+                <Tooltip label='Average rating' placement='right'>
+                  <Box>
+                    <ReactStars
+                      count={5}
+                      size={24}
+                      isHalf={true}
+                      emptyIcon={<i className='far fa-star'></i>}
+                      halfIcon={<i className='fa fa-star-half-alt'></i>}
+                      fullIcon={<i className='fa fa-star'></i>}
+                      activeColor='#ffd700'
+                      value={
+                        state['rating'][
+                          Classification[
+                            userDetails.classification
+                            ].toLowerCase() as keyof Ratings
+                          ]
+                      }
+                      edit={false}/>
+                  </Box>
+                </Tooltip>
+                <Spacer/>
+                <Tooltip label='Total no. of reviews' placement='right'>
+                  <Text>Reviews: {state['popularity']}</Text>
+                </Tooltip>
+                <Spacer/>
+                <Authenticity value={state['authenticity']}/>
+              </Stack>
             </CardBody>
           </Card>
         </Box>
@@ -86,7 +106,7 @@ export function Cafe() {
             <CardBody>
               {reviews.length > 0 ? (
                 reviews.map((review: ReviewModel, index) => (
-                  <ReviewList key={index} review={review}></ReviewList>
+                  <Review key={index} review={review}></Review>
                 ))
               ) : (
                 <Text>No Reviews for this Cafe 😔</Text>
