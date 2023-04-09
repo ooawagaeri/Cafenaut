@@ -28,8 +28,8 @@ import UserContext from '../../common/UserContext';
 import Authenticity from '../authenticity-senti/Authenticity';
 
 export function Cafe() {
-  const {userDetails, setUserDetails} = useContext(UserContext);
-  const {state} = useLocation();
+  const { userDetails, setUserDetails } = useContext(UserContext);
+  const { state } = useLocation();
   const [reviews, setReviews] = useState([]);
   useEffect(() => {
     getReviews();
@@ -41,7 +41,7 @@ export function Cafe() {
 
   return (
     <Box>
-      <Header/>
+      <Header />
       <Flex
         paddingTop={'5%'}
         paddingLeft={'10%'}
@@ -49,7 +49,7 @@ export function Cafe() {
         alignContent={'center'}
         justifyContent={'center'}
       >
-        <Box minW={'200px'} maxW={'500px'} padding={'1%'}>
+        <Box minW={'20%'} maxW={'40%'} padding={'1%'}>
           <Card>
             <CardHeader>
               <Heading>{state['name']}</Heading>
@@ -61,39 +61,47 @@ export function Cafe() {
                   mt={-6}
                   mx={-5}
                   mb={6}
-                  position='relative'
+                  position="relative"
                 >
-                  <Image minHeight={'300px'} src={state['logo']} p={5} fit={'contain'}/>
+                  <Image
+                    minHeight={'300px'}
+                    src={state['logo']}
+                    p={5}
+                    fit={'contain'}
+                  />
                 </Center>
               )}
-              <Heading as='h4' size='md'>Overall Statistics:</Heading>
+              <Heading as="h4" size="md">
+                Overall Statistics:
+              </Heading>
               <Stack mt={6} direction={'row'} spacing={4} align={'center'}>
-                <Tooltip label='Average rating' placement='right'>
+                <Tooltip label="Average rating" placement="right">
                   <Box>
                     <ReactStars
                       count={5}
                       size={24}
                       isHalf={true}
-                      emptyIcon={<i className='far fa-star'></i>}
-                      halfIcon={<i className='fa fa-star-half-alt'></i>}
-                      fullIcon={<i className='fa fa-star'></i>}
-                      activeColor='#ffd700'
+                      emptyIcon={<i className="far fa-star"></i>}
+                      halfIcon={<i className="fa fa-star-half-alt"></i>}
+                      fullIcon={<i className="fa fa-star"></i>}
+                      activeColor="#ffd700"
                       value={
                         state['rating'][
                           Classification[
                             userDetails.classification
-                            ].toLowerCase() as keyof Ratings
-                          ]
+                          ].toLowerCase() as keyof Ratings
+                        ]
                       }
-                      edit={false}/>
+                      edit={false}
+                    />
                   </Box>
                 </Tooltip>
-                <Spacer/>
-                <Tooltip label='Total no. of reviews' placement='right'>
+                <Spacer />
+                <Tooltip label="Total no. of reviews" placement="right">
                   <Text>Reviews: {state['popularity']}</Text>
                 </Tooltip>
-                <Spacer/>
-                <Authenticity value={state['authenticity']}/>
+                <Spacer />
+                <Authenticity value={state['authenticity']} />
               </Stack>
             </CardBody>
           </Card>
