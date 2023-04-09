@@ -19,7 +19,7 @@ import {
   Button,
   useToast,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
@@ -30,8 +30,12 @@ import Sentiment from '../authenticity-senti/Sentiment';
 import Authenticity from '../authenticity-senti/Authenticity';
 import { ReviewModel } from 'apps/backend/src/review/review.interface';
 import { ImageSlider } from './ImageSlider';
+import { Classification } from 'apps/backend/src/classifier/classification.interface';
+import { Ratings } from 'apps/backend/src/rating/rating.interface';
+import UserContext from '../../common/UserContext';
 
-export function ReviewCard({review}: { review: ReviewModel }) {
+export function ReviewCard({ review }: { review: ReviewModel }) {
+  const { userDetails, setUserDetails } = useContext(UserContext);
   const [cafeLogo, setCafeLogo] = useState('');
   const [cafeDetails, setCafeDetails] = useState({});
   const navigate = useNavigate();
@@ -59,6 +63,12 @@ export function ReviewCard({review}: { review: ReviewModel }) {
     });
   };
 
+  const userClass =
+    Classification[userDetails.classification] === undefined
+      ? 'unweighted'
+      : Classification[userDetails.classification];
+  const ratingKey = review.rating[userClass.toLowerCase() as keyof Ratings];
+
   return (
     <Card>
       <CardHeader>
@@ -68,7 +78,7 @@ export function ReviewCard({review}: { review: ReviewModel }) {
             <Link
               onClick={() =>
                 navigate(`/profile/${review.user_uid}`, {
-                  state: {uid: review.user_uid},
+                  state: { uid: review.user_uid },
                 })
               }
             >
@@ -78,22 +88,22 @@ export function ReviewCard({review}: { review: ReviewModel }) {
               {review.created_at.toLocaleDateString()},{' '}
               {review.created_at.toLocaleTimeString()}
             </Text>
-            <Spacer/>
-            <Sentiment value={review.sentiment}/>
+            <Spacer />
+            <Sentiment value={review.sentiment} />
             <HStack>
               <Text fontWeight={600} size="sm">
                 Authenticity:
               </Text>
-              <Authenticity value={review.authenticity}/>
+              <Authenticity value={review.authenticity} />
             </HStack>
           </Stack>
 
-          <Spacer/>
+          <Spacer />
           <HStack>
             <Link
               onClick={() =>
                 navigate(`/cafe/${review.cafe_id}`, {
-                  state: {...cafeDetails, id: review.cafe_id},
+                  state: { ...cafeDetails, id: review.cafe_id },
                 })
               }
               size="md"
@@ -113,7 +123,7 @@ export function ReviewCard({review}: { review: ReviewModel }) {
         </Flex>
       </CardHeader>
       <CardBody>
-        <Stack divider={<StackDivider/>} spacing="4">
+        <Stack divider={<StackDivider />} spacing="4">
           <Box>
             <Heading size="xs" textTransform="uppercase">
               Summary
@@ -126,7 +136,7 @@ export function ReviewCard({review}: { review: ReviewModel }) {
               halfIcon={<i className="fa fa-star-half-alt"></i>}
               fullIcon={<i className="fa fa-star"></i>}
               activeColor="#ffd700"
-              value={review.rating?.unweighted}
+              value={ratingKey}
               edit={false}
             />
             <Text pt="2" fontSize="sm">
@@ -462,7 +472,7 @@ export function ReviewCard({review}: { review: ReviewModel }) {
 
           <Flex>
             <Spacer></Spacer>
-            <Text pr='10px'>Spot a suspicious review?</Text>
+            <Text pr="10px">Spot a suspicious review?</Text>
             <Button size="sm" colorScheme={'red'} onClick={reportSpam}>
               Report
             </Button>
