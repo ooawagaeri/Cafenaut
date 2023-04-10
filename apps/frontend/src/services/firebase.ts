@@ -14,13 +14,13 @@ import { Classification } from 'apps/backend/src/classifier/classification.inter
 //            https://github.com/atharvadeosthale/firebase-auth-article/tree/master/src
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyC58tOLUBFaRVvWqQo4J-tnfI_GD5I3bAQ',
-  authDomain: 'cafenaut-511b2.firebaseapp.com',
-  projectId: 'cafenaut-511b2',
-  storageBucket: 'cafenaut-511b2.appspot.com',
-  messagingSenderId: '1008137617927',
-  appId: '1:1008137617927:web:f6b296f68df3de7835e0a2',
-  measurementId: 'G-KXQ8Q36XVZ',
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
+  measurementId: import.meta.env.VITE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
